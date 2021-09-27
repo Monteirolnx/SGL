@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SF_SGL", "SF_SGL\SF_SGL.csproj", "{6C3000D6-19B0-4CC6-A5F6-6C8D6D338DE7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SF_SGL.IntegrationTests", "SF_SGL.IntegrationTests\SF_SGL.IntegrationTests.csproj", "{0230F31B-A155-41A3-9E64-B4B3BE0F3F11}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6C3000D6-19B0-4CC6-A5F6-6C8D6D338DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C3000D6-19B0-4CC6-A5F6-6C8D6D338DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C3000D6-19B0-4CC6-A5F6-6C8D6D338DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C3000D6-19B0-4CC6-A5F6-6C8D6D338DE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0230F31B-A155-41A3-9E64-B4B3BE0F3F11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0230F31B-A155-41A3-9E64-B4B3BE0F3F11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0230F31B-A155-41A3-9E64-B4B3BE0F3F11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0230F31B-A155-41A3-9E64-B4B3BE0F3F11}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {79E5E305-4CC6-48EB-8508-B437464A2686}
+	EndGlobalSection
+EndGlobal

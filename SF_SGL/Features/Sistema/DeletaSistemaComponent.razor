@@ -1,0 +1,65 @@
+﻿@inject MediatR.IMediator _mediatr
+@inject NavigationManager NavigationManager
+
+
+@if (deletaSistema.Data == null)
+{
+
+}
+else
+{
+    <p>Deseja sistema Id :<b> @id</b></p>
+    <br />
+    <div class="col-md-8">
+        <table class="table">
+            <tr>
+                <td>Nome</td>
+                <td>@deletaSistema.Data.Nome</td>
+            </tr>
+            <tr>
+                <td>UrlServicoConsultaLog</td>
+                <td>@deletaSistema.Data.UrlServicoConsultaLog</td>
+            </tr>
+            <tr>
+                <td>UsuarioLogin</td>
+                <td>@deletaSistema.Data.UsuarioLogin</td>
+            </tr>
+        </table>
+        <div class="form-group">
+            <input type="button" value="Deleta" @onclick="@Deleta" class="btn btn-primary" />
+            <input type="button" value="Cancela" @onclick="@Cancela" class="btn" />
+        </div>
+    </div>
+}
+
+
+@code {
+    [Parameter] public int id { get; set; }
+    DeletaSistema deletaSistema;
+
+    protected override async Task OnInitializedAsync()
+    {
+        deletaSistema = new DeletaSistema();
+        deletaSistema.Data = await _mediatr.Send(new DeletaSistema.Query() { Id = id });
+    }
+
+    protected async Task Deleta()
+    {
+        Task tarefa = Task.FromResult(await _mediatr.Send(deletaSistema.Data));
+
+        if (tarefa.IsCompletedSuccessfully == false)
+        {
+            //erro = true;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("sistemas");
+        }
+        //await _mediatr.Send(deletaSistema.Data);
+    }
+
+    void Cancela()
+    {
+        NavigationManager.NavigateTo("sistemas");
+    }
+}
