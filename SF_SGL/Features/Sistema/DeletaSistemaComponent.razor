@@ -35,11 +35,12 @@ else
 
 @code {
     [Parameter] public int id { get; set; }
+
     DeletaSistema deletaSistema;
 
     protected override async Task OnInitializedAsync()
     {
-        deletaSistema = new DeletaSistema();
+        deletaSistema = new();
         deletaSistema.Data = await _mediatr.Send(new DeletaSistema.Query() { Id = id });
     }
 

@@ -1,4 +1,5 @@
 ﻿@inject MediatR.IMediator _mediatr
+@inject NavigationManager NavigationManager
 
 @if (erro)
 {
@@ -6,37 +7,38 @@
 }
 else
 {
-    <EditForm Model="@Data" OnValidSubmit="@HandleValidSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <h3>Adicionar Sistema</h3>
-        <hr />
-        <div class="form-group row">
-            <label for="Nome" class="col-sm-2 col-form-label">Nome:</label>
-            <div class="col-sm-10">
-                <InputText id="Nome" class="form-control" placeholder="Nome" @bind-Value="@Data.Nome" />
-            </div>
+<EditForm Model="@Data" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <h3>Adicionar Sistema</h3>
+    <hr />
+    <div class="form-group row">
+        <label for="Nome" class="col-sm-2 col-form-label">Nome:</label>
+        <div class="col-sm-10">
+            <InputText id="Nome" class="form-control" placeholder="Nome" @bind-Value="@Data.Nome" />
         </div>
-        <div class="form-group row">
-            <label for="UrlServicoConsultaLog" class="col-sm-2 col-form-label">UrlServicoConsultaLog:</label>
-            <div class="col-sm-10">
-                <InputText id="UrlServicoConsultaLog" class="form-control" placeholder="UrlServicoConsultaLog" @bind-Value="@Data.UrlServicoConsultaLog" />
-            </div>
+    </div>
+    <div class="form-group row">
+        <label for="UrlServicoConsultaLog" class="col-sm-2 col-form-label">UrlServicoConsultaLog:</label>
+        <div class="col-sm-10">
+            <InputText id="UrlServicoConsultaLog" class="form-control" placeholder="UrlServicoConsultaLog" @bind-Value="@Data.UrlServicoConsultaLog" />
         </div>
-        <div class="form-group row">
-            <label for="UsuarioLogin" class="col-sm-2 col-form-label">UsuarioLogin:</label>
-            <div class="col-sm-10">
-                <InputText id="UsuarioLogin" class="form-control" placeholder="UsuarioLogin" @bind-Value="@Data.UsuarioLogin" />
-            </div>
+    </div>
+    <div class="form-group row">
+        <label for="UsuarioLogin" class="col-sm-2 col-form-label">UsuarioLogin:</label>
+        <div class="col-sm-10">
+            <InputText id="UsuarioLogin" class="form-control" placeholder="UsuarioLogin" @bind-Value="@Data.UsuarioLogin" />
         </div>
-        <div class="form-group row">
-            <label for="UsuarioSenha" class="col-sm-2 col-form-label">Nome:</label>
-            <div class="col-sm-10">
-                <InputText id="UsuarioSenha" class="form-control" placeholder="UsuarioSenha" @bind-Value="@Data.UsuarioSenha" />
-            </div>
+    </div>
+    <div class="form-group row">
+        <label for="UsuarioSenha" class="col-sm-2 col-form-label">Nome:</label>
+        <div class="col-sm-10">
+            <InputText id="UsuarioSenha" class="form-control" placeholder="UsuarioSenha" @bind-Value="@Data.UsuarioSenha" />
         </div>
-        <button type="submit">Submit</button>
-    </EditForm>
+    </div>
+    <button type="submit">Cadastrar</button>
+    <input type="button" class="btn" @onclick="@Cancela" value="Cancela" />
+</EditForm>
 }
 
 @code {
@@ -63,8 +65,14 @@ else
         finally
         {
             Data = new AdicionaSistema.Command();
+            NavigationManager.NavigateTo("sistemas");
         }
 
+    }
+
+    void Cancela()
+    {
+        NavigationManager.NavigateTo("sistemas");
     }
 
 }

@@ -1,5 +1,74 @@
-﻿<h3>EditaSistemaComponent</h3>
+﻿@inject MediatR.IMediator _mediatr
+@inject NavigationManager NavigationManager
+
+<h2>Edita Sistema</h2>
+<hr />
+
+@if (editaSistema.Data == null)
+{
+    //loading
+}
+else
+{
+    <form>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="Nome" class="control-label">Nome</label>
+                    <input for="Nome" class="form-control" @bind="@editaSistema.Data.Nome" />
+                </div>
+                <div class="form-group">
+                    <label for="UrlServicoConsultaLog" class="control-label">UrlServicoConsultaLog</label>
+                    <input for="UrlServicoConsultaLog" class="form-control" @bind="@editaSistema.Data.UrlServicoConsultaLog" />
+                </div>
+                <div class="form-group">
+                    <label for="UsuarioLogin" class="control-label">UsuarioLogin</label>
+                    <input for="UsuarioLogin" class="form-control" @bind="@editaSistema.Data.UsuarioLogin" />
+                </div>
+                <div class="form-group">
+                    <label for="UsuarioSenha" class="control-label">UsuarioSenha</label>
+                    <input for="UsuarioSenha" class="form-control" @bind="editaSistema.Data.UsuarioSenha" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@Atualiza" value="Atualiza" />
+                <input type="button" class="btn" @onclick="@Cancela" value="Cancela" />
+            </div>
+        </div>
+    </form>
+}
+
 
 @code {
+    [Parameter] public int id { get; set; }
 
+    EditaSistema editaSistema;
+
+    protected override async Task OnInitializedAsync()
+    {
+        editaSistema = new();
+        editaSistema.Data = await _mediatr.Send(new EditaSistema.Query() { Id = id });
+    }
+
+    protected async Task Atualiza()
+    {
+        Task tarefa = Task.FromResult(await _mediatr.Send(editaSistema.Data));
+
+        if (tarefa.IsCompletedSuccessfully == false)
+        {
+            //erro = true;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("sistemas");
+        }
+        //await _mediatr.Send(deletaSistema.Data);
+    }
+
+    void Cancela()
+    {
+        NavigationManager.NavigateTo("sistemas");
+    }
 }

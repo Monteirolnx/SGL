@@ -31,7 +31,7 @@ namespace SF_SGL
             services.AddAutoMapper(typeof(Startup).Assembly);
 
             services.AddDbContext<SGLContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DetaultConnection"), b => b.MigrationsAssembly(typeof(SGLContext)         .Assembly.FullName)));
+                options.UseSqlServer(Configuration.GetConnectionString("DetaultConnection"), b => b.MigrationsAssembly(typeof(SGLContext).Assembly.FullName)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +49,7 @@ namespace SF_SGL
             }
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();

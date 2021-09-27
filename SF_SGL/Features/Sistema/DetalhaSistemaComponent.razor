@@ -1,13 +1,12 @@
-﻿@inject MediatR.IMediator _mediatr
+﻿@*@inject MediatR.IMediator _mediatr
 
 @code {
     DetalhaSistema Detalhe;
 
 
-    protected override async Task OnInitializedAsync()
-    {
-        DetalhaSistema.Query query = new();
-        Detalhe.Data = await _mediatr.Send(query);
-    }
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    throw new NotImplementedException();
+    //}
 
-}
+}*@

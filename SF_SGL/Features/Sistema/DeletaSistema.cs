@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +16,10 @@ namespace SF_SGL.Features.Sistema
 
         public class MappingProfile : Profile
         {
-            public MappingProfile() => CreateMap<Entidades.Sistema, Command>();
+            public MappingProfile()
+            {
+                CreateMap<Entidades.Sistema, Command>();
+            }
         }
 
         public record Query : IRequest<Command>

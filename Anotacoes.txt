@@ -1,0 +1,17 @@
+
+=== Artigos:
+
+Architecture eBook:
+    https://ardalis.com/architecture-ebook
+
+Architecting for maintainability through Vertical Slices:
+    https://www.ghyston.com/insights/architecting-for-maintainability-through-vertical-slices
+ 
+
+=== Videos:
+
+Vertical Slice Architecture con Asp.Net Core | Latino .NET Online
+    https://www.youtube.com/watch?v=i9ZgkC_NtQ0
+
+Clean Architecture with ASP.NET Core with Steve "Ardalis" Smith (2020-06-01):
+    https://www.youtube.com/watch?v=joNTQy-KXiU
