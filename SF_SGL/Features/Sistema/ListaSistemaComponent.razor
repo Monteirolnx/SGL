@@ -44,7 +44,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        listaSistema = new ListaSistema();
+        listaSistema = new();
         listaSistema.Data = await _mediatr.Send(new ListaSistema.Query() { });
     }
 }

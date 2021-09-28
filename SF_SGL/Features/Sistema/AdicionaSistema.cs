@@ -8,6 +8,8 @@ namespace SF_SGL.Features.Sistema
 {
     public class AdicionaSistema
     {
+        public Command Data { get; set; }
+
         public class Command : IRequest<int>
         {
             [Required]
