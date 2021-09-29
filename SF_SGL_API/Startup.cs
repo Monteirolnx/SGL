@@ -40,8 +40,8 @@ namespace SF_SGL_API
 
             services.AddAutoMapper(typeof(Startup).Assembly);
 
-            services.AddDbContext<SGLContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DetaultConnection"), b => b.MigrationsAssembly(typeof(SGLContext).Assembly.FullName)));
+            services.AddDbContext<SGLContexto>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DetaultConnection"), b => b.MigrationsAssembly(typeof(SGLContexto).Assembly.FullName)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

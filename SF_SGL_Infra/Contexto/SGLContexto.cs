@@ -6,20 +6,20 @@ using SF_SGL_Infra.ConfiguracaoEntidades.Sistema;
 
 namespace SF_SGL_Infra.Contexto
 {
-    public class SGLContext : DbContext
+    public class SGLContexto : DbContext
     {
         private IDbContextTransaction _currentTransaction;
 
-        public DbSet<Sistema> Sistema { get; set; }
+        public DbSet<EntidadeSistemaConfig> Sistema { get; set; }
 
-        public SGLContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        public SGLContexto(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            _ = modelBuilder.ApplyConfigurationsFromAssembly(typeof(SGLContext).Assembly);
+            _ = modelBuilder.ApplyConfigurationsFromAssembly(typeof(SGLContexto).Assembly);
         }
 
         public async Task BeginTransactionAsync()

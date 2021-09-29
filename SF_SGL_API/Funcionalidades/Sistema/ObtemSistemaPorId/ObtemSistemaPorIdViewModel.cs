@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using MediatR;
 
-namespace SF_SGL_API.Funcionalidades.Sistema.AdicionaSistema
+namespace SF_SGL_API.Funcionalidades.Sistema.ObtemSistemaPorId
 {
-    public class AdicionaSistemaModelo : IRequest<int>
+    public class ObtemSistemaPorIdViewModel
     {
+        public int Id { get; set; }
+
         public string Nome { get; set; }
 
         public string UrlServicoConsultaLog { get; set; }
@@ -22,7 +23,7 @@ namespace SF_SGL_API.Funcionalidades.Sistema.AdicionaSistema
     {
         public MappingProfile()
         {
-            CreateMap<SF_SGL_Infra.ConfiguracaoEntidades.Sistema.Sistema, AdicionaSistemaModelo>();
+            CreateMap<SF_SGL_Infra.ConfiguracaoEntidades.Sistema.EntidadeSistemaConfig, ObtemSistemaPorIdViewModel>();
         }
     }
 }

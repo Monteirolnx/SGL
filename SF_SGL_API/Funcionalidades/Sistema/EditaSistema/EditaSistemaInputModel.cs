@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using MediatR;
 
-namespace SF_SGL_API.Funcionalidades.Sistema.ObtemSistemaPorId
+namespace SF_SGL_API.Funcionalidades.Sistema.EditaSistema
 {
-    public class ObtemSistemaPorIdModelo
+    public class EditaSistemaInputModel:IRequest
     {
         public int Id { get; set; }
 
@@ -18,12 +19,11 @@ namespace SF_SGL_API.Funcionalidades.Sistema.ObtemSistemaPorId
 
         public string UsuarioSenha { get; set; }
     }
-
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-            CreateMap<SF_SGL_Infra.ConfiguracaoEntidades.Sistema.Sistema, ObtemSistemaPorIdModelo>();
+            CreateMap<SF_SGL_Infra.ConfiguracaoEntidades.Sistema.EntidadeSistemaConfig, EditaSistemaInputModel>();
         }
     }
 }

@@ -7,7 +7,7 @@ using MediatR;
 
 namespace SF_SGL_API.Funcionalidades.Sistema.ObtemTodosSistemas
 {
-    public class ObtemTodosSistemasModelo : IRequest
+    public class ObtemTodosSistemasViewModel : IRequest
     {
         public int Id { get; set; }
 
@@ -24,7 +24,7 @@ namespace SF_SGL_API.Funcionalidades.Sistema.ObtemTodosSistemas
     {
         public MappingProfile()
         {
-            CreateMap<SF_SGL_Infra.ConfiguracaoEntidades.Sistema.Sistema, ObtemTodosSistemasModelo>();
+            CreateMap<SF_SGL_Infra.ConfiguracaoEntidades.Sistema.EntidadeSistemaConfig, ObtemTodosSistemasViewModel>();
         }
     }
 }

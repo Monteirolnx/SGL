@@ -7,7 +7,7 @@ using MediatR;
 
 namespace SF_SGL_API.Funcionalidades.Sistema.DeletaSistema
 {
-    public record DeletaSistemaModelo : IRequest
+    public record DeletaSistemaViewModel : IRequest
     {
         public int Id { get; init; }
 
@@ -24,7 +24,7 @@ namespace SF_SGL_API.Funcionalidades.Sistema.DeletaSistema
     {
         public MappingProfile()
         {
-            CreateMap<SF_SGL_Infra.ConfiguracaoEntidades.Sistema.Sistema, DeletaSistemaModelo>();
+            CreateMap<SF_SGL_Infra.ConfiguracaoEntidades.Sistema.EntidadeSistemaConfig, DeletaSistemaViewModel>();
         }
     }
 }
