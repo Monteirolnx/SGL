@@ -33,6 +33,9 @@ namespace SF_SGL_API.Funcionalidades.Sistema
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Route("api/AdicionaSistema")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> AdicionaSistema(AdicionaSistemaInputModel adicionaSistemaInputModel)
         {
             if (!ModelState.IsValid)
@@ -52,6 +55,7 @@ namespace SF_SGL_API.Funcionalidades.Sistema
         [Route("api/EditaSistema/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> EditaSistema(int id, EditaSistemaInputModel editaSistemaInputModel)
         {
             try
@@ -84,6 +88,7 @@ namespace SF_SGL_API.Funcionalidades.Sistema
         [Route("api/DeletaSistema/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeletaSistema(int id)
         {
             Task<DeletaSistemaViewModel> tarefaPesquisaId = Task.FromResult(await _mediator.Send(new DeletaSistemaQuery(id)));
@@ -103,6 +108,7 @@ namespace SF_SGL_API.Funcionalidades.Sistema
         [Route("api/ObtemTodosSistemas")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ObtemTodosSistemasViewModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ObtemTodosSistemas()
         {
             Task<IEnumerable<ObtemTodosSistemasViewModel>> tarefaObtemTodosSistemas = Task.FromResult(await _mediator.Send(new ObtemTodosSistemasQuery()));
@@ -118,6 +124,7 @@ namespace SF_SGL_API.Funcionalidades.Sistema
         [Route("api/ObtemSistemaPorId/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ObtemSistemaPorIdViewModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ObtemSistemaPorId(int id)
         {
             Task<ObtemSistemaPorIdViewModel> tarefaObtemSistemasPorId = Task.FromResult(await _mediator.Send(new ObtemSistemaPorIdQuery(id)));
