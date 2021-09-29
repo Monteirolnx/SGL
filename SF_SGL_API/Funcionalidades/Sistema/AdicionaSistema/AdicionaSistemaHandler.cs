@@ -5,7 +5,7 @@ using SF_SGL_Infra.Contexto;
 
 namespace SF_SGL_API.Funcionalidades.Sistema.AdicionaSistema
 {
-    public class AdicionaSistemaHandler : IRequestHandler<AdicionaSistemaModelo, int>
+    public class AdicionaSistemaHandler : IRequestHandler<AdicionaSistemaCommand, int>
     {
         private readonly SGLContext _sglContext;
 
@@ -14,14 +14,14 @@ namespace SF_SGL_API.Funcionalidades.Sistema.AdicionaSistema
             _sglContext = sglContext;
         }
 
-        public async Task<int> Handle(AdicionaSistemaModelo request, CancellationToken cancellationToken)
+        public async Task<int> Handle(AdicionaSistemaCommand request, CancellationToken cancellationToken)
         {
             SF_SGL_Infra.ConfiguracaoEntidades.Sistema.Sistema sistema = new()
             {
-                Nome = request.Nome,
-                UrlServicoConsultaLog = request.UrlServicoConsultaLog,
-                UsuarioLogin = request.UsuarioLogin,
-                UsuarioSenha = request.UsuarioSenha
+                Nome = request.AdicionamodeloSistemaModelo.Nome,
+                UrlServicoConsultaLog = request.AdicionamodeloSistemaModelo.UrlServicoConsultaLog,
+                UsuarioLogin = request.AdicionamodeloSistemaModelo.UsuarioLogin,
+                UsuarioSenha = request.AdicionamodeloSistemaModelo.UsuarioSenha
             };
             await _sglContext.AddAsync(sistema, cancellationToken);
 

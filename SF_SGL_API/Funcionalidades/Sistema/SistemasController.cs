@@ -76,7 +76,7 @@ namespace SF_SGL_API.Funcionalidades.Sistema
         [HttpPost]
         public async Task<ActionResult<AdicionaSistemaModelo>> PostSistema(AdicionaSistemaModelo adicionaSistemaModelo)
         {
-            int idSistema = await _mediator.Send(adicionaSistemaModelo);
+            int idSistema = await _mediator.Send(new AdicionaSistemaCommand(adicionaSistemaModelo));
 
             return CreatedAtAction("GetSistema", new { id = idSistema });
         }
