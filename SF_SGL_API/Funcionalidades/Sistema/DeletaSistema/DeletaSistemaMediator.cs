@@ -39,7 +39,7 @@ namespace SF_SGL_API.Funcionalidades.Sistema.DeletaSistema
 
         public record DeletaSistemaCommand(DeletaSistemaViewModel DeletaSistemaViewModel) : IRequest;
 
-        public class DeletaSistemaCommandHandler : IRequestHandler<DeletaSistemaViewModel>
+        public class DeletaSistemaCommandHandler : IRequestHandler<DeletaSistemaCommand>
         {
             private readonly SGLContexto _sglContexto;
             public DeletaSistemaCommandHandler(SGLContexto sglContexto)
@@ -47,9 +47,9 @@ namespace SF_SGL_API.Funcionalidades.Sistema.DeletaSistema
                 _sglContexto = sglContexto;
             }
 
-            public async Task<Unit> Handle(DeletaSistemaViewModel request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(DeletaSistemaCommand request, CancellationToken cancellationToken)
             {
-                _sglContexto.Sistema.Remove(await _sglContexto.Sistema.FindAsync(new object[] { request.Id }, cancellationToken: cancellationToken));
+                _sglContexto.Sistema.Remove(await _sglContexto.Sistema.FindAsync(new object[] { request.DeletaSistemaViewModel.Id }, cancellationToken: cancellationToken));
 
                 await _sglContexto.SaveChangesAsync(cancellationToken);
 

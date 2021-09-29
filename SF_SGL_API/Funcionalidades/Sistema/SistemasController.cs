@@ -65,7 +65,7 @@ namespace SF_SGL_API.Funcionalidades.Sistema
                 if (tarefaPesquisaId.Result == null)
                     return NotFound();
 
-                Task<Unit> tarefaEditaSistema = Task.FromResult(await _mediator.Send(editaSistemaInputModel));
+                Task<Unit> tarefaEditaSistema = Task.FromResult(await _mediator.Send(new EditaSistemaCommand(editaSistemaInputModel)));
                 if (!tarefaEditaSistema.IsCompletedSuccessfully)
                     return Problem();
 
@@ -92,7 +92,7 @@ namespace SF_SGL_API.Funcionalidades.Sistema
             if (tarefaPesquisaId.Result == null)
                 return NotFound();
 
-            Task<Unit> tarefaDeletaSistema = Task.FromResult(await _mediator.Send(new DeletaSistemaCommand(tarefaPesquisaId.Result)));
+            var tarefaDeletaSistema = Task.FromResult(await _mediator.Send(new DeletaSistemaCommand(tarefaPesquisaId.Result)));
             if (!tarefaDeletaSistema.IsCompletedSuccessfully)
                 return Problem();
 

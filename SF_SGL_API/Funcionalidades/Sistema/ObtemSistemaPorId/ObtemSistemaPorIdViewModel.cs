@@ -6,17 +6,17 @@ using AutoMapper;
 
 namespace SF_SGL_API.Funcionalidades.Sistema.ObtemSistemaPorId
 {
-    public class ObtemSistemaPorIdViewModel
+    public record ObtemSistemaPorIdViewModel
     {
-        public int Id { get; set; }
+        public int Id { get; init; }
 
-        public string Nome { get; set; }
+        public string Nome { get; init; }
 
-        public string UrlServicoConsultaLog { get; set; }
+        public string UrlServicoConsultaLog { get; init; }
 
-        public string UsuarioLogin { get; set; }
+        public string UsuarioLogin { get; init; }
 
-        public string UsuarioSenha { get; set; }
+        public string UsuarioSenha { get; init; }
     }
 
     public class MappingProfile : Profile

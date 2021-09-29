@@ -39,8 +39,9 @@ namespace SF_SGL_API.Funcionalidades.Sistema.EditaSistema
         #endregion
 
         #region Command
+        public record EditaSistemaCommand(EditaSistemaInputModel EditaSistemaInputModel) : IRequest;
 
-        public class EditaSistemaCommandHandler : IRequestHandler<EditaSistemaInputModel>
+        public class EditaSistemaCommandHandler : IRequestHandler<EditaSistemaCommand>
         {
             private readonly SGLContexto _sglContexto;
 
@@ -48,14 +49,14 @@ namespace SF_SGL_API.Funcionalidades.Sistema.EditaSistema
             {
                 _sglContexto = sglContexto;
             }
-            public async Task<Unit> Handle(EditaSistemaInputModel request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(EditaSistemaCommand request, CancellationToken cancellationToken)
             {
-                EntidadeSistemaConfig sistema = await _sglContexto.Sistema.FindAsync(new object[] { request.Id }, cancellationToken: cancellationToken);
+                EntidadeSistemaConfig sistema = await _sglContexto.Sistema.FindAsync(new object[] { request.EditaSistemaInputModel.Id }, cancellationToken: cancellationToken);
 
-                sistema.Nome = request.Nome;
-                sistema.UrlServicoConsultaLog = request.UsuarioLogin;
-                sistema.UsuarioLogin = request.UsuarioLogin;
-                sistema.UsuarioSenha = request.UsuarioSenha;
+                sistema.Nome = request.EditaSistemaInputModel.Nome;
+                sistema.UrlServicoConsultaLog = request.EditaSistemaInputModel.UsuarioLogin;
+                sistema.UsuarioLogin = request.EditaSistemaInputModel.UsuarioLogin;
+                sistema.UsuarioSenha = request.EditaSistemaInputModel.UsuarioSenha;
 
                 _sglContexto.Sistema.Update(sistema);
                 await _sglContexto.SaveChangesAsync(cancellationToken);
