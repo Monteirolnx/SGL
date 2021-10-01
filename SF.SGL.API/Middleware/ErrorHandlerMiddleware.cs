@@ -31,7 +31,7 @@ namespace SF.SGL.API.Middleware
 
                 response.StatusCode = error switch
                 {
-                    SistemasException => (int)HttpStatusCode.BadRequest,// custom application error
+                    FuncionalidadeSistemasException => (int)HttpStatusCode.BadRequest,// custom application error
                     KeyNotFoundException => (int)HttpStatusCode.NotFound,// not found error
                     _ => (int)HttpStatusCode.InternalServerError,// unhandled error
                 };

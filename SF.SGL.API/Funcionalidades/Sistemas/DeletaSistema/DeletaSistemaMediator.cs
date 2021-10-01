@@ -5,7 +5,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SF.SGL.Dominio.Entidades;
+using SF.SGL.Dominio.Entidades.Sistema;
 using SF.SGL.Infra.Data.Contexto;
 
 namespace SF.SGL.API.Funcionalidades.Sistemas.DeletaSistema
@@ -34,7 +34,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas.DeletaSistema
         {
             public MappingProfile()
             {
-                CreateMap<SistemaEntidade, Command>();
+                CreateMap<EntidadeSistema, Command>();
             }
         }
 
@@ -54,7 +54,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas.DeletaSistema
                 Command sistema = await _sglContexto.Sistema.Where(s => s.Id == query.Id)
                        .ProjectTo<Command>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
 
-                SistemasException.Quando(sistema is null, $"Não existe sistema com o código {query.Id}.");
+                FuncionalidadeSistemasException.Quando(sistema is null, $"Não existe sistema com o código {query.Id}.");
 
                 return sistema;
             }

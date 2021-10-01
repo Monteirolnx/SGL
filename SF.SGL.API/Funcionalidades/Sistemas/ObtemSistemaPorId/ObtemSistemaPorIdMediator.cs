@@ -5,7 +5,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SF.SGL.Dominio.Entidades;
+using SF.SGL.Dominio.Entidades.Sistema;
 using SF.SGL.Infra.Data.Contexto;
 
 namespace SF.SGL.API.Funcionalidades.Sistemas.ObtemSistemaPorId
@@ -34,11 +34,9 @@ namespace SF.SGL.API.Funcionalidades.Sistemas.ObtemSistemaPorId
         {
             public MappingProfile()
             {
-                CreateMap<SistemaEntidade, Model>();
+                CreateMap<EntidadeSistema, Model>();
             }
         }
-
-        #region Query
 
         public class ObtemSistemaPorIdHandler : IRequestHandler<Query, Model>
         {
@@ -55,12 +53,11 @@ namespace SF.SGL.API.Funcionalidades.Sistemas.ObtemSistemaPorId
                 Model sistema = await _sglContexto.Sistema.Where(s => s.Id == request.Id)
                     .ProjectTo<Model>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
 
-                SistemasException.Quando(sistema is null, $"Não existe sistema com o código {sistema.Id}.");
+                FuncionalidadeSistemasException.Quando(sistema is null, $"Não existe sistema com o código {sistema.Id}.");
 
                 return sistema;
             }
         }
 
-        #endregion
     }
 }

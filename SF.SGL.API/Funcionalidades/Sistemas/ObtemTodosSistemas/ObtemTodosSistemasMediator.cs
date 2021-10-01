@@ -6,7 +6,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SF.SGL.Dominio.Entidades;
+using SF.SGL.Dominio.Entidades.Sistema;
 using SF.SGL.Infra.Data.Contexto;
 
 namespace SF.SGL.API.Funcionalidades.Sistemas.ObtemTodosSistemas
@@ -40,7 +40,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas.ObtemTodosSistemas
         {
             public MappingProfile()
             {
-                CreateMap<SistemaEntidade, Model>();
+                CreateMap<EntidadeSistema, Model>();
             }
         }
 
@@ -61,7 +61,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas.ObtemTodosSistemas
                     .ProjectTo<Model>(_configurationProvider)
                     .ToListAsync(cancellationToken);
 
-                SistemasException.Quando(!resultado.Any(), "Não existe resultado para a pesquisa.");
+                FuncionalidadeSistemasException.Quando(!resultado.Any(), "Não existe resultado para a pesquisa.");
 
                 Result model = new()
                 {

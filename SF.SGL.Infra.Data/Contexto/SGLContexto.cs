@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using SF.SGL.Dominio.Entidades;
+using SF.SGL.Dominio.Entidades.Sistema;
 
 namespace SF.SGL.Infra.Data.Contexto
 {
@@ -10,7 +10,7 @@ namespace SF.SGL.Infra.Data.Contexto
     {
         private IDbContextTransaction _currentTransaction;
 
-        public DbSet<SistemaEntidade> Sistema { get; set; }
+        public DbSet<EntidadeSistema> Sistema { get; set; }
 
         public SGLContexto(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {

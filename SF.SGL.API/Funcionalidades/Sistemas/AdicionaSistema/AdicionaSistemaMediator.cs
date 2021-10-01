@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
-using SF.SGL.Dominio.Entidades;
+using SF.SGL.Dominio.Entidades.Sistema;
 using SF.SGL.Infra.Data.Contexto;
 
 namespace SF.SGL.API.Funcionalidades.Sistemas.AdicionaSistema
@@ -30,7 +30,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas.AdicionaSistema
         {
             public MappingProfile()
             {
-                CreateMap<SistemaEntidade, Command>();
+                CreateMap<EntidadeSistema, Command>();
             }
         }
 
@@ -45,7 +45,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas.AdicionaSistema
 
             public async Task<int> Handle(Command command, CancellationToken cancellationToken)
             {
-                SistemaEntidade sistemaEntidade = new()
+                EntidadeSistema sistemaEntidade = new()
                 {
                     Nome = command.Nome,
                     UrlServicoConsultaLog = command.UrlServicoConsultaLog,

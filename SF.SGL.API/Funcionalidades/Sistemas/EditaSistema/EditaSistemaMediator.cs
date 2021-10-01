@@ -5,7 +5,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SF.SGL.Dominio.Entidades;
+using SF.SGL.Dominio.Entidades.Sistema;
 using SF.SGL.Infra.Data.Contexto;
 
 namespace SF.SGL.API.Funcionalidades.Sistemas.EditaSistema
@@ -36,7 +36,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas.EditaSistema
         {
             public MappingProfile()
             {
-                CreateMap<SistemaEntidade, Command>();
+                CreateMap<EntidadeSistema, Command>();
             }
         }
 
@@ -56,7 +56,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas.EditaSistema
                 Command sistema = await _sglContexto.Sistema.Where(s => s.Id == request.Id)
                     .ProjectTo<Command>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
 
-                SistemasException.Quando(sistema is null, $"Não existe sistema com o código {request.Id}.");
+                FuncionalidadeSistemasException.Quando(sistema is null, $"Não existe sistema com o código {request.Id}.");
 
                 return sistema;
             }
@@ -72,7 +72,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas.EditaSistema
             }
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                SistemaEntidade sistema = await _sglContexto.Sistema.FindAsync(new object[] { request.Id }, cancellationToken: cancellationToken);
+                EntidadeSistema sistema = await _sglContexto.Sistema.FindAsync(new object[] { request.Id }, cancellationToken: cancellationToken);
 
                 sistema.Nome = request.Nome;
                 sistema.UrlServicoConsultaLog = request.UsuarioLogin;

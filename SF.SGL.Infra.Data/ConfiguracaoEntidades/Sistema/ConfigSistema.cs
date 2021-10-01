@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SF.SGL.Dominio.Entidades;
+using SF.SGL.Dominio.Entidades.Sistema;
 
 namespace SF.SGL.Infra.Data.ConfiguracaoEntidades.Sistema
 {
-    public class EntidadeSistemaConfig : IEntityTypeConfiguration<SistemaEntidade>
+    public class ConfigSistema : IEntityTypeConfiguration<EntidadeSistema>
     {
-        public void Configure(EntityTypeBuilder<SistemaEntidade> builder)
+        public void Configure(EntityTypeBuilder<EntidadeSistema> builder)
         {
             builder.ToTable("sistema");
 
