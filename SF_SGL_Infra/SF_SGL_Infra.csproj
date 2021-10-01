@@ -9,4 +9,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SF_SGL_Dominio\SF_SGL_Dominio.csproj" />
+  </ItemGroup>
+
 </Project>

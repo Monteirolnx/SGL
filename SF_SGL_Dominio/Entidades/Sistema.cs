@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace SF_SGL_Dominio.Entidades
 {
-    public sealed class Sistema
+    public class SistemaEntidade
     {
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
-        public string Nome { get; private set; }
+        public string Nome { get; set; }
 
-        public string UrlServicoConsultaLog { get; private set; }
+        public string UrlServicoConsultaLog { get; set; }
 
-        public string UsuarioLogin { get; private set; }
+        public string UsuarioLogin { get; set; }
 
-        public string UsuarioSenha { get; private set; }
+        public string UsuarioSenha { get; set; }
     }
 }
