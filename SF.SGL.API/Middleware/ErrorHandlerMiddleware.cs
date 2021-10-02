@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using SF.SGL.API.Funcionalidades.Excecoes;
 using SF.SGL.API.Funcionalidades.Sistemas;
 
 namespace SF.SGL.API.Middleware

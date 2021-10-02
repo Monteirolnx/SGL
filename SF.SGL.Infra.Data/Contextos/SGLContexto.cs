@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using SF.SGL.Dominio.Entidades.Sistema;
+using SF.SGL.Dominio.Entidades;
 
-namespace SF.SGL.Infra.Data.Contexto
+namespace SF.SGL.Infra.Data.Contextos
 {
     public class SGLContexto : DbContext
     {

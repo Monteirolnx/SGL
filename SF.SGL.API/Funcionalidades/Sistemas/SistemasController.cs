@@ -2,11 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SF.SGL.API.Filtros;
-using SF.SGL.API.Funcionalidades.Sistemas.AdicionaSistema;
-using SF.SGL.API.Funcionalidades.Sistemas.DeletaSistema;
-using SF.SGL.API.Funcionalidades.Sistemas.EditaSistema;
-using SF.SGL.API.Funcionalidades.Sistemas.ObtemSistemaPorId;
-using SF.SGL.API.Funcionalidades.Sistemas.ObtemTodosSistemas;
 
 namespace SF.SGL.API.Funcionalidades.Sistemas
 {
@@ -25,7 +20,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
         [HttpPost]
         [Route("AdicionaSistema")]
         [ModelValidation]
-        public async Task<IActionResult> AdicionaSistema(AdicionaSistemaMediator.Command command)
+        public async Task<IActionResult> AdicionaSistema(AdicionaSistema.Command command)
         {
             int sistemaId = await _mediator.Send(command);
             return RedirectToAction(nameof(ObtemSistemaPorId), new { id = sistemaId });
@@ -35,7 +30,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
         [Route("DeletaSistema/{id}")]
         public async Task<IActionResult> DeletaSistema(int id)
         {
-            DeletaSistemaMediator.Command command = await _mediator.Send(new DeletaSistemaMediator.Query { Id = id });
+            DeletaSistema.Command command = await _mediator.Send(new DeletaSistema.Query { Id = id });
             await _mediator.Send(command);
 
             return Ok();
@@ -44,12 +39,12 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
         [HttpPut]
         [Route("EditaSistema/{id}")]
         [ModelValidation]
-        public async Task<IActionResult> EditaSistema(int id, EditaSistemaMediator.Command command)
+        public async Task<IActionResult> EditaSistema(int id, EditaSistema.Command command)
         {
             if (id != command.Id)
                 return BadRequest();
 
-            await _mediator.Send(new EditaSistemaMediator.Query() { Id = id });
+            await _mediator.Send(new EditaSistema.Query() { Id = id });
             await _mediator.Send(command);
 
             return Ok();
@@ -59,15 +54,26 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
         [Route("ObtemTodosSistemas")]
         public async Task<IActionResult> ObtemTodosSistemas()
         {
-            ObtemTodosSistemasMediator.Result resultado = await _mediator.Send(new ObtemTodosSistemasMediator.Query());
+            ObtemTodosSistemas.Result resultado = await _mediator.Send(new ObtemTodosSistemas.Query());
             return Ok(resultado.Resultados);
+        }
+
+        [HttpGet]
+        [Route("ObtemTodosSistemasPaginado")]
+        public async Task<IActionResult> ObtemTodosSistemasPaginado(string sortOrder,
+            string currentFilter, string palavraChave, int? numeroPagina, int tamanhoPagina)
+        {
+            ObtemTodosSistemasPaginado.Result resultado = 
+                await _mediator.Send(new ObtemTodosSistemasPaginado.Query 
+                { CurrentFilter = currentFilter, NumeroPagina = numeroPagina, PalavraChave = palavraChave, SortOrder = sortOrder, TamanhoPagina = tamanhoPagina });
+            return Ok(resultado);
         }
 
         [HttpGet]
         [Route("ObtemSistemaPorId/{id}")]
         public async Task<IActionResult> ObtemSistemaPorId(int id)
         {
-            ObtemSistemaPorIdMediator.Model resultado = await _mediator.Send(new ObtemSistemaPorIdMediator.Query() { Id = id });
+            ObtemSistemaPorId.Model resultado = await _mediator.Send(new ObtemSistemaPorId.Query() { Id = id });
             return Ok(resultado);
         }
     }

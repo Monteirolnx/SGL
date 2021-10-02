@@ -3,12 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
-using SF.SGL.Dominio.Entidades.Sistema;
-using SF.SGL.Infra.Data.Contexto;
+using SF.SGL.Dominio.Entidades;
+using SF.SGL.Infra.Data.Contextos;
 
-namespace SF.SGL.API.Funcionalidades.Sistemas.AdicionaSistema
+namespace SF.SGL.API.Funcionalidades.Sistemas
 {
-    public class AdicionaSistemaMediator
+    public class AdicionaSistema
     {
 
         public class Command : IRequest<int>
@@ -45,18 +45,13 @@ namespace SF.SGL.API.Funcionalidades.Sistemas.AdicionaSistema
 
             public async Task<int> Handle(Command command, CancellationToken cancellationToken)
             {
-                EntidadeSistema sistemaEntidade = new()
-                {
-                    Nome = command.Nome,
-                    UrlServicoConsultaLog = command.UrlServicoConsultaLog,
-                    UsuarioLogin = command.UsuarioLogin,
-                    UsuarioSenha = command.UsuarioSenha
-                };
-                await _sglContexto.AddAsync(sistemaEntidade, cancellationToken);
+                EntidadeSistema entidadeSistema = new(command.Nome, command.UrlServicoConsultaLog, command.UsuarioLogin, command.UsuarioSenha);
+              
+                await _sglContexto.AddAsync(entidadeSistema, cancellationToken);
 
                 await _sglContexto.SaveChangesAsync(cancellationToken);
 
-                return sistemaEntidade.Id;
+                return entidadeSistema.Id;
             }
         }
     }

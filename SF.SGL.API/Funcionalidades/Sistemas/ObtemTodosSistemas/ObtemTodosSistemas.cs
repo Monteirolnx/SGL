@@ -6,12 +6,13 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SF.SGL.Dominio.Entidades.Sistema;
-using SF.SGL.Infra.Data.Contexto;
+using SF.SGL.API.Funcionalidades.Excecoes;
+using SF.SGL.Dominio.Entidades;
+using SF.SGL.Infra.Data.Contextos;
 
-namespace SF.SGL.API.Funcionalidades.Sistemas.ObtemTodosSistemas
+namespace SF.SGL.API.Funcionalidades.Sistemas
 {
-    public class ObtemTodosSistemasMediator
+    public class ObtemTodosSistemas
     {
         public record Query : IRequest<Result>
         {

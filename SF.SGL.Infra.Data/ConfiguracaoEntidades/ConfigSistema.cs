@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SF.SGL.Dominio.Entidades.Sistema;
+using SF.SGL.Dominio.Entidades;
 
-namespace SF.SGL.Infra.Data.ConfiguracaoEntidades.Sistema
+namespace SF.SGL.Infra.Data.ConfiguracaoEntidades
 {
     public class ConfigSistema : IEntityTypeConfiguration<EntidadeSistema>
     {

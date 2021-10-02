@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SF.SGL.API.Middleware;
-using SF.SGL.Infra.Data.Contexto;
+using SF.SGL.Infra.Data.Contextos;
 
 namespace SF.SGL.API
 {
@@ -37,6 +37,7 @@ namespace SF.SGL.API
 
             services.AddDbContext<SGLContexto>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DetaultConnection"), b => b.MigrationsAssembly(typeof(SGLContexto).Assembly.FullName)));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -5,12 +5,13 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SF.SGL.Dominio.Entidades.Sistema;
-using SF.SGL.Infra.Data.Contexto;
+using SF.SGL.API.Funcionalidades.Excecoes;
+using SF.SGL.Dominio.Entidades;
+using SF.SGL.Infra.Data.Contextos;
 
-namespace SF.SGL.API.Funcionalidades.Sistemas.DeletaSistema
+namespace SF.SGL.API.Funcionalidades.Sistemas
 {
-    public class DeletaSistemaMediator
+    public class DeletaSistema
     {
         public record Query : IRequest<Command>
         {
