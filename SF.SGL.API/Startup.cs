@@ -36,7 +36,8 @@ namespace SF.SGL.API
             services.AddAutoMapper(typeof(Startup).Assembly);
 
             services.AddDbContext<SGLContexto>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DetaultConnection"), b => b.MigrationsAssembly(typeof(SGLContexto).Assembly.FullName)));
+                options.UseSqlServer(Configuration.GetConnectionString("DetaultConnection"), 
+                b => b.MigrationsAssembly(typeof(SGLContexto).Assembly.FullName)));
 
         }
 

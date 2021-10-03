@@ -38,9 +38,9 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
 
             public string SearchString { get; init; }
 
-            public int PageIndex { get; internal set; }
+            public int NumeroPagina { get; internal set; }
 
-            public int TotalPages { get; internal set; }
+            public int TotalPaginas { get; internal set; }
 
             public bool ExistePaginaAnterior { get; set; }
 
@@ -119,8 +119,8 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
                     DateSortParm = query.SortOrder == "Date" ? "date_desc" : "Date",
                     CurrentFilter = palavraChave,
                     SearchString = palavraChave,
-                    PageIndex = resultado.NumeroPagina,
-                    TotalPages = resultado.TotalPaginas,
+                    NumeroPagina = resultado.NumeroPagina,
+                    TotalPaginas = resultado.TotalPaginas,
                     ExistePaginaAnterior = resultado.ExistePaginaAnterior,
                     ExisteProximaPagina = resultado.ExisteProximaPagina,
                     Resultados = resultado,

@@ -8,14 +8,10 @@
 @inject IConfiguration Configuration
 @inject HttpClient Http
 
-    <div class="row">
-        <h2>Sistemas</h2>
-        <a class="btn btn-success float-right" href='/sistemas/incluir'><i class="oi oi-plus"></i></a>
-    </div>
-
-<p>
-    <a href="/sistemas/adiciona">Adicionar Sistema</a>
-</p>
+<h2>Sistemas</h2>
+<div class="row">
+    <a class="btn btn-success float-right" href='/sistemas/incluir'><i class="oi oi-plus"></i>Adicionar Sistema</a>
+</div>
 
 @if (resultado != null)
 {
@@ -46,11 +42,11 @@
         </tbody>
     </table>
 
-    var anteriorDisabilitado = !resultado.ExistePaginaAnterior ? "disabled" : "";
-    var proximoDisabilitado = !resultado.ExisteProximaPagina ? "disabled" : "";
+    var anteriorDesabilitado = !resultado.ExistePaginaAnterior;
+    var proximoDesabilitado = !resultado.ExisteProximaPagina;
 
-    <button class="btn btn-primary @anteriorDisabilitado" @onclick="PaginaAnterior">Anterior</button>
-    <button class="btn btn-primary @proximoDisabilitado" @onclick="ProximaPagina">Próximo</button>
+    <button class="btn btn-primary" disabled="@anteriorDesabilitado" @onclick="PaginaAnterior">Anterior</button>
+    <button class="btn btn-primary" disabled="@proximoDesabilitado" @onclick="ProximaPagina">Próximo</button>
 }
 else if (retorno?.Message != null)
 {
@@ -95,50 +91,73 @@ else if (retorno?.Message != null)
 
     protected async Task PaginaAnterior()
     {
+        try
+        {
+            resultado.NumeroPagina = resultado.NumeroPagina - 1;
+            UriBuilder uriBuilder = new UriBuilder(string.Concat(Configuration["EnderecoBaseSGLAPI"], ServiceEndpoint));
+            uriBuilder.Query = $"sortOrder=&currentFilter=&palavraChave=&numeroPagina={resultado.NumeroPagina}&tamanhoPagina=1";
+
+            HttpResponseMessage chamadaAPI = await Http.GetAsync(uriBuilder.Uri);
+
+            if (chamadaAPI.IsSuccessStatusCode)
+            {
+                resultado = await chamadaAPI.Content.ReadFromJsonAsync<Resultado>();
+            }
+            else
+            {
+                retorno = await chamadaAPI.Content.ReadFromJsonAsync<Retorno>();
+            }
+
+        }
+        catch (Exception exception)
+        {
+            exceptionMessage = exception.Message;
+        }
 
     }
 
     protected async Task ProximaPagina()
     {
-        //try
-        //{
-        //    resultado.PageIndex
-        //    UriBuilder uriBuilder = new UriBuilder(string.Concat(Configuration["EnderecoBaseSGLAPI"], ServiceEndpoint));
-        //    uriBuilder.Query = "sortOrder=&currentFilter=&palavraChave=&numeroPagina=&tamanhoPagina=1";
+        try
+        {
 
-        //    HttpResponseMessage chamadaAPI = await Http.GetAsync(uriBuilder.Uri);
+            resultado.NumeroPagina = resultado.NumeroPagina + 1;
+            UriBuilder uriBuilder = new UriBuilder(string.Concat(Configuration["EnderecoBaseSGLAPI"], ServiceEndpoint));
+            uriBuilder.Query = $"sortOrder=&currentFilter=&palavraChave=&numeroPagina={resultado.NumeroPagina}&tamanhoPagina=1";
 
-        //    if (chamadaAPI.IsSuccessStatusCode)
-        //    {
-        //        resultado = await chamadaAPI.Content.ReadFromJsonAsync<Resultado>();
-        //    }
-        //    else
-        //    {
-        //        retorno = await chamadaAPI.Content.ReadFromJsonAsync<Retorno>();
-        //    }
+            HttpResponseMessage chamadaAPI = await Http.GetAsync(uriBuilder.Uri);
 
-        //}
-        //catch (Exception exception)
-        //{
-        //    exceptionMessage = exception.Message;
-        //}
+            if (chamadaAPI.IsSuccessStatusCode)
+            {
+                resultado = await chamadaAPI.Content.ReadFromJsonAsync<Resultado>();
+            }
+            else
+            {
+                retorno = await chamadaAPI.Content.ReadFromJsonAsync<Retorno>();
+            }
+
+        }
+        catch (Exception exception)
+        {
+            exceptionMessage = exception.Message;
+        }
     }
 
     internal class Resultado
     {
-        public string CurrentSort { get; init; }
+        public string CurrentSort { get; set; }
 
-        public string NameSortParm { get; init; }
+        public string NameSortParm { get; set; }
 
-        public string DateSortParm { get; init; }
+        public string DateSortParm { get; set; }
 
-        public string CurrentFilter { get; init; }
+        public string CurrentFilter { get; set; }
 
-        public string SearchString { get; init; }
+        public string SearchString { get; set; }
 
-        public int PageIndex { get; internal set; }
+        public int NumeroPagina { get;  set; }
 
-        public int TotalPages { get; internal set; }
+        public int TotalPaginas { get;  set; }
 
         public bool ExistePaginaAnterior { get; set; }
 
