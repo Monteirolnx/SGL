@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -15,7 +13,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
 {
     public class ObtemTodosSistemasPaginado
     {
-        public record Query : IRequest<Result>
+        public record Query : IRequest<Resultado>
         {
             public string SortOrder { get; init; }
 
@@ -28,7 +26,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
             public int TamanhoPagina { get; init; }
         }
 
-        public record Result
+        public record Resultado
         {
             public string CurrentSort { get; init; }
 
@@ -38,15 +36,19 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
 
             public string CurrentFilter { get; init; }
 
-            public string SearchString { get; init; }   
-            
+            public string SearchString { get; init; }
+
             public int PageIndex { get; internal set; }
 
             public int TotalPages { get; internal set; }
 
-            public ListaPaginada<Model> Resultados { get; init; }
+            public bool ExistePaginaAnterior { get; set; }
+
+            public bool ExisteProximaPagina { get; set; }
+
+            public ListaPaginada<Modelo> Resultados { get; init; }
         }
-        public record Model
+        public record Modelo
         {
             public int Id { get; init; }
 
@@ -63,11 +65,11 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
         {
             public MappingProfile()
             {
-                CreateMap<EntidadeSistema, Model>();
+                CreateMap<EntidadeSistema, Modelo>();
             }
         }
 
-        public class QueryHandler : IRequestHandler<Query, Result>
+        public class QueryHandler : IRequestHandler<Query, Resultado>
         {
             private readonly SGLContexto _sglContexto;
             private readonly IConfigurationProvider _configurationProvider;
@@ -78,11 +80,11 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
                 _configurationProvider = configurationProvider;
             }
 
-            public async Task<Result> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Resultado> Handle(Query query, CancellationToken cancellationToken)
             {
-                FuncionalidadeSistemasException.Quando(request.TamanhoPagina < 1, "Tamanho da página deve ser maior que 0.");
+                FuncionalidadeSistemasException.Quando(query.TamanhoPagina < 1, "Tamanho da página deve ser maior que 0.");
 
-                string palavraChave = request.PalavraChave ?? request.CurrentFilter;
+                string palavraChave = query.PalavraChave ?? query.CurrentFilter;
                 IQueryable<EntidadeSistema> sistemas = _sglContexto.Sistema;
 
                 if (!string.IsNullOrEmpty(palavraChave))
@@ -91,7 +93,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
                     //|| s.OutraPropriedade.Contains(searchString)); --exemplo de uso
                 }
 
-                sistemas = request.SortOrder switch
+                sistemas = query.SortOrder switch
                 {
                     "name_desc" => sistemas.OrderByDescending(s => s.Nome),
                     //"date" => sistemas.OrderBy(s => s.DataCriacao), --exemplo de uso
@@ -99,26 +101,28 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
                     _ => sistemas.OrderBy(s => s.Nome)
                 };
 
-                int pageSize = request.TamanhoPagina;
-                int pageNumber = (request.PalavraChave == null ? request.NumeroPagina : 1) ?? 1;
+                int pageSize = query.TamanhoPagina;
+                int pageNumber = (query.PalavraChave == null ? query.NumeroPagina : 1) ?? 1;
 
-                ListaPaginada<Model> resultado = await sistemas
-                   .ProjectTo<Model>(_configurationProvider)
+                ListaPaginada<Modelo> resultado = await sistemas
+                   .ProjectTo<Modelo>(_configurationProvider)
                    .PaginatedListAsync(pageNumber, pageSize);
 
                 FuncionalidadeSistemasException.Quando(!resultado.Any(), "Não existe resultado para a pesquisa.");
-                FuncionalidadeSistemasException.Quando(request.NumeroPagina.HasValue && 
-                    request.NumeroPagina > resultado.TotalPaginas, "Número da página invalido.");
+                FuncionalidadeSistemasException.Quando(query.NumeroPagina.HasValue &&
+                    query.NumeroPagina > resultado.TotalPaginas, "Número da página invalido.");
 
-                Result model = new()
+                Resultado model = new()
                 {
-                    CurrentSort = request.SortOrder,
-                    NameSortParm = string.IsNullOrEmpty(request.SortOrder) ? "name_desc" : "",
-                    DateSortParm = request.SortOrder == "Date" ? "date_desc" : "Date",
+                    CurrentSort = query.SortOrder,
+                    NameSortParm = string.IsNullOrEmpty(query.SortOrder) ? "name_desc" : "",
+                    DateSortParm = query.SortOrder == "Date" ? "date_desc" : "Date",
                     CurrentFilter = palavraChave,
                     SearchString = palavraChave,
                     PageIndex = resultado.NumeroPagina,
                     TotalPages = resultado.TotalPaginas,
+                    ExistePaginaAnterior = resultado.ExistePaginaAnterior,
+                    ExisteProximaPagina = resultado.ExisteProximaPagina,
                     Resultados = resultado,
                 };
 

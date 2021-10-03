@@ -37,7 +37,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
         {
             public MappingProfile()
             {
-                CreateMap<EntidadeSistema, Command>();
+                CreateMap<EntidadeSistema, Command>().ReverseMap();
             }
         }
 
@@ -54,33 +54,30 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
 
             public async Task<Command> Handle(Query request, CancellationToken cancellationToken)
             {
-                Command sistema = await _sglContexto.Sistema.Where(s => s.Id == request.Id)
+                Command command = await _sglContexto.Sistema.Where(s => s.Id == request.Id)
                     .ProjectTo<Command>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
 
-                FuncionalidadeSistemasException.Quando(sistema is null, $"Não existe sistema com o código {request.Id}.");
+                FuncionalidadeSistemasException.Quando(command is null, $"Não existe sistema com o código {request.Id}.");
 
-                return sistema;
+                return command;
             }
         }
 
         public class CommandHandler : IRequestHandler<Command>
         {
             private readonly SGLContexto _sglContexto;
+            private readonly IMapper _mapper;
 
-            public CommandHandler(SGLContexto sglContexto)
+            public CommandHandler(SGLContexto sglContexto, IMapper mapper)
             {
                 _sglContexto = sglContexto;
+                _mapper = mapper;
             }
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
             {
-                EntidadeSistema sistema = await _sglContexto.Sistema.FindAsync(new object[] { request.Id }, cancellationToken: cancellationToken);
-
-                sistema.Nome = request.Nome;
-                sistema.UrlServicoConsultaLog = request.UsuarioLogin;
-                sistema.UsuarioLogin = request.UsuarioLogin;
-                sistema.UsuarioSenha = request.UsuarioSenha;
-
-                _sglContexto.Sistema.Update(sistema);
+                EntidadeSistema entidadeSistema = _mapper.Map<EntidadeSistema>(command);
+                
+                _sglContexto.Sistema.Update(entidadeSistema);
                 await _sglContexto.SaveChangesAsync(cancellationToken);
 
                 return default;

@@ -14,17 +14,17 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
 {
     public class ObtemTodosSistemas
     {
-        public record Query : IRequest<Result>
+        public record Query : IRequest<Resultado>
         {
 
         }
 
-        public record Result
+        public record Resultado
         {
-            public IEnumerable<Model> Resultados { get; set; }
+            public IEnumerable<Modelo> Resultados { get; set; }
         }
 
-        public record Model
+        public record Modelo
         {
             public int Id { get; init; }
 
@@ -41,11 +41,11 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
         {
             public MappingProfile()
             {
-                CreateMap<EntidadeSistema, Model>();
+                CreateMap<EntidadeSistema, Modelo>();
             }
         }
 
-        public class QueryHandler : IRequestHandler<Query, Result>
+        public class QueryHandler : IRequestHandler<Query, Resultado>
         {
             private readonly SGLContexto _sglContexto;
             private readonly IConfigurationProvider _configurationProvider;
@@ -56,15 +56,15 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
                 _configurationProvider = configurationProvider;
             }
 
-            public async Task<Result> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Resultado> Handle(Query query, CancellationToken cancellationToken)
             {
-                List<Model> resultado = await _sglContexto.Sistema
-                    .ProjectTo<Model>(_configurationProvider)
+                List<Modelo> resultado = await _sglContexto.Sistema
+                    .ProjectTo<Modelo>(_configurationProvider)
                     .ToListAsync(cancellationToken);
 
                 FuncionalidadeSistemasException.Quando(!resultado.Any(), "Não existe resultado para a pesquisa.");
 
-                Result model = new()
+                Resultado model = new()
                 {
                     Resultados = resultado
                 };

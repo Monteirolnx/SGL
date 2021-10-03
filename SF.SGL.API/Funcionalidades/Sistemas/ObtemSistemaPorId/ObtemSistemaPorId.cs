@@ -13,12 +13,12 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
 {
     public class ObtemSistemaPorId
     {
-        public record Query : IRequest<Model>
+        public record Query : IRequest<Command>
         {
             public int Id { get; init; }
         }
 
-        public record Model
+        public record Command
         {
             public int Id { get; init; }
 
@@ -35,11 +35,11 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
         {
             public MappingProfile()
             {
-                CreateMap<EntidadeSistema, Model>();
+                CreateMap<EntidadeSistema, Command>();
             }
         }
 
-        public class ObtemSistemaPorIdHandler : IRequestHandler<Query, Model>
+        public class ObtemSistemaPorIdHandler : IRequestHandler<Query, Command>
         {
             private readonly SGLContexto _sglContexto;
             private readonly IConfigurationProvider _configurationProvider;
@@ -49,14 +49,14 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
                 _sglContexto = sglContexto;
                 _configurationProvider = configurationProvider;
             }
-            public async Task<Model> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Command> Handle(Query query, CancellationToken cancellationToken)
             {
-                Model sistema = await _sglContexto.Sistema.Where(s => s.Id == request.Id)
-                    .ProjectTo<Model>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
+                Command command = await _sglContexto.Sistema.Where(s => s.Id == query.Id)
+                    .ProjectTo<Command>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
 
-                FuncionalidadeSistemasException.Quando(sistema is null, $"Não existe sistema com o código {sistema.Id}.");
+                FuncionalidadeSistemasException.Quando(command is null, $"Não existe sistema com o código {query.Id}.");
 
-                return sistema;
+                return command;
             }
         }
 

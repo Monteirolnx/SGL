@@ -20,9 +20,9 @@ namespace SF.SGL.API.Util
             AddRange(items);
         }
 
-        public bool HasPreviousPage => NumeroPagina > 1;
+        public bool ExistePaginaAnterior => NumeroPagina > 1;
 
-        public bool HasNextPage => NumeroPagina < TotalPaginas;
+        public bool ExisteProximaPagina => NumeroPagina < TotalPaginas;
 
         public static async Task<ListaPaginada<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
         {

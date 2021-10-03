@@ -30,23 +30,25 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
         {
             public MappingProfile()
             {
-                CreateMap<EntidadeSistema, Command>();
+                CreateMap<EntidadeSistema, Command>().ReverseMap();
             }
         }
 
         public class CommandHandler : IRequestHandler<Command, int>
         {
             private readonly SGLContexto _sglContexto;
+            private readonly IMapper _mapper;
 
-            public CommandHandler(SGLContexto sglContexto)
+            public CommandHandler(SGLContexto sglContexto, IMapper mapper)
             {
                 _sglContexto = sglContexto;
+                _mapper = mapper;
             }
 
             public async Task<int> Handle(Command command, CancellationToken cancellationToken)
             {
-                EntidadeSistema entidadeSistema = new(command.Nome, command.UrlServicoConsultaLog, command.UsuarioLogin, command.UsuarioSenha);
-              
+                EntidadeSistema entidadeSistema = _mapper.Map<EntidadeSistema>(command); 
+
                 await _sglContexto.AddAsync(entidadeSistema, cancellationToken);
 
                 await _sglContexto.SaveChangesAsync(cancellationToken);

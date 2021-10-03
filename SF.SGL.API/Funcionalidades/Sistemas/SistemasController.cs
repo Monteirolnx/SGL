@@ -51,10 +51,18 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
         }
 
         [HttpGet]
+        [Route("ObtemSistemaPorId/{id}")]
+        public async Task<IActionResult> ObtemSistemaPorId(int id)
+        {
+            ObtemSistemaPorId.Command resultado = await _mediator.Send(new ObtemSistemaPorId.Query() { Id = id });
+            return Ok(resultado);
+        }
+
+        [HttpGet]
         [Route("ObtemTodosSistemas")]
         public async Task<IActionResult> ObtemTodosSistemas()
         {
-            ObtemTodosSistemas.Result resultado = await _mediator.Send(new ObtemTodosSistemas.Query());
+            ObtemTodosSistemas.Resultado resultado = await _mediator.Send(new ObtemTodosSistemas.Query());
             return Ok(resultado.Resultados);
         }
 
@@ -63,18 +71,11 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
         public async Task<IActionResult> ObtemTodosSistemasPaginado(string sortOrder,
             string currentFilter, string palavraChave, int? numeroPagina, int tamanhoPagina)
         {
-            ObtemTodosSistemasPaginado.Result resultado = 
+            ObtemTodosSistemasPaginado.Resultado resultado = 
                 await _mediator.Send(new ObtemTodosSistemasPaginado.Query 
                 { CurrentFilter = currentFilter, NumeroPagina = numeroPagina, PalavraChave = palavraChave, SortOrder = sortOrder, TamanhoPagina = tamanhoPagina });
             return Ok(resultado);
         }
 
-        [HttpGet]
-        [Route("ObtemSistemaPorId/{id}")]
-        public async Task<IActionResult> ObtemSistemaPorId(int id)
-        {
-            ObtemSistemaPorId.Model resultado = await _mediator.Send(new ObtemSistemaPorId.Query() { Id = id });
-            return Ok(resultado);
-        }
     }
 }

@@ -35,7 +35,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
         {
             public MappingProfile()
             {
-                CreateMap<EntidadeSistema, Command>();
+                CreateMap<EntidadeSistema, Command>().ReverseMap();
             }
         }
 
@@ -52,26 +52,31 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
 
             public async Task<Command> Handle(Query query, CancellationToken cancellationToken)
             {
-                Command sistema = await _sglContexto.Sistema.Where(s => s.Id == query.Id)
+                Command command = await _sglContexto.Sistema.Where(s => s.Id == query.Id)
                        .ProjectTo<Command>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
 
-                FuncionalidadeSistemasException.Quando(sistema is null, $"Não existe sistema com o código {query.Id}.");
+                FuncionalidadeSistemasException.Quando(command is null, $"Não existe sistema com o código {query.Id}.");
 
-                return sistema;
+                return command;
             }
         }
 
         public class CommandHandler : IRequestHandler<Command>
         {
             private readonly SGLContexto _sglContexto;
-            public CommandHandler(SGLContexto sglContexto)
+            private readonly IMapper _mapper;
+
+            public CommandHandler(SGLContexto sglContexto, IMapper mapper)
             {
                 _sglContexto = sglContexto;
+                _mapper = mapper;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
             {
-                _sglContexto.Sistema.Remove(await _sglContexto.Sistema.FindAsync(new object[] { request.Id }, cancellationToken: cancellationToken));
+                EntidadeSistema entidadeSistema = _mapper.Map<EntidadeSistema>(command);
+
+                await Task.FromResult(_sglContexto.Sistema.Remove(entidadeSistema));
 
                 await _sglContexto.SaveChangesAsync(cancellationToken);
 
