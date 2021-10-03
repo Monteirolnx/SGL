@@ -5,7 +5,10 @@
 @using System.Threading.Tasks
 @inject HttpClient Http
 
-<h2>Sistemas</h2>
+    <div class="row">
+        <h2>Sistemas</h2>
+        <a class="btn btn-success float-right" href='/sistemas/incluir'><i class="oi oi-plus"></i></a>
+    </div>
 
 @if (sistemas == null)
 {
