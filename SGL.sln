@@ -16,9 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SF.SGL.API", "SF.SGL.API\SF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SF.SGL.UI", "SF.SGL.UI\SF.SGL.UI.csproj", "{F2B27085-659C-44B1-AE39-8F06A332BBEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SF.SGL.Dominio.Testes.Unitarios", "SF.SGL.Dominio.Testes.Unitarios\SF.SGL.Dominio.Testes.Unitarios.csproj", "{74731038-F608-4080-8BD8-22E221DC2457}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SF.SGL.Dominio.Testes.Unitarios", "SF.SGL.Dominio.Testes.Unitarios\SF.SGL.Dominio.Testes.Unitarios.csproj", "{74731038-F608-4080-8BD8-22E221DC2457}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SF.SGL.Testes.Integracao", "SF.SGL.Testes.Integracao\SF.SGL.Testes.Integracao.csproj", "{723FA5F3-F5CF-48BA-803A-F98CC08CCF73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SF.SGL.Testes.Integracao", "SF.SGL.Testes.Integracao\SF.SGL.Testes.Integracao.csproj", "{723FA5F3-F5CF-48BA-803A-F98CC08CCF73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

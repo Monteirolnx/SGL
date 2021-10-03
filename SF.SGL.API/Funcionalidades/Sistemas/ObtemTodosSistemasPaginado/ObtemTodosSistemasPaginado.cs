@@ -25,7 +25,6 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
 
             public int? NumeroPagina { get; init; }
 
-            [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than {1}")]
             public int TamanhoPagina { get; init; }
         }
 
@@ -45,7 +44,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
 
             public int TotalPages { get; internal set; }
 
-            public PaginatedList<Model> Resultados { get; init; }
+            public ListaPaginada<Model> Resultados { get; init; }
         }
         public record Model
         {
@@ -103,13 +102,13 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
                 int pageSize = request.TamanhoPagina;
                 int pageNumber = (request.PalavraChave == null ? request.NumeroPagina : 1) ?? 1;
 
-                PaginatedList<Model> resultado = await sistemas
+                ListaPaginada<Model> resultado = await sistemas
                    .ProjectTo<Model>(_configurationProvider)
                    .PaginatedListAsync(pageNumber, pageSize);
 
                 FuncionalidadeSistemasException.Quando(!resultado.Any(), "Não existe resultado para a pesquisa.");
                 FuncionalidadeSistemasException.Quando(request.NumeroPagina.HasValue && 
-                    request.NumeroPagina > resultado.TotalPages, "Número da página invalido.");
+                    request.NumeroPagina > resultado.TotalPaginas, "Número da página invalido.");
 
                 Result model = new()
                 {
@@ -118,8 +117,8 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
                     DateSortParm = request.SortOrder == "Date" ? "date_desc" : "Date",
                     CurrentFilter = palavraChave,
                     SearchString = palavraChave,
-                    PageIndex = resultado.PageIndex,
-                    TotalPages = resultado.TotalPages,
+                    PageIndex = resultado.NumeroPagina,
+                    TotalPages = resultado.TotalPaginas,
                     Resultados = resultado,
                 };
 
