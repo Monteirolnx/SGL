@@ -7,14 +7,43 @@
 
 @inject IConfiguration Configuration
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 
 <h2>Sistemas</h2>
 <div class="row">
     <a class="btn btn-success float-right" href='/sistemas/incluir'><i class="oi oi-plus"></i>Adicionar Sistema</a>
 </div>
 
-@if (resultado != null)
+@if (retornoAPI == null && mensagemErro?.Message == null)
 {
+    <p>Carregando...</p>
+}
+else if (retornoAPI != null)
+{
+    <div class="row" style="padding-top:10px">
+        <div class="col-md-2">
+            <label class="control-label">Mostrar até </label>
+        </div>
+        <div class="col-md-2">
+            <select class="form-control" @onchange="QuantidadeRegPagClicked">
+                <option value="2">2</option>
+                <option value="5">5</option>
+                <option value="7">7</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="control-label">resultados por página.</label>
+        </div>
+    </div>
+
+    <div class="form-actions no-color">
+        <p>
+            <input type="text" @bind="@retornoAPI.CurrentFilter" @oninput="@((e) => { retornoAPI.CurrentFilter=(string)e.Value;})" />
+            <button class="btn btn-primary" @onclick="Pesquisar">Pesquisar</button>
+        </p>
+    </div>
+
     <table class='table'>
         <thead>
             <tr>
@@ -26,7 +55,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var resultado in resultado.Resultados)
+            @foreach (var resultado in retornoAPI.Resultados)
             {
                 <tr>
                     <td>@resultado.Nome</td>
@@ -42,105 +71,102 @@
         </tbody>
     </table>
 
-    var anteriorDesabilitado = !resultado.ExistePaginaAnterior;
-    var proximoDesabilitado = !resultado.ExisteProximaPagina;
+    var anteriorDesabilitado = !retornoAPI.ExistePaginaAnterior;
+    var proximoDesabilitado = !retornoAPI.ExisteProximaPagina;
 
     <button class="btn btn-primary" disabled="@anteriorDesabilitado" @onclick="PaginaAnterior">Anterior</button>
     <button class="btn btn-primary" disabled="@proximoDesabilitado" @onclick="ProximaPagina">Próximo</button>
 }
-else if (retorno?.Message != null)
+else
 {
-    @retorno.Message
+    @mensagemErro?.Message
+    @exceptionMessage
+    <div class="row">
+        <input type="button" class="btn" @onclick="@Voltar" value="Voltar" />
+    </div>
 }
 
-<p>
-    @exceptionMessage
-</p>
 
 @code {
     private const string ServiceEndpoint = "api/Sistemas/ObtemTodosSistemasPaginado";
-    private Resultado resultado;
-    private Retorno retorno;
+    private Resultado retornoAPI;
+    private Retorno mensagemErro;
+    public int tamanhoPagina;
 
     private string exceptionMessage;
-
+    
     protected override async Task OnInitializedAsync()
     {
-        try
+        tamanhoPagina = 2;
+        await ChamarAPI(retornoAPI?.CurrentFilter, retornoAPI?.NumeroPagina, tamanhoPagina);
+    }
+
+    protected async Task Pesquisar()
+    {
+        if (retornoAPI != null)
         {
-            UriBuilder uriBuilder = new UriBuilder(string.Concat(Configuration["EnderecoBaseSGLAPI"], ServiceEndpoint));
-            uriBuilder.Query = "sortOrder=&currentFilter=&palavraChave=&numeroPagina=&tamanhoPagina=1";
-
-            HttpResponseMessage chamadaAPI = await Http.GetAsync(uriBuilder.Uri);
-
-            if (chamadaAPI.IsSuccessStatusCode)
-            {
-                resultado = await chamadaAPI.Content.ReadFromJsonAsync<Resultado>();
-            }
-            else
-            {
-                retorno = await chamadaAPI.Content.ReadFromJsonAsync<Retorno>();
-            }
-
+            retornoAPI.NumeroPagina = 1;
         }
-        catch (Exception exception)
+        await ChamarAPI(retornoAPI?.CurrentFilter, retornoAPI?.NumeroPagina, tamanhoPagina);
+    }
+
+    protected async void QuantidadeRegPagClicked(ChangeEventArgs changeEventArgs)
+    {
+        tamanhoPagina = Convert.ToInt32(changeEventArgs.Value);
+        if (retornoAPI != null)
         {
-            exceptionMessage = exception.Message;
+            retornoAPI.NumeroPagina = 1;
         }
+
+        await ChamarAPI(retornoAPI?.CurrentFilter, retornoAPI?.NumeroPagina, tamanhoPagina);
     }
 
     protected async Task PaginaAnterior()
     {
-        try
-        {
-            resultado.NumeroPagina = resultado.NumeroPagina - 1;
-            UriBuilder uriBuilder = new UriBuilder(string.Concat(Configuration["EnderecoBaseSGLAPI"], ServiceEndpoint));
-            uriBuilder.Query = $"sortOrder=&currentFilter=&palavraChave=&numeroPagina={resultado.NumeroPagina}&tamanhoPagina=1";
-
-            HttpResponseMessage chamadaAPI = await Http.GetAsync(uriBuilder.Uri);
-
-            if (chamadaAPI.IsSuccessStatusCode)
-            {
-                resultado = await chamadaAPI.Content.ReadFromJsonAsync<Resultado>();
-            }
-            else
-            {
-                retorno = await chamadaAPI.Content.ReadFromJsonAsync<Retorno>();
-            }
-
-        }
-        catch (Exception exception)
-        {
-            exceptionMessage = exception.Message;
-        }
-
+        retornoAPI.NumeroPagina = retornoAPI.NumeroPagina - 1;
+        await ChamarAPI(retornoAPI?.CurrentFilter, retornoAPI?.NumeroPagina, tamanhoPagina);
     }
 
     protected async Task ProximaPagina()
     {
+        retornoAPI.NumeroPagina = retornoAPI.NumeroPagina + 1;
+        await ChamarAPI(retornoAPI?.CurrentFilter, retornoAPI?.NumeroPagina, tamanhoPagina);
+    }
+
+    protected async Task ChamarAPI(string filtroAtual, int? numeroPagina, int tamanhoPagina)
+    {
         try
         {
-
-            resultado.NumeroPagina = resultado.NumeroPagina + 1;
             UriBuilder uriBuilder = new UriBuilder(string.Concat(Configuration["EnderecoBaseSGLAPI"], ServiceEndpoint));
-            uriBuilder.Query = $"sortOrder=&currentFilter=&palavraChave=&numeroPagina={resultado.NumeroPagina}&tamanhoPagina=1";
+            uriBuilder.Query = $"sortOrder=&currentFilter=&palavraChave={retornoAPI?.CurrentFilter}&numeroPagina={retornoAPI?.NumeroPagina}&tamanhoPagina={tamanhoPagina}";
 
             HttpResponseMessage chamadaAPI = await Http.GetAsync(uriBuilder.Uri);
 
             if (chamadaAPI.IsSuccessStatusCode)
             {
-                resultado = await chamadaAPI.Content.ReadFromJsonAsync<Resultado>();
+                retornoAPI = await chamadaAPI.Content.ReadFromJsonAsync<Resultado>();
+                if (mensagemErro != null)
+                {
+                    mensagemErro.Message = string.Empty;
+                    exceptionMessage = string.Empty;
+                }
             }
             else
             {
-                retorno = await chamadaAPI.Content.ReadFromJsonAsync<Retorno>();
+                mensagemErro = await chamadaAPI.Content.ReadFromJsonAsync<Retorno>();
+                retornoAPI = null;
             }
-
+            StateHasChanged();
         }
         catch (Exception exception)
         {
             exceptionMessage = exception.Message;
         }
+    }
+
+    void Voltar()
+    {
+        NavigationManager.NavigateTo("sistema",true);
     }
 
     internal class Resultado
@@ -155,9 +181,9 @@ else if (retorno?.Message != null)
 
         public string SearchString { get; set; }
 
-        public int NumeroPagina { get;  set; }
+        public int? NumeroPagina { get; set; }
 
-        public int TotalPaginas { get;  set; }
+        public int TotalPaginas { get; set; }
 
         public bool ExistePaginaAnterior { get; set; }
 

@@ -68,12 +68,12 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
 
         [HttpGet]
         [Route("ObtemTodosSistemasPaginado")]
-        public async Task<IActionResult> ObtemTodosSistemasPaginado(string sortOrder,
+        public async Task<IActionResult> ObtemTodosSistemasPaginado(string ordenacao,
             string currentFilter, string palavraChave, int? numeroPagina, int tamanhoPagina)
         {
-            ObtemTodosSistemasPaginado.Resultado resultado = 
+            ObtemTodosSistemasPaginado.Resultado resultado =
                 await _mediator.Send(new ObtemTodosSistemasPaginado.Query 
-                { CurrentFilter = currentFilter, NumeroPagina = numeroPagina, PalavraChave = palavraChave, SortOrder = sortOrder, TamanhoPagina = tamanhoPagina });
+                { CurrentFilter = currentFilter, NumeroPagina = numeroPagina, PalavraChave = palavraChave, Ordenacao = ordenacao, TamanhoPagina = tamanhoPagina });
             return Ok(resultado);
         }
 

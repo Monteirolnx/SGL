@@ -15,7 +15,7 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
     {
         public record Query : IRequest<Resultado>
         {
-            public string SortOrder { get; init; }
+            public string Ordenacao { get; init; }
 
             public string CurrentFilter { get; init; }
 
@@ -93,30 +93,26 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
                     //|| s.OutraPropriedade.Contains(searchString)); --exemplo de uso
                 }
 
-                sistemas = query.SortOrder switch
+                sistemas = query.Ordenacao switch
                 {
-                    "name_desc" => sistemas.OrderByDescending(s => s.Nome),
+                    "nome_desc" => sistemas.OrderByDescending(s => s.Nome),
                     //"date" => sistemas.OrderBy(s => s.DataCriacao), --exemplo de uso
                     //"date_desc" => sistemas.OrderByDescending(s => s.DataCriacao), --exemplo de uso
                     _ => sistemas.OrderBy(s => s.Nome)
                 };
 
-                int pageSize = query.TamanhoPagina;
-                int pageNumber = (query.PalavraChave == null ? query.NumeroPagina : 1) ?? 1;
-
-                ListaPaginada<Modelo> resultado = await sistemas
+                ListaPaginada <Modelo> resultado = await sistemas
                    .ProjectTo<Modelo>(_configurationProvider)
-                   .PaginatedListAsync(pageNumber, pageSize);
+                   .PaginatedListAsync(query.NumeroPagina ?? 1, query.TamanhoPagina);
 
                 FuncionalidadeSistemasException.Quando(!resultado.Any(), "Não existe resultado para a pesquisa.");
-                FuncionalidadeSistemasException.Quando(query.NumeroPagina.HasValue &&
-                    query.NumeroPagina > resultado.TotalPaginas, "Número da página invalido.");
+                FuncionalidadeSistemasException.Quando(query.NumeroPagina.HasValue && query.NumeroPagina > resultado.TotalPaginas, "Número da página invalido.");
 
                 Resultado model = new()
                 {
-                    CurrentSort = query.SortOrder,
-                    NameSortParm = string.IsNullOrEmpty(query.SortOrder) ? "name_desc" : "",
-                    DateSortParm = query.SortOrder == "Date" ? "date_desc" : "Date",
+                    CurrentSort = query.Ordenacao,
+                    NameSortParm = string.IsNullOrEmpty(query.Ordenacao) ? "nome_desc" : "",
+                    DateSortParm = query.Ordenacao == "Date" ? "date_desc" : "Date",
                     CurrentFilter = palavraChave,
                     SearchString = palavraChave,
                     NumeroPagina = resultado.NumeroPagina,
