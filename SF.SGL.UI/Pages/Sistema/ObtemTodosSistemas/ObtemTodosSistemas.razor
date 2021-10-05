@@ -1,0 +1,44 @@
+﻿
+@layout MainLayout
+
+<RadzenContent Container="main">
+    <ChildContent>
+        <RadzenHeading Size="H2" Text="Sistema">
+        </RadzenHeading>
+        <div class="row">
+            <div class="col-md-12">
+                <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Adicionar Sistema" Click="@Adicionar">
+                </RadzenButton>
+                @if (Sistemas != null)
+                {
+                    <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" EmptyText="A pesquisa não retornou resultados."
+                                    FilterMode="FilterMode.Simple" PageSize="100" AllowPaging="true" AllowSorting="true" Data="@Sistemas" TItem="Sistema" ColumnWidth="300px"
+                                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                    LogicalFilterOperator="LogicalFilterOperator.Or">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Sistema" Property="Id" Filterable="true" Title="ID" Frozen="false" Width="70px" TextAlign="TextAlign.Center" />
+                            <RadzenDataGridColumn TItem="Sistema" Property="Nome" Title="Nome" />
+                            <RadzenDataGridColumn TItem="Sistema" Property="UrlServicoConsultaLog" Title="Url Servico ConsultaLog" />
+                            <RadzenDataGridColumn TItem="Sistema" Property="UsuarioLogin" Title="Usuario Login" />
+
+                            <RadzenDataGridColumn TItem="Sistema" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                                <Template Context="edicao">
+                                    <RadzenButton ButtonStyle="ButtonStyle.Info" Text="Editar" Icon="edit" Size="ButtonSize.Small" Click="@(() => GridEditButtonClick(edicao))" @onclick:stopPropagation="true">
+                                    </RadzenButton>
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Sistema" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                                <Template Context="teste">
+                                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="Editar" Icon="close" Size="ButtonSize.Small" Click="@((args) => GridDeleteButtonClick(args, teste))" @onclick:stopPropagation="true">
+                                    </RadzenButton>
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
+                }
+            </div>
+        </div>
+    </ChildContent>
+</RadzenContent>
+
+

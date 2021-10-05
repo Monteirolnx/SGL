@@ -1,17 +1,41 @@
-﻿@inherits LayoutComponentBase
+﻿
+@inherits SF.SGL.UI.Shared.MainLayoutComponent
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+@using Radzen.Blazor
 
-    <div class="main">
-        <div class="top-row px-4">
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+<RadzenDialog />
+<RadzenNotification />
+<RadzenTooltip />
+<RadzenContextMenu />
+
+<RadzenHeader>
+    <ChildContent>
+        <div class="row justify-content-start align-items-center">
+            <div class="col-6 d-flex align-items-center">
+                <RadzenSidebarToggle Click="@SidebarToggle0Click">
+                </RadzenSidebarToggle>
+                <RadzenLabel Text="SGL - Sistema de Gestão de Logs">
+                </RadzenLabel>
+            </div>
+            <div class="col-6 text-right">
+            </div>
         </div>
-
-        <div class="content px-4">
+    </ChildContent>
+</RadzenHeader>
+<RadzenBody @ref="body0">
+    <ChildContent>
+        <RadzenContentContainer Name="main">
             @Body
-        </div>
-    </div>
-</div>
+        </RadzenContentContainer>
+    </ChildContent>
+</RadzenBody>
+<RadzenSidebar @ref="sidebar0">
+    <ChildContent>
+        <RadzenPanelMenu style="height: 100%">
+            <ChildContent>
+                <RadzenPanelMenuItem Text="Sistema" Path="sistema">
+                </RadzenPanelMenuItem>
+            </ChildContent>
+        </RadzenPanelMenu>
+    </ChildContent>
+</RadzenSidebar>
