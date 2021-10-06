@@ -1,5 +1,4 @@
-﻿
-@inherits SF.SGL.UI.Shared.MainLayoutComponent
+﻿@inherits SF.SGL.UI.Shared.MainLayoutComponent
 
 @using Radzen.Blazor
 
@@ -33,7 +32,11 @@
     <ChildContent>
         <RadzenPanelMenu style="height: 100%">
             <ChildContent>
-                <RadzenPanelMenuItem Text="Sistema" Path="sistema">
+                <RadzenPanelMenuItem Text="Home" Path="/"></RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Cadastros">
+                    <ChildContent>
+                        <RadzenPanelMenuItem Text="Sistemas" Path="cadastros/sistemas"></RadzenPanelMenuItem>
+                    </ChildContent>
                 </RadzenPanelMenuItem>
             </ChildContent>
         </RadzenPanelMenu>

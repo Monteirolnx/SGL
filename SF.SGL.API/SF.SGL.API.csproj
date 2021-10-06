@@ -26,4 +26,11 @@
     <ProjectReference Include="..\SF.SGL.Infra.Data\SF.SGL.Infra.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Funcionalidades\Consultas\LogOperacao\" />
+    <Folder Include="Funcionalidades\Consultas\LogAuditoria\" />
+    <Folder Include="Funcionalidades\Parametizacoes\ExpurgoLogs\" />
+    <Folder Include="Funcionalidades\Parametizacoes\PermissoesAcessoLogs\" />
+  </ItemGroup>
+
 </Project>

@@ -1,18 +1,25 @@
-﻿@page "/sistemas/adiciona"
-
+﻿@page "/cadastros/sistemas/edita/{id:int}"
 @layout MainLayout
 
 @using Radzen
 @using Radzen.Blazor
 
+
+@if (Sistema == null)
+{
+<RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+<h4>Carregando...</h4>
+}
+else
+{
+<RadzenProgressBar Value="100" ShowValue="false" Max="100" Style="margin-bottom: 20px" />
 <RadzenContent Container="main">
     <ChildContent>
-        <RadzenHeading Size="H2" Text="Adicionar Sistema"></RadzenHeading>
+        <RadzenHeading Size="H2" Text="Editar Sistema"></RadzenHeading>
         <div class="row">
             <div class="col-md-9">
                 <RadzenTemplateForm Data="@Sistema" Visible="@(Sistema != null)" TItem="Sistema" Submit="@FormSubmit">
                     <ChildContent>
-
                         <RadzenFieldset Text="Parametrizar sistema">
                             <div style="margin-bottom: 1rem" class="row">
                                 <div class="col-md-3">
@@ -66,14 +73,15 @@
                             <br />
                             <div class="row">
                                 <div class="col offset-sm-5">
-                                    <RadzenButton ButtonStyle="ButtonStyle.Light" style="margin-left: 1rem" Text="Cancelar" Click="@ButtonCancelClick"></RadzenButton>
+                                    <RadzenButton ButtonStyle="ButtonStyle.Warning" style="margin-left: 1rem" Text="Cancelar" Click="@ButtonCancelClick"></RadzenButton>
                                     <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Salvar" ButtonStyle="ButtonStyle.Primary"></RadzenButton>
                                 </div>
                             </div>
-                        </RadzenFieldset>                   
+                        </RadzenFieldset>
                     </ChildContent>
                 </RadzenTemplateForm>
             </div>
         </div>
     </ChildContent>
 </RadzenContent>
+}

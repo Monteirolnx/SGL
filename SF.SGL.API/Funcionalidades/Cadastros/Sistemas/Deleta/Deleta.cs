@@ -9,34 +9,21 @@ using SF.SGL.API.Funcionalidades.Excecoes;
 using SF.SGL.Dominio.Entidades;
 using SF.SGL.Infra.Data.Contextos;
 
-namespace SF.SGL.API.Funcionalidades.Sistemas
+namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.DeletaSistema
 {
-    public class DeletaSistema
+    public class Deleta
     {
-        public record Query : IRequest<Command>
-        {
-            public int Id { get; init; }
-        }
-
-        public record Command : IRequest
-        {
-            public int Id { get; set; }
-
-            public string Nome { get; set; }
-
-            public string UrlServicoConsultaLog { get; set; }
-
-            public string UsuarioLogin { get; set; }
-
-            public string UsuarioSenha { get; set; }
-        }
-
         public class MappingProfile : Profile
         {
             public MappingProfile()
             {
                 CreateMap<EntidadeSistema, Command>().ReverseMap();
             }
+        }
+
+        public record Query : IRequest<Command>
+        {
+            public int Id { get; init; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Command>
@@ -59,6 +46,19 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
 
                 return command;
             }
+        }
+
+        public record Command : IRequest
+        {
+            public int Id { get; set; }
+
+            public string Nome { get; set; }
+
+            public string UrlServicoConsultaLog { get; set; }
+
+            public string UsuarioLogin { get; set; }
+
+            public string UsuarioSenha { get; set; }
         }
 
         public class CommandHandler : IRequestHandler<Command>

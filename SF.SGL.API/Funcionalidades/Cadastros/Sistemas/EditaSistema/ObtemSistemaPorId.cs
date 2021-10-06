@@ -9,13 +9,21 @@ using SF.SGL.API.Funcionalidades.Excecoes;
 using SF.SGL.Dominio.Entidades;
 using SF.SGL.Infra.Data.Contextos;
 
-namespace SF.SGL.API.Funcionalidades.Sistemas
+namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema
 {
     public class ObtemSistemaPorId
     {
         public record Query : IRequest<Command>
         {
             public int Id { get; init; }
+        }
+
+        public class MappingProfile : Profile
+        {
+            public MappingProfile()
+            {
+                CreateMap<EntidadeSistema, Command>();
+            }
         }
 
         public record Command
@@ -31,20 +39,12 @@ namespace SF.SGL.API.Funcionalidades.Sistemas
             public string UsuarioSenha { get; init; }
         }
 
-        public class MappingProfile : Profile
-        {
-            public MappingProfile()
-            {
-                CreateMap<EntidadeSistema, Command>();
-            }
-        }
-
-        public class ObtemSistemaPorIdHandler : IRequestHandler<Query, Command>
+        public class CommandHandler : IRequestHandler<Query, Command>
         {
             private readonly SGLContexto _sglContexto;
             private readonly IConfigurationProvider _configurationProvider;
 
-            public ObtemSistemaPorIdHandler(SGLContexto sglContexto, IConfigurationProvider configurationProvider)
+            public CommandHandler(SGLContexto sglContexto, IConfigurationProvider configurationProvider)
             {
                 _sglContexto = sglContexto;
                 _configurationProvider = configurationProvider;

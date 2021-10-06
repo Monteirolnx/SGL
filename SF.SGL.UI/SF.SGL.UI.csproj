@@ -12,12 +12,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Pages\Sistema\Incluir.cshtml.cs" />
+    <Compile Remove="Pages\Cadastros\Sistemas\Incluir.cshtml.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\Sistema\Incluir.cshtml" />
+    <Content Remove="Pages\Cadastros\Sistemas\Incluir.cshtml" />
+    <Content Remove="Shared\NavMenu.razor" />
     <Content Remove="Shared\SurveyPrompt.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Shared\NavMenu.razor.css" />
   </ItemGroup>
 
   <ItemGroup>

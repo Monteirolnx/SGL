@@ -10,7 +10,7 @@ using SF.SGL.API.Funcionalidades.Excecoes;
 using SF.SGL.Dominio.Entidades;
 using SF.SGL.Infra.Data.Contextos;
 
-namespace SF.SGL.API.Funcionalidades.Sistemas
+namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ObtemTodosSistemas
 {
     public class ObtemTodosSistemas
     {

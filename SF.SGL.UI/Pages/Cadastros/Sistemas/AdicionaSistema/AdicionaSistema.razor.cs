@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Configuration;
 using Radzen;
 
-namespace SF.SGL.UI.Pages.Sistema.AdicionaSistema
+namespace SF.SGL.UI.Pages.Cadastros.Sistemas.AdicionaSistema
 {
 
     public partial class AdicionaSistema : ComponentBase
@@ -55,12 +55,10 @@ namespace SF.SGL.UI.Pages.Sistema.AdicionaSistema
 
         protected async Task FormSubmit(Sistema sistema)
         {
-            string serviceEndpoint = "api/Sistemas/AdicionaSistema";
-
-            HttpResponseMessage response = await ChamarAPI(serviceEndpoint);
+            HttpResponseMessage response = await APIAdicionaSistema();
             if (response.IsSuccessStatusCode)
             {
-                NavigationManager.NavigateTo("sistema");
+                NavigationManager.NavigateTo("cadastros/sistemas");
             }
             else
             {
@@ -70,22 +68,23 @@ namespace SF.SGL.UI.Pages.Sistema.AdicionaSistema
             StateHasChanged();
         }
 
-        protected async Task<HttpResponseMessage> ChamarAPI(string serviceEndpoint)
+        protected async Task<HttpResponseMessage> APIAdicionaSistema()
         {
             try
             {
+                string serviceEndpoint = "api/AdicionaSistema/Adiciona";
                 UriBuilder uriBuilder = new(string.Concat(Configuration["EnderecoBaseSGLAPI"], serviceEndpoint));
                 return await HttpClient.PostAsJsonAsync(uriBuilder.Uri, Sistema);
-
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
         protected void ButtonCancelClick(MouseEventArgs args)
         {
-            NavigationManager.NavigateTo("sistema");
+            NavigationManager.NavigateTo("cadastros/sistemas");
         }
     }
     public class Sistema

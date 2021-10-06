@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Configuration;
 
-namespace SF.SGL.UI.Pages.Sistema.ObtemTodosSistemas
+namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ObtemTodosSistemas
 {
     public partial class ObtemTodosSistemas : ComponentBase
     {
@@ -31,9 +31,7 @@ namespace SF.SGL.UI.Pages.Sistema.ObtemTodosSistemas
 
         private async Task Load()
         {
-            string serviceEndpoint = "api/Sistemas/ObtemTodosSistemas";
-
-            HttpResponseMessage response = await ChamarAPI(serviceEndpoint);
+            HttpResponseMessage response = await APIObtemTodosSistemas();
             if (response.IsSuccessStatusCode)
             {
                 Sistemas = await response.Content.ReadFromJsonAsync<IEnumerable<Sistema>>();
@@ -48,26 +46,11 @@ namespace SF.SGL.UI.Pages.Sistema.ObtemTodosSistemas
             StateHasChanged();
         }
 
-        protected void Adicionar(MouseEventArgs args)
-        {
-            NavigationManager.NavigateTo("/sistemas/adiciona");
-        }
-
-        protected void GridEditButtonClick(dynamic data)
-        {
-            NavigationManager.NavigateTo($"/sistemas/edita/{data.Id}");
-        }
-
-        protected void GridDeleteButtonClick(MouseEventArgs args, dynamic data)
-        {
-
-
-        }
-
-        protected async Task<HttpResponseMessage> ChamarAPI(string serviceEndpoint)
+        protected async Task<HttpResponseMessage> APIObtemTodosSistemas()
         {
             try
             {
+                string serviceEndpoint = "api/ObtemTodosSistemas/ObtemTodos";
                 UriBuilder uriBuilder = new(string.Concat(Configuration["EnderecoBaseSGLAPI"], serviceEndpoint));
                 return await HttpClient.GetAsync(uriBuilder.Uri);
             }
@@ -76,6 +59,22 @@ namespace SF.SGL.UI.Pages.Sistema.ObtemTodosSistemas
                 throw;
             }
         }
+
+        protected void Adicionar(MouseEventArgs args)
+        {
+            NavigationManager.NavigateTo("cadastros/sistemas/adiciona");
+        }
+
+        protected void GridEditButtonClick(dynamic data)
+        {
+            NavigationManager.NavigateTo($"cadastros/sistemas/edita/{data.Id}");
+        }
+
+        protected void GridDeleteButtonClick(MouseEventArgs args, dynamic data)
+        {
+
+
+        } 
     }
     internal record Sistema
     {
