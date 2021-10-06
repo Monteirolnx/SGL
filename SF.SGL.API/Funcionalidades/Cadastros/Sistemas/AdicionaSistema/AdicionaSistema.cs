@@ -6,9 +6,9 @@ using MediatR;
 using SF.SGL.Dominio.Entidades;
 using SF.SGL.Infra.Data.Contextos;
 
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Adiciona
+namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.AdicionaSistema
 {
-    public class Adiciona
+    public class AdicionaSistema
     {
         public class MappingProfile : Profile
         {

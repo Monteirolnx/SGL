@@ -10,7 +10,6 @@ using Radzen;
 
 namespace SF.SGL.UI.Pages.Cadastros.Sistemas.AdicionaSistema
 {
-
     public partial class AdicionaSistema : ComponentBase
     {
         internal Sistema Sistema { get; set; }

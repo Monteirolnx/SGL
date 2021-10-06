@@ -17,7 +17,7 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ObtemTodosSistemas
 
         [HttpGet]
         [Route("ObtemTodos")]
-        public async Task<IActionResult> ObtemTodosSistemas()
+        public async Task<IActionResult> ObtemTodos()
         {
             ObtemTodosSistemas.Resultado resultado = await _mediator.Send(new ObtemTodosSistemas.Query());
             return Ok(resultado.Resultados);

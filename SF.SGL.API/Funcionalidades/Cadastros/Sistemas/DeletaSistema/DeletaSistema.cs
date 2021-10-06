@@ -11,7 +11,7 @@ using SF.SGL.Infra.Data.Contextos;
 
 namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.DeletaSistema
 {
-    public class Deleta
+    public class DeletaSistema
     {
         public class MappingProfile : Profile
         {

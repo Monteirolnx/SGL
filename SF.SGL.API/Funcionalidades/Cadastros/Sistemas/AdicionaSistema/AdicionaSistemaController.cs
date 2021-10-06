@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SF.SGL.API.Filtros;
 
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Adiciona
+namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.AdicionaSistema
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -19,7 +19,7 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Adiciona
         [HttpPost]
         [Route("Adiciona")]
         [ModelValidation]
-        public async Task<IActionResult> Adiciona(Adiciona.Command command)
+        public async Task<IActionResult> Adiciona(AdicionaSistema.Command command)
         {
             int iD = await _mediator.Send(command);
             return Ok(iD);

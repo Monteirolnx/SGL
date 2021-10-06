@@ -44,8 +44,8 @@ else
                                     </Template>
                                 </RadzenDataGridColumn>
                                 <RadzenDataGridColumn TItem="Sistema" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
-                                    <Template Context="teste">
-                                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="Editar" Icon="close" Size="ButtonSize.Small" Click="@((args) => GridDeleteButtonClick(args, teste))" @onclick:stopPropagation="true">
+                                    <Template Context="exclusao">
+                                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="Excluir" Icon="close" Size="ButtonSize.Small" Click="@((args) => GridDeleteButtonClick(args, exclusao))" @onclick:stopPropagation="true">
                                         </RadzenButton>
                                     </Template>
                                 </RadzenDataGridColumn>

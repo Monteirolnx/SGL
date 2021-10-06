@@ -62,12 +62,12 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ObtemTodosSistemas
 
         protected void Adicionar(MouseEventArgs args)
         {
-            NavigationManager.NavigateTo("cadastros/sistemas/adiciona");
+            NavigationManager.NavigateTo("cadastros/sistemas/adicionasistema");
         }
 
         protected void GridEditButtonClick(dynamic data)
         {
-            NavigationManager.NavigateTo($"cadastros/sistemas/edita/{data.Id}");
+            NavigationManager.NavigateTo($"cadastros/sistemas/editasistema/{data.Id}");
         }
 
         protected void GridDeleteButtonClick(MouseEventArgs args, dynamic data)

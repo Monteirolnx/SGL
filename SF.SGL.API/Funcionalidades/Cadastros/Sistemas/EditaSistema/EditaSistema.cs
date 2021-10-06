@@ -6,6 +6,7 @@ using SF.SGL.Dominio.Entidades;
 using SF.SGL.Infra.Data.Contextos;
 
 namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema
+
 {
     public class EditaSistema
     {

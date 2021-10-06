@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Adiciona;
+using SF.SGL.API.Funcionalidades.Cadastros.Sistemas.AdicionaSistema;
 using SF.SGL.Dominio.Entidades;
 using Shouldly;
 using Xunit;
@@ -19,7 +19,7 @@ namespace SF.SGL.Testes.Integracao.Sistemas
         [Fact]
         public async Task Deve_Criar_Sistema()
         {
-            Adiciona.Command command = new()
+            AdicionaSistema.Command command = new()
             {
                 Nome = "Sistema Teste",
                 UrlServicoConsultaLog = "Url",

@@ -19,7 +19,7 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.DeletaSistema
         [Route("Deleta/{id}")]
         public async Task<IActionResult> Deleta(int id)
         {
-            Deleta.Command command = await _mediator.Send(new Deleta.Query { Id = id });
+            DeletaSistema.Command command = await _mediator.Send(new DeletaSistema.Query { Id = id });
             await _mediator.Send(command);
 
             return Ok();
