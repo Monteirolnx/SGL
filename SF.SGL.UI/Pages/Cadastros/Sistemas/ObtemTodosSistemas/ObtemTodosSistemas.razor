@@ -52,13 +52,13 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                 <RadzenDataGridColumn TItem="Sistema" Property="UrlServicoConsultaLog" Title="Url Servico ConsultaLog" />
                                 <RadzenDataGridColumn TItem="Sistema" Property="UsuarioLogin" Title="Usuario Login"/>
 
-                                <RadzenDataGridColumn TItem="Sistema" Filterable="false" Sortable="false" Width="80px" TextAlign="TextAlign.Center">
+                                <RadzenDataGridColumn TItem="Sistema" Filterable="false" Sortable="false" Width="90px" TextAlign="TextAlign.Center">
                                     <Template Context="edicao">
                                         <RadzenButton ButtonStyle="ButtonStyle.Info" Text="Editar" Icon="edit" Size="ButtonSize.Small" Click="@(() => GridEditButtonClick(edicao))" @onclick:stopPropagation="true">
                                         </RadzenButton>
                                     </Template>
                                 </RadzenDataGridColumn>
-                                <RadzenDataGridColumn TItem="Sistema" Filterable="false" Sortable="false" Width="80px" TextAlign="TextAlign.Center">
+                                <RadzenDataGridColumn TItem="Sistema" Filterable="false" Sortable="false" Width="90px" TextAlign="TextAlign.Center">
                                     <Template Context="exclusao">
                                         <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="Excluir" Icon="close" Size="ButtonSize.Small" Click="@((args) => GridDeleteButtonClick(args, exclusao))" @onclick:stopPropagation="true">
                                         </RadzenButton>
