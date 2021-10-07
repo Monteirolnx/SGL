@@ -1,5 +1,6 @@
 ﻿@inherits SF.SGL.UI.Shared.MainLayoutComponent
 
+@using Radzen
 @using Radzen.Blazor
 
 <RadzenDialog />
@@ -13,10 +14,16 @@
             <div class="col-6 d-flex align-items-center">
                 <RadzenSidebarToggle Click="@SidebarToggle0Click">
                 </RadzenSidebarToggle>
-                <RadzenLabel Text="SGL - Sistema de Gestão de Logs">
-                </RadzenLabel>
+                <RadzenLabel Text="SGL - Sistema de Gestão de Logs"></RadzenLabel>
             </div>
-            <div class="col-6 text-right">
+            <div class="col-6 text-right" >
+                   <RadzenButton 
+                            ButtonStyle="ButtonStyle.Secondary" 
+                            Text="Sair" Size="ButtonSize.Small"
+                            Style="margin-right:20px"
+                            >
+                   </RadzenButton>
+                
             </div>
         </div>
     </ChildContent>
@@ -36,6 +43,22 @@
                 <RadzenPanelMenuItem Text="Cadastros">
                     <ChildContent>
                         <RadzenPanelMenuItem Text="Sistemas" Path="cadastros/sistemas"></RadzenPanelMenuItem>
+                    </ChildContent>
+                </RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Parametrizações">
+                    <ChildContent>
+                        <RadzenPanelMenuItem Text="Parametrizar Expurgo Log">
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Parametrizar Permissões de Acesso do Log">
+                        </RadzenPanelMenuItem>
+                    </ChildContent>
+                </RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Consultas">
+                    <ChildContent>
+                        <RadzenPanelMenuItem Text="Log de Operação">
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Log de Auditoria">
+                        </RadzenPanelMenuItem>
                     </ChildContent>
                 </RadzenPanelMenuItem>
             </ChildContent>
