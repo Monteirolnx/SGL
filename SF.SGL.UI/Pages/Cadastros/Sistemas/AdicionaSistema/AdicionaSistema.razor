@@ -18,15 +18,13 @@
     <ChildContent>
         <RadzenHeading Size="H2" Text="Adicionar Sistema"></RadzenHeading>
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-6">
                 <RadzenTemplateForm Data="@sistema" Visible="@(sistema != null)" TItem="Sistema" Submit="@FormSubmit">
                     <ChildContent>
                         <RadzenFieldset Text="Parametrizar sistema">
                             <div style="margin-bottom: 1rem" class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-12">
                                     <RadzenLabel Text="Nome:" Component="nm_sistema" style="width: 100%"></RadzenLabel>
-                                </div>
-                                <div class="col-md-9">
                                     <RadzenTextBox MaxLength="100" style="display: block; width: 100%" @bind-Value="@sistema.Nome" Name="Nm_sistema">
                                     </RadzenTextBox>
                                     <RadzenRequiredValidator Component="Nm_sistema" Text="Nome do sistema é obrigatório." style="position: absolute">
@@ -35,11 +33,8 @@
                             </div>
                             <RadzenFieldset Text="Informações de acesso ao serviço">
                                 <div style="margin-bottom: 1rem" class="row">
-                                    <div class="col-md-3">
-                                        <RadzenLabel Text="URL:" Component="nm_url_servico_consulta_log" style="width: 100%">
-                                        </RadzenLabel>
-                                    </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-12">
+                                        <RadzenLabel Text="URL:" Component="nm_url_servico_consulta_log" style="width: 100%"></RadzenLabel>
                                         <RadzenTextBox MaxLength="255" style="display: block; width: 100%" @bind-Value="@sistema.UrlServicoConsultaLog" Name="Nm_url_servico_consulta_log">
                                         </RadzenTextBox>
                                         <RadzenRequiredValidator Component="Nm_url_servico_consulta_log" Text="Url de acesso ao serviço é obrigatória." style="position: absolute">
@@ -47,11 +42,8 @@
                                     </div>
                                 </div>
                                 <div style="margin-bottom: 1rem" class="row">
-                                    <div class="col-md-3">
-                                        <RadzenLabel Text="Usuário:" Component="nm_usuario_servico_consulta_log" style="width: 100%">
-                                        </RadzenLabel>
-                                    </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-12">
+                                        <RadzenLabel Text="Usuário:" Component="nm_usuario_servico_consulta_log" style="width: 100%"></RadzenLabel>
                                         <RadzenTextBox MaxLength="200" style="display: block; width: 100%" @bind-Value="@sistema.UsuarioLogin" Name="Nm_usuario_servico_consulta_log">
                                         </RadzenTextBox>
                                         <RadzenRequiredValidator Component="Nm_usuario_servico_consulta_log" Text="Login do usuário de acesso ao serviço é obrigatório." style="position: absolute">
@@ -59,11 +51,8 @@
                                     </div>
                                 </div>
                                 <div style="margin-bottom: 1rem" class="row">
-                                    <div class="col-md-3">
-                                        <RadzenLabel Text="Senha:" Component="nm_senha_servico_consulta_log" style="width: 100%">
-                                        </RadzenLabel>
-                                    </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-12">
+                                        <RadzenLabel Text="Senha:" Component="nm_senha_servico_consulta_log" style="width: 100%"></RadzenLabel>
                                         <RadzenTextBox MaxLength="200" style="display: block; width: 100%" @bind-Value="@sistema.UsuarioSenha" Name="Nm_senha_servico_consulta_log">
                                         </RadzenTextBox>
                                         <RadzenRequiredValidator Component="Nm_senha_servico_consulta_log" Text="Senha do usuário de acesso ao serviço é obrigatória." style="position: absolute">
@@ -73,9 +62,9 @@
                             </RadzenFieldset>
                             <br />
                             <div class="row">
-                                <div class="col offset-sm-5">
-                                    <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Salvar" ButtonStyle="ButtonStyle.Primary"></RadzenButton>
-                                    <RadzenButton ButtonStyle="ButtonStyle.Warning" style="margin-left: 1rem" Text="Cancelar" Click="@ButtonCancelClick"></RadzenButton>
+                                <div class="col-md-12" style="display:flex; justify-content:flex-end; width:100%; padding:1;">
+                                    <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Salvar" ButtonStyle="ButtonStyle.Primary" Style="width: 150px; margin-right:5px"></RadzenButton>
+                                    <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="close" Text="Cancelar" Click="@ButtonCancelClick" Style="width: 150px;"></RadzenButton>
                                 </div>
                             </div>
                         </RadzenFieldset>

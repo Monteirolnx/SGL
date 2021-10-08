@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Radzen;
 using Radzen.Blazor;
-using SF.SGL.UI.Pages.Cadastros.Sistemas.ObtemTodosSistemas;
 using static SF.SGL.UI.Pages.Cadastros.Sistemas.ObtemTodosSistemas.ObtemTodosSistemas;
 
 namespace SF.SGL.UI
