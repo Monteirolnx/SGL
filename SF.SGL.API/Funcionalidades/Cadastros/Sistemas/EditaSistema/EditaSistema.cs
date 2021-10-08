@@ -45,7 +45,7 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema
             {
                 EntidadeSistema entidadeSistema = _mapper.Map<EntidadeSistema>(command);
 
-                _sglContexto.Sistema.Update(entidadeSistema);
+                _sglContexto.EntidadeSistema.Update(entidadeSistema);
                 await _sglContexto.SaveChangesAsync(cancellationToken);
 
                 return default;

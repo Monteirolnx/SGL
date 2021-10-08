@@ -1,8 +1,5 @@
 ﻿@inherits SF.SGL.UI.Shared.MainLayoutComponent
 
-@using Radzen
-@using Radzen.Blazor
-
 <RadzenDialog />
 <RadzenNotification />
 <RadzenTooltip />
@@ -12,56 +9,41 @@
     <ChildContent>
         <div class="row justify-content-start align-items-center">
             <div class="col-6 d-flex align-items-center">
-                <RadzenSidebarToggle Click="@SidebarToggle0Click">
-                </RadzenSidebarToggle>
-                <RadzenLabel Text="SGL - Sistema de Gestão de Logs"></RadzenLabel>
+                <RadzenLabel Text="SGL - Sistema de Gestão de Logs" Style="margin-left:10px"></RadzenLabel>
             </div>
-            <div class="col-6 text-right" >
-                   <RadzenButton 
-                            ButtonStyle="ButtonStyle.Secondary" 
-                            Text="Sair" Size="ButtonSize.Small"
-                            Style="margin-right:20px"
-                            >
-                   </RadzenButton>
-                
+            <div class="col-6 text-right" style="margin-top:10px">
+                <RadzenButton ButtonStyle="ButtonStyle.Secondary"
+                              Text="Sair" Size="ButtonSize.Small"
+                              Style="margin-right:20px">
+        </RadzenButton>
+            </div>
+        </div>
+        <div class="row justify-content-start align-items-center">
+            <div class="col-12 d-flex align-items-center">
+                <RadzenMenu>
+                    <RadzenMenuItem Text="Início" Icon="home" Path="/">
+                    </RadzenMenuItem>
+                    <RadzenMenuItem Text="Cadastros" Icon="app_registration">
+                        <RadzenMenuItem Text="Sistemas" Path="cadastros/sistemas" Icon="app_registrationn"></RadzenMenuItem>
+                    </RadzenMenuItem>
+                    <RadzenMenuItem Text="Parametrizações" Icon="tune">
+                        <RadzenMenuItem Text="Parametrizar Expurgo Log" Path="" Icon="tune"></RadzenMenuItem>
+                        <RadzenMenuItem Text="Parametrizar Permissões de Acesso do Log" Path="" Icon="tune"></RadzenMenuItem>
+                    </RadzenMenuItem>
+                    <RadzenMenuItem Text="Consultas" Icon="add_chart">
+                        <RadzenMenuItem Text="Log de Operação" Path="tabs" Icon="add_chart"></RadzenMenuItem>
+                        <RadzenMenuItem Text="Log de Auditoria" Path="panel" Icon="add_chart"></RadzenMenuItem>
+                    </RadzenMenuItem>
+                </RadzenMenu>
             </div>
         </div>
     </ChildContent>
 </RadzenHeader>
-<RadzenBody @ref="body0">
+
+<RadzenBody Expanded=true Style="margin-top:90px">
     <ChildContent>
         <RadzenContentContainer Name="main">
             @Body
         </RadzenContentContainer>
     </ChildContent>
 </RadzenBody>
-<RadzenSidebar @ref="sidebar0">
-    <ChildContent>
-        <RadzenPanelMenu style="height: 100%">
-            <ChildContent>
-                <RadzenPanelMenuItem Text="Home" Path="/"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Cadastros">
-                    <ChildContent>
-                        <RadzenPanelMenuItem Text="Sistemas" Path="cadastros/sistemas"></RadzenPanelMenuItem>
-                    </ChildContent>
-                </RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Parametrizações">
-                    <ChildContent>
-                        <RadzenPanelMenuItem Text="Parametrizar Expurgo Log">
-                        </RadzenPanelMenuItem>
-                        <RadzenPanelMenuItem Text="Parametrizar Permissões de Acesso do Log">
-                        </RadzenPanelMenuItem>
-                    </ChildContent>
-                </RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Consultas">
-                    <ChildContent>
-                        <RadzenPanelMenuItem Text="Log de Operação">
-                        </RadzenPanelMenuItem>
-                        <RadzenPanelMenuItem Text="Log de Auditoria">
-                        </RadzenPanelMenuItem>
-                    </ChildContent>
-                </RadzenPanelMenuItem>
-            </ChildContent>
-        </RadzenPanelMenu>
-    </ChildContent>
-</RadzenSidebar>

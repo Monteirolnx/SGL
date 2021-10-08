@@ -51,7 +51,7 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema
             }
             public async Task<Command> Handle(Query query, CancellationToken cancellationToken)
             {
-                Command command = await _sglContexto.Sistema.Where(s => s.Id == query.Id)
+                Command command = await _sglContexto.EntidadeSistema.Where(s => s.Id == query.Id)
                     .ProjectTo<Command>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
 
                 FuncionalidadeSistemasException.Quando(command is null, $"Não existe sistema com o código {query.Id}.");

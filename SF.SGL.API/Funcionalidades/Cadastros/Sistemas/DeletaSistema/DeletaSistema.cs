@@ -39,7 +39,7 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.DeletaSistema
 
             public async Task<Command> Handle(Query query, CancellationToken cancellationToken)
             {
-                Command command = await _sglContexto.Sistema.Where(s => s.Id == query.Id)
+                Command command = await _sglContexto.EntidadeSistema.Where(s => s.Id == query.Id)
                        .ProjectTo<Command>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
 
                 FuncionalidadeSistemasException.Quando(command is null, $"Não existe sistema com o código {query.Id}.");
@@ -76,7 +76,7 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.DeletaSistema
             {
                 EntidadeSistema entidadeSistema = _mapper.Map<EntidadeSistema>(command);
 
-                await Task.FromResult(_sglContexto.Sistema.Remove(entidadeSistema));
+                await Task.FromResult(_sglContexto.EntidadeSistema.Remove(entidadeSistema));
 
                 await _sglContexto.SaveChangesAsync(cancellationToken);
 
