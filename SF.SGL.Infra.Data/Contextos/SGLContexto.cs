@@ -10,7 +10,9 @@ namespace SF.SGL.Infra.Data.Contextos
     {
         private IDbContextTransaction _currentTransaction;
 
-        public DbSet<EntidadeSistema> Sistema { get; set; }
+        public DbSet<EntidadeSistema> EntidadeSistema { get; set; }
+
+        public DbSet<EntidadeParametroExpurgo> EntidadeExpurgo {  get; set; }
 
         public SGLContexto(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {

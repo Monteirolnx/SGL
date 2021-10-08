@@ -58,7 +58,7 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ObtemTodosSistemas
 
             public async Task<Resultado> Handle(Query query, CancellationToken cancellationToken)
             {
-                List<Modelo> resultado = await _sglContexto.Sistema
+                List<Modelo> resultado = await _sglContexto.EntidadeSistema
                     .ProjectTo<Modelo>(_configurationProvider)
                     .ToListAsync(cancellationToken);
 

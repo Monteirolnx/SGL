@@ -12,7 +12,6 @@
 @using Microsoft.AspNetCore.Components.Web;
 @using Microsoft.Extensions.Configuration;
 
-
 @if (sistemas == null && erroRetornoAPI == null)
 {
     <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
@@ -38,7 +37,6 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                 PagerPosition="PagerPosition.TopAndBottom"
                                 AllowPaging="true"
                                 AllowSorting="true"
-
                                 FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                 LogicalFilterOperator="LogicalFilterOperator.Or"
                                 AllowVirtualization="true"
@@ -49,7 +47,7 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                 <RadzenDataGridColumn TItem="Sistema" Property="Id" Filterable="true" Title="ID" Frozen="false" Width="70px" TextAlign="TextAlign.Center" />
                                 <RadzenDataGridColumn TItem="Sistema" Property="Nome" Title="Nome" />
                                 <RadzenDataGridColumn TItem="Sistema" Property="UrlServicoConsultaLog" Title="Url Servico ConsultaLog" />
-                                <RadzenDataGridColumn TItem="Sistema" Property="UsuarioLogin" Title="Usuario Login"/>
+                                <RadzenDataGridColumn TItem="Sistema" Property="UsuarioLogin" Title="Usuario Login" />
 
                                 <RadzenDataGridColumn TItem="Sistema" Filterable="false" Sortable="false" Width="90px" TextAlign="TextAlign.Center">
                                     <Template Context="edicao">
@@ -75,7 +73,6 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
         <p>@erroRetornoAPI.Message</p>
     }
 }
-
 
 @code {
     protected List<Sistema> sistemas;
@@ -157,8 +154,8 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
     {
         try
         {
-            if (await DialogService.Confirm("Deseja excluir o Sistema selecionado?",title:"Confirma") == true)
-            {
+            if (await DialogService.Confirm("Deseja excluir o Sistema selecionado?", title: "Confirma", new ConfirmOptions(){ OkButtonText = "Ok", CancelButtonText = "Cancelar" }) == true)
+        {
                 HttpResponseMessage response = await APIDeletaSistema(data.Id);
                 if (response.IsSuccessStatusCode)
                 {
