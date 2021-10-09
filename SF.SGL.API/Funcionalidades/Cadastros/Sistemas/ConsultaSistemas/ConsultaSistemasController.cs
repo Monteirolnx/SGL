@@ -2,15 +2,15 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ObtemTodosSistemas
+namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ConsultaSistemas
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ObtemTodosSistemasController : ControllerBase
+    public class ConsultaSistemasController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public ObtemTodosSistemasController(IMediator mediator)
+        public ConsultaSistemasController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -19,7 +19,7 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ObtemTodosSistemas
         [Route("ObtemTodos")]
         public async Task<IActionResult> ObtemTodos()
         {
-            ObtemTodosSistemas.Resultado resultado = await _mediator.Send(new ObtemTodosSistemas.Query());
+            ConsultaSistemas.Resultado resultado = await _mediator.Send(new ConsultaSistemas.Query());
             return Ok(resultado.Resultados);
         }
     }

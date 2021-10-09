@@ -1,0 +1,66 @@
+﻿@layout MainLayout
+
+@using Radzen
+@using Radzen.Blazor
+
+@if (sistemas == null && erroRetornoAPI == null)
+{
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+    <h4>Carregando...</h4>
+}
+else if (sistemas != null || erroRetornoAPI?.Message != null)
+{
+    <RadzenProgressBar Value="100" ShowValue="false" Max="100" Style="margin-bottom: 20px" />
+    <RadzenHeading Size="H2" Text="Sistemas"></RadzenHeading>
+    <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Adicionar Sistema" Click="@NavegarPaginaAdicionarSistema" Disabled="@desabilitaAdicao"></RadzenButton>
+    @if (sistemas != null)
+    {
+        <RadzenContent Container="main">
+            <ChildContent>
+                <div class="row">
+                    <div class="col-md-12">
+                        <RadzenDataGrid @ref="GridConsultaSistemas"
+                                AllowFiltering="true"
+                                AllowColumnResize="true"
+                                EmptyText="A pesquisa não retornou resultados."
+                                FilterMode="FilterMode.Simple"
+                                PageSize="25"
+                                PagerPosition="PagerPosition.TopAndBottom"
+                                AllowPaging="true"
+                                AllowSorting="true"
+                                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                LogicalFilterOperator="LogicalFilterOperator.Or"
+                                AllowVirtualization="true"
+                                Data="@sistemas"
+                                TItem="Sistema">
+
+                            <Columns>
+                                <RadzenDataGridColumn TItem="Sistema" Property="Id" Filterable="true" Title="ID" Frozen="false" Width="70px" TextAlign="TextAlign.Center" />
+                                <RadzenDataGridColumn TItem="Sistema" Property="Nome" Title="Nome" />
+                                <RadzenDataGridColumn TItem="Sistema" Property="UrlServicoConsultaLog" Title="Url Servico ConsultaLog" />
+                                <RadzenDataGridColumn TItem="Sistema" Property="UsuarioLogin" Title="Usuario Login" />
+
+                                <RadzenDataGridColumn TItem="Sistema" Filterable="false" Sortable="false" Width="90px" TextAlign="TextAlign.Center">
+                                    <Template Context="edicao">
+                                        <RadzenButton ButtonStyle="ButtonStyle.Info" Text="Editar" Icon="edit" Size="ButtonSize.Small" Click="@(() => GridEditButtonClick(edicao))" @onclick:stopPropagation="true">
+                                        </RadzenButton>
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                <RadzenDataGridColumn TItem="Sistema" Filterable="false" Sortable="false" Width="90px" TextAlign="TextAlign.Center">
+                                    <Template Context="exclusao">
+                                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="Excluir" Icon="close" Size="ButtonSize.Small" Click="@(() => GridDeleteButtonClick(exclusao))" @onclick:stopPropagation="true">
+                                        </RadzenButton>
+                                    </Template>
+                                </RadzenDataGridColumn>
+                            </Columns>
+                        </RadzenDataGrid>
+                    </div>
+                </div>
+            </ChildContent>
+        </RadzenContent>
+    }
+    else
+    {
+        <p>@erroRetornoAPI.Message</p>
+    }
+}

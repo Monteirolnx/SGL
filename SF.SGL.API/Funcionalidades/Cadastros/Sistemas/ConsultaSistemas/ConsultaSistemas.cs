@@ -10,9 +10,9 @@ using SF.SGL.API.Funcionalidades.Excecoes;
 using SF.SGL.Dominio.Entidades;
 using SF.SGL.Infra.Data.Contextos;
 
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ObtemTodosSistemas
+namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ConsultaSistemas
 {
-    public class ObtemTodosSistemas
+    public class ConsultaSistemas
     {
         public record Query : IRequest<Resultado>
         {

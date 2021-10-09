@@ -14,7 +14,7 @@ namespace SF.SGL.UI.Shared
         [Inject]
         public IJSRuntime JsRuntime { get; set; }
 
-        protected async System.Threading.Tasks.Task SidebarToggle0Click(dynamic args)
+        protected async Task SidebarToggle0Click(dynamic args)
         {
             await InvokeAsync(() => { sidebar0.Toggle(); });
 
@@ -23,14 +23,10 @@ namespace SF.SGL.UI.Shared
 
         protected async Task UpdateTheme()
         {
-            //setting the themeName parameter
             string themeName = DarkTheme ? "dark" : "software";
 
-            //calling JS function
             IJSObjectReference module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
             await module.InvokeVoidAsync("setTheme", themeName);
-
         }
-
     }
 }

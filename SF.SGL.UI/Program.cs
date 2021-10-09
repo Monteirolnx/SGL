@@ -1,11 +1,11 @@
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Radzen;
 using Radzen.Blazor;
-using static SF.SGL.UI.Pages.Cadastros.Sistemas.ObtemTodosSistemas.ObtemTodosSistemas;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
 
 namespace SF.SGL.UI
 {
@@ -23,7 +23,7 @@ namespace SF.SGL.UI
             builder.Services.AddScoped<TooltipService>();
             builder.Services.AddScoped<ContextMenuService>();
 
-            builder.Services.AddSingleton<RadzenDataGrid<Sistema>>();
+            builder.Services.AddSingleton<RadzenDataGrid<Pages.Cadastros.Sistemas.ConsultaSistemas.ConsultaSistemas.Sistema>>();
 
             await builder.Build().RunAsync();
         }
