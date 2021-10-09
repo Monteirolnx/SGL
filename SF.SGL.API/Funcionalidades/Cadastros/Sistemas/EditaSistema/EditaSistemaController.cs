@@ -17,10 +17,10 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema
         }
 
         [HttpGet]
-        [Route("ObtemSistemaPorId/{id}")]
-        public async Task<IActionResult> ObtemSistemaPorId(int id)
+        [Route("ConsultaSistemaPorId/{id}")]
+        public async Task<IActionResult> ConsultaSistemaPorId(int id)
         {
-            ObtemSistemaPorId.Command resultado = await _mediator.Send(new ObtemSistemaPorId.Query() { Id = id });
+            ConsultaSistemaPorId.Command resultado = await _mediator.Send(new ConsultaSistemaPorId.Query() { Id = id });
             return Ok(resultado);
         }
 

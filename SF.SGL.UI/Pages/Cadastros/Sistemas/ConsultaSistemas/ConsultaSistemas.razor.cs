@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Configuration;
 using Radzen;
 using Radzen.Blazor;
@@ -17,6 +16,7 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
         protected ErroRetornoAPI erroRetornoAPI;
         protected bool desabilitaAdicao;
 
+        #region Injects
         [Inject]
         protected TooltipService TooltipService { get; set; }
 
@@ -37,49 +37,49 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
 
         [Inject]
         protected RadzenDataGrid<Sistema> GridConsultaSistemas { get; set; }
+        #endregion
 
         #region Métodos
         protected async override void OnInitialized()
         {
-            await Load();
+            await CargaInicial();
         }
 
-        private async Task Load()
+        private async Task CargaInicial()
         {
             desabilitaAdicao = true;
-            //erroRetornoAPI.Message = string.Empty;
-            HttpResponseMessage response = await ApiConsultaSistemas();
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            HttpResponseMessage httpResponseMessage = await ApiConsultaSistemas();
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 InformarFallhaComunicacaoAPI();
             }
-            else if (!response.IsSuccessStatusCode)
+            else if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                await InformarErroAPI(response);
+                await InformarErroAPI(httpResponseMessage);
             }
             else
             {
-                sistemas = await response.Content.ReadFromJsonAsync<List<Sistema>>();
+                sistemas = await httpResponseMessage.Content.ReadFromJsonAsync<List<Sistema>>();
                 desabilitaAdicao = false;
             }
             StateHasChanged();
         }
 
-        public void Reload()
+        public void Recarregar()
         {
             InvokeAsync(StateHasChanged);
         }
 
         protected void NavegarPaginaAdicionarSistema()
         {
-            NavigationManager.NavigateTo("cadastros/sistemas/adicionasistema");
+            NavigationManager.NavigateTo("Cadastros/Sistemas/adicionasistema");
         }
         #endregion
 
         #region Eventos
         protected void GridEditButtonClick(dynamic data)
         {
-            NavigationManager.NavigateTo($"cadastros/sistemas/editasistema/{data.Id}");
+            NavigationManager.NavigateTo($"Cadastros/Sistemas/Editasistema/{data.Id}");
         }
 
         protected async Task GridDeleteButtonClick(dynamic data)
@@ -113,7 +113,7 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
         }
         #endregion
 
-        #region Chamadas API
+        #region Chamadas Api
         protected async Task<HttpResponseMessage> ApiConsultaSistemas()
         {
             try
@@ -141,6 +141,7 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
                 throw;
             }
         }
+        #endregion
 
         #region Notificações e Mensagens de erro
         private void InformarFallhaComunicacaoAPI()
@@ -156,10 +157,9 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
             erroRetornoAPI = await response.Content.ReadFromJsonAsync<ErroRetornoAPI>();
             NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro", Detail = erroRetornoAPI.Message });
         }
-
-        #endregion
         #endregion
 
+        #region Classes
         public record Sistema
         {
             public int Id { get; init; }
@@ -177,5 +177,6 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
         {
             public string Message { get; set; }
         }
+        #endregion
     }
 }

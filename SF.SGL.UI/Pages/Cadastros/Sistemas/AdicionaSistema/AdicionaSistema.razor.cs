@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Configuration;
+using Microsoft.JSInterop;
 using Radzen;
 using System;
 using System.Net.Http;
@@ -12,58 +12,80 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.AdicionaSistema
     public partial class AdicionaSistema
     {
         protected Sistema sistema;
+        protected ErroRetornoAPI erroRetornoAPI;
 
-        protected ErroRetornoAPI mensagemErro;
-
-        public void Reload()
-        {
-            InvokeAsync(StateHasChanged);
-        }
-
+        #region Injects
         [Inject]
-        protected NavigationManager NavigationManager { get; set; }
-
-        [Inject]
-        protected DialogService DialogService { get; set; }
+        protected IJSRuntime JSRuntime { get; set; }
 
         [Inject]
         protected TooltipService TooltipService { get; set; }
 
         [Inject]
+        protected DialogService DialogService { get; set; }
+
+        [Inject]
         protected NotificationService NotificationService { get; set; }
+
+        [Inject]
+        protected NavigationManager NavigationManager { get; set; }
 
         [Inject]
         protected IConfiguration Configuration { get; set; }
 
         [Inject]
         protected HttpClient HttpClient { get; set; }
+        #endregion
 
+        #region Métodos
         protected override async Task OnInitializedAsync()
         {
-            await Load();
+            await CargaInicial();
         }
 
-        protected async Task Load()
+        protected async Task CargaInicial()
         {
             await Task.FromResult(sistema = new());
         }
 
-        protected async Task FormSubmit(Sistema sistema)
+        public void Recarregar()
         {
-            HttpResponseMessage response = await APIAdicionaSistema();
-            if (response.IsSuccessStatusCode)
+            InvokeAsync(StateHasChanged);
+        }
+
+        protected void NavegarPaginaSistemas()
+        {
+            NavigationManager.NavigateTo("Cadastros/Sistemas");
+        }
+
+        protected async Task EnvioFormulario(Sistema sistema)
+        {
+            HttpResponseMessage httpResponseMessage = await ApiAdicionaSistema();
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                NavigationManager.NavigateTo("cadastros/sistemas");
+                InformarFallhaComunicacaoAPI();
+            }
+            else if (!httpResponseMessage.IsSuccessStatusCode)
+            {
+                await InformarErroAPI(httpResponseMessage);
             }
             else
             {
-                mensagemErro = await response.Content.ReadFromJsonAsync<ErroRetornoAPI>();
-                sistema = null;
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Sucesso", Detail = $"Sistema incluído com sucesso." });
+                NavigationManager.NavigateTo("Cadastros/Sistemas");
             }
             StateHasChanged();
         }
+        #endregion
 
-        protected async Task<HttpResponseMessage> APIAdicionaSistema()
+        #region Eventos
+        public void OnPropertyChanged()
+        {
+        }
+        #endregion
+
+        #region Chamadas Api
+        protected async Task<HttpResponseMessage> ApiAdicionaSistema()
         {
             try
             {
@@ -76,12 +98,25 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.AdicionaSistema
                 throw;
             }
         }
+        #endregion
 
-        protected void ButtonCancelClick(MouseEventArgs args)
+        #region Notificações e Mensagens de erro
+        private void InformarFallhaComunicacaoAPI()
         {
-            NavigationManager.NavigateTo("cadastros/sistemas");
+            erroRetornoAPI = new();
+            erroRetornoAPI.Message = "Não foi possível realizar a comunicação com a Api SGL.";
+            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro", Detail = erroRetornoAPI.Message });
         }
 
+        private async Task InformarErroAPI(HttpResponseMessage response)
+        {
+            erroRetornoAPI = new();
+            erroRetornoAPI = await response.Content.ReadFromJsonAsync<ErroRetornoAPI>();
+            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro", Detail = erroRetornoAPI.Message });
+        }
+        #endregion
+
+        #region Classes
         public class Sistema
         {
             public string Nome { get; set; }
@@ -93,9 +128,10 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.AdicionaSistema
             public string UsuarioSenha { get; set; }
         }
 
-        public class ErroRetornoAPI
+        public record ErroRetornoAPI
         {
             public string Message { get; set; }
         }
+        #endregion
     }
 }

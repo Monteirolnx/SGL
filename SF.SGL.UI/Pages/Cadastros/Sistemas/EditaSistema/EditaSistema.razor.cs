@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Configuration;
 using Radzen;
 using System;
@@ -11,63 +10,90 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.EditaSistema
 {
     public partial class EditaSistema
     {
+        [Parameter] public int Id { get; set; }
         protected Sistema sistema;
-
         protected ErroRetornoAPI erroRetornoAPI;
 
-        public void Reload()
-        {
-            InvokeAsync(StateHasChanged);
-        }
-
+        #region Injects
         [Inject]
-        protected NavigationManager NavigationManager { get; set; }
+        protected TooltipService TooltipService { get; set; }
 
         [Inject]
         protected DialogService DialogService { get; set; }
 
         [Inject]
-        protected TooltipService TooltipService { get; set; }
+        protected NotificationService NotificationService { get; set; }
 
         [Inject]
-        protected NotificationService NotificationService { get; set; }
+        protected NavigationManager NavigationManager { get; set; }
 
         [Inject]
         protected IConfiguration Configuration { get; set; }
 
         [Inject]
         protected HttpClient HttpClient { get; set; }
+        #endregion
 
-        [Parameter]
-        public int id { get; set; }
-
+        #region Métodos
         protected override async Task OnInitializedAsync()
         {
-            await Load();
+            await CargaInicial();
         }
-        protected async Task Load()
+
+        protected async Task CargaInicial()
         {
-            HttpResponseMessage httpResponseMessage = await APIObtemSistemaPorId(id);
-            if (httpResponseMessage.IsSuccessStatusCode)
+            HttpResponseMessage httpResponseMessage = await ApiConsultaSistemaPorId(Id);
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                sistema = await httpResponseMessage.Content.ReadFromJsonAsync<Sistema>();
-                if (erroRetornoAPI != null)
-                {
-                    erroRetornoAPI.Message = string.Empty;
-                }
+                InformarFallhaComunicacaoAPI();
+            }
+            else if (!httpResponseMessage.IsSuccessStatusCode)
+            {
+                await InformarErroAPI(httpResponseMessage);
             }
             else
             {
-                erroRetornoAPI = await httpResponseMessage.Content.ReadFromJsonAsync<ErroRetornoAPI>();
-                sistema = null;
+                sistema = await httpResponseMessage.Content.ReadFromJsonAsync<Sistema>();
             }
         }
 
-        private async Task<HttpResponseMessage> APIObtemSistemaPorId(int id)
+        public void Recarregar()
+        {
+            InvokeAsync(StateHasChanged);
+        }
+
+        protected void NavegarPaginaSistemas()
+        {
+            NavigationManager.NavigateTo("Cadastros/Sistemas");
+        }
+
+        protected async Task EnvioFormulario()
+        {
+            HttpResponseMessage httpResponseMessage = await ApiEditaSistema(Id, sistema);
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                InformarFallhaComunicacaoAPI();
+            }
+            else if (!httpResponseMessage.IsSuccessStatusCode)
+            {
+                await InformarErroAPI(httpResponseMessage);
+            }
+            else
+            {
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Sucesso", Detail = $"Sistema editado com sucesso." });
+                NavigationManager.NavigateTo("Cadastros/Sistemas");
+            }
+            StateHasChanged();
+        }
+        
+        #endregion
+
+        #region Chamadas Api
+        private async Task<HttpResponseMessage> ApiConsultaSistemaPorId(int id)
         {
             try
             {
-                string serviceEndpoint = $"api/EditaSistema/ObtemSistemaPorId/{id}";
+                string serviceEndpoint = $"api/EditaSistema/ConsultaSistemaPorId/{id}";
                 UriBuilder uriBuilder = new(string.Concat(Configuration["EnderecoBaseSGLAPI"], serviceEndpoint));
                 return await HttpClient.GetAsync(uriBuilder.Uri);
             }
@@ -77,23 +103,7 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.EditaSistema
             }
         }
 
-        protected async Task FormSubmit()
-        {
-            HttpResponseMessage httpResponseMessage = await APIEditaSistema(id, sistema);
-            if (httpResponseMessage.IsSuccessStatusCode)
-            {
-                NavigationManager.NavigateTo("cadastros/sistemas");
-            }
-            else
-            {
-                erroRetornoAPI = await httpResponseMessage.Content.ReadFromJsonAsync<ErroRetornoAPI>();
-                sistema = null;
-                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = erroRetornoAPI.Message });
-            }
-            StateHasChanged();
-        }
-
-        private async Task<HttpResponseMessage> APIEditaSistema(int id, Sistema sistema)
+        private async Task<HttpResponseMessage> ApiEditaSistema(int id, Sistema sistema)
         {
             try
             {
@@ -106,12 +116,25 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.EditaSistema
                 throw;
             }
         }
+        #endregion
 
-        protected void ButtonCancelClick(MouseEventArgs args)
+        #region Notificações e Mensagens de erro
+        private void InformarFallhaComunicacaoAPI()
         {
-            NavigationManager.NavigateTo("cadastros/sistemas");
+            erroRetornoAPI = new();
+            erroRetornoAPI.Message = "Não foi possível realizar a comunicação com a Api SGL.";
+            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro", Detail = erroRetornoAPI.Message });
         }
 
+        private async Task InformarErroAPI(HttpResponseMessage response)
+        {
+            erroRetornoAPI = new();
+            erroRetornoAPI = await response.Content.ReadFromJsonAsync<ErroRetornoAPI>();
+            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro", Detail = erroRetornoAPI.Message });
+        }
+        #endregion
+
+        #region Classes
         public class Sistema
         {
             public int Id { get; set; }
@@ -125,9 +148,10 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.EditaSistema
             public string UsuarioSenha { get; set; }
         }
 
-        public class ErroRetornoAPI
+        public record ErroRetornoAPI
         {
             public string Message { get; set; }
         }
+        #endregion
     }
 }

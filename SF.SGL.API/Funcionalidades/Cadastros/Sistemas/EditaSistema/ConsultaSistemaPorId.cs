@@ -11,7 +11,7 @@ using SF.SGL.Infra.Data.Contextos;
 
 namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema
 {
-    public class ObtemSistemaPorId
+    public class ConsultaSistemaPorId
     {
         public record Query : IRequest<Command>
         {
