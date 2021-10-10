@@ -56,6 +56,7 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
             else if (!httpResponseMessage.IsSuccessStatusCode)
             {
                 await InformarErroAPI(httpResponseMessage);
+                desabilitaAdicao = false;
             }
             else
             {
@@ -86,7 +87,7 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
         {
             try
             {
-                if (await DialogService.Confirm($"Deseja excluir o sistema: {data.Nome}?", title: "Confirma", new ConfirmOptions() { OkButtonText = "Ok", CancelButtonText = "Cancelar" }) == true)
+                if (await DialogService.Confirm($"Deseja excluir o sistema: {data.Nome}?", title: "Confirma", new ConfirmOptions() { CancelButtonText = "Cancelar", OkButtonText = "Ok" }) == true)
                 {
                     HttpResponseMessage response = await ApiDeletaSistema(data.Id);
                     if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
