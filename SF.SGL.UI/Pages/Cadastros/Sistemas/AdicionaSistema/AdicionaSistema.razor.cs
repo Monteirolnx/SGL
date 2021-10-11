@@ -71,19 +71,13 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.AdicionaSistema
             }
             else
             {
-                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Sucesso", Detail = $"Sistema incluído com sucesso." });
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Sucesso:", Detail = $"Sistema incluído com sucesso." });
                 NavigationManager.NavigateTo("Cadastros/Sistemas");
             }
             StateHasChanged();
         }
         #endregion
-
-        #region Eventos
-        public void OnPropertyChanged()
-        {
-        }
-        #endregion
-
+        
         #region Chamadas Api
         protected async Task<HttpResponseMessage> ApiAdicionaSistema()
         {
@@ -105,14 +99,14 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.AdicionaSistema
         {
             erroRetornoAPI = new();
             erroRetornoAPI.Message = "Não foi possível realizar a comunicação com a Api SGL.";
-            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro", Detail = erroRetornoAPI.Message });
+            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = erroRetornoAPI.Message });
         }
 
         private async Task InformarErroAPI(HttpResponseMessage response)
         {
             erroRetornoAPI = new();
             erroRetornoAPI = await response.Content.ReadFromJsonAsync<ErroRetornoAPI>();
-            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro", Detail = erroRetornoAPI.Message });
+            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = erroRetornoAPI.Message });
         }
         #endregion
 

@@ -1,18 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Excecoes;
+using SF.SGL.API.Funcionalidades.Consultas.LogOperacao.Excecoes;
 using SF.SGL.Dominio.Entidades;
 using SF.SGL.Infra.Data.Contextos;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ConsultaSistemas
+namespace SF.SGL.API.Funcionalidades.Consultas.LogOperacao.ConsultaLogsOperacoes
 {
-    public class ConsultaSistemas
+    public class ConsultaLogsOperacoes
+    {
+    }
+    public class AuxConsultaSistemas
     {
         public class MappingProfile : Profile
         {
@@ -24,7 +27,6 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ConsultaSistemas
 
         public record Query : IRequest<Resultado>
         {
-
         }
 
         public record Resultado
@@ -37,14 +39,7 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ConsultaSistemas
             public int Id { get; init; }
 
             public string Nome { get; init; }
-
-            public string UrlServicoConsultaLog { get; init; }
-
-            public string UsuarioLogin { get; init; }
-
-            public string UsuarioSenha { get; init; }
         }
-
 
         public class QueryHandler : IRequestHandler<Query, Resultado>
         {
@@ -63,7 +58,7 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ConsultaSistemas
                     .ProjectTo<Sistema>(_configurationProvider)
                     .ToListAsync(cancellationToken);
 
-                FuncionalidadeSistemasException.Quando(!resultado.Any(), "Não existe resultado para a pesquisa.");
+                FuncionalidadeLogOperacaoException.Quando(!resultado.Any(), "Não existe resultado para a pesquisa.");
 
                 Resultado model = new()
                 {

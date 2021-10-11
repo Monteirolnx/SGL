@@ -1,7 +1,66 @@
 ﻿@page "/Consultas/LogOperacao/ConsultaLogOperacao"
 
-<h3>ConsultaLogOperacao</h3>
+@layout MainLayout
 
-@code {
+@using Radzen
+@using Radzen.Blazor
 
-}
+<RadzenProgressBar Value="100" ShowValue="false" Max="100" Style="margin-bottom: 20px" />
+<RadzenContent Container="main">
+    <ChildContent>
+        <RadzenHeading Size="H2" Text="Consultar Log Operação"></RadzenHeading>
+        <div class="row">
+            <div class="col-md-6">
+                <RadzenTemplateForm Data="@logOperacao" Visible="@(logOperacao != null)" TItem="LogOperacao" Submit="@EnvioFormulario">
+                    <ChildContent>
+                        <RadzenFieldset Text="Sistema">
+                            <div style="margin-bottom: 1rem" class="row">
+                                <div class="col-md-12">
+                                    <RadzenLabel Text="Cod Sistema:" Component="nm_sistema" style="display:inline-block;width: 20%;overflow: hidden;text-overflow: ellipsis;" ></RadzenLabel>
+                                    <RadzenLabel Text="Nome Sistema:" Component="nm_sistema" style="display:inline-block;width: 60%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                </div>
+                                   <div class="col-md-12">
+                                    <RadzenTextBox MaxLength="6" style="display:inline-block; width: 20%" @bind-Value="@logOperacao.SistemaId" Name="txtIdSistema" Change="@OnTxtIdSistemaChange"></RadzenTextBox>
+                                    <RadzenTextBox MaxLength="100" style="display: inline-block; width: 75%" @bind-Value="@logOperacao.SistemaNome" Name="txtNomeSistema" Disabled=true></RadzenTextBox>
+                                    <RadzenRequiredValidator Component="Nm_sistema" Text="Nome do sistema é obrigatório." style="position: absolute">
+                                    </RadzenRequiredValidator>
+                                </div>
+                            </div>
+                        </RadzenFieldset>
+                        <RadzenFieldset Text="Parametrizar sistema">
+                            <RadzenFieldset Text="Informações de acesso ao serviço">
+                                <div style="margin-bottom: 1rem" class="row">
+                                    <div class="col-md-12">
+                                     
+
+
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 1rem" class="row">
+                                    <div class="col-md-12">
+                                   
+
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 1rem" class="row">
+                                    <div class="col-md-12">
+                                  
+
+
+                                    </div>
+                                </div>
+                            </RadzenFieldset>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12" style="display:flex; justify-content:flex-end; width:100%;">
+                                    
+                                    <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Salvar" ButtonStyle="ButtonStyle.Primary" Style="width: 150px;"></RadzenButton>
+                                </div>
+                            </div>
+                        </RadzenFieldset>
+                    </ChildContent>
+                </RadzenTemplateForm>
+            </div>
+        </div>
+    </ChildContent>
+</RadzenContent>

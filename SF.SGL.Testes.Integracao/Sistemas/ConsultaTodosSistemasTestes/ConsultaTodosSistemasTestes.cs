@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SF.SGL.Testes.Integracao.Sistemas.ObtemTodosSistemas
+namespace SF.SGL.Testes.Integracao.Sistemas.ConsultaTodosSistemas
 {
-    class ObtemTodosSistemasTestes
+    class ConsultaTodosSistemasTestes
     {
     }
 }

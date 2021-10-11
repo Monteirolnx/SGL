@@ -16,8 +16,8 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ConsultaSistemas
         }
 
         [HttpGet]
-        [Route("ObtemTodos")]
-        public async Task<IActionResult> ObtemTodos()
+        [Route("ConsultaTodos")]
+        public async Task<IActionResult> ConsultaTodos()
         {
             ConsultaSistemas.Resultado resultado = await _mediator.Send(new ConsultaSistemas.Query());
             return Ok(resultado.Resultados);

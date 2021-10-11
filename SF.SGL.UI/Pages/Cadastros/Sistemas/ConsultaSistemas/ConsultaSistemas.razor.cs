@@ -103,13 +103,13 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
                         sistemas.RemoveAll(x => x.Id == data.Id);
 
                         await GridConsultaSistemas.Reload();
-                        NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Sucesso", Detail = $"Sistema exluído com sucesso." });
+                        NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Sucesso:", Detail = $"Sistema exluído com sucesso." });
                     }
                 }
             }
             catch (Exception)
             {
-                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro", Detail = $"Não foi possível deletar o sistema." });
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = $"Não foi possível deletar o sistema." });
             }
         }
         #endregion
@@ -119,7 +119,7 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
         {
             try
             {
-                string serviceEndpoint = "api/ConsultaSistemas/ObtemTodos";
+                string serviceEndpoint = "api/ConsultaSistemas/ConsultaTodos";
                 UriBuilder uriBuilder = new(string.Concat(Configuration["EnderecoBaseSGLAPI"], serviceEndpoint));
                 return await HttpClient.GetAsync(uriBuilder.Uri);
             }
@@ -149,14 +149,14 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
         {
             erroRetornoAPI = new();
             erroRetornoAPI.Message = "Não foi possível realizar a comunicação com a Api SGL.";
-            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro", Detail = erroRetornoAPI.Message });
+            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = erroRetornoAPI.Message });
         }
 
         private async Task InformarErroAPI(HttpResponseMessage response)
         {
             erroRetornoAPI = new();
             erroRetornoAPI = await response.Content.ReadFromJsonAsync<ErroRetornoAPI>();
-            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro", Detail = erroRetornoAPI.Message });
+            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = erroRetornoAPI.Message });
         }
         #endregion
 

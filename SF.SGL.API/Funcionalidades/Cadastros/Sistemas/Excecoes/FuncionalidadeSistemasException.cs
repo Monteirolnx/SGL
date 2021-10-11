@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace SF.SGL.API.Funcionalidades.Excecoes
+namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Excecoes
 {
     public class FuncionalidadeSistemasException : Exception
     {
