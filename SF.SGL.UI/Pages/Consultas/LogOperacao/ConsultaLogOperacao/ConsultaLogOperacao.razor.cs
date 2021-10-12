@@ -41,6 +41,16 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
             await CargaInicial();
         }
 
+        public async Task AbrirPesquisaSistema()
+        {
+            LogOperacao resultado = await DialogService.OpenAsync<AuxPesquisaSistema>($"Pesquisa",
+                   new Dictionary<string, object>() { { "Sistemas", sistemas } },
+                   new DialogOptions() { Width = "670px", Height = "620px", Resizable = false, Draggable = true });
+
+            logOperacao.SistemaId = resultado == null ? string.Empty : resultado.SistemaId;
+            logOperacao.SistemaNome = resultado == null ? string.Empty : resultado.SistemaNome;
+        }
+
         protected async Task CargaInicial()
         {
             await Task.FromResult(logOperacao = new());
@@ -76,20 +86,24 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
 
         protected void OnTxtIdSistemaChange(string data)
         {
-            int id = Convert.ToInt32(data);
-            Sistema sistema = sistemas.Find(x => x.Id == id);
-            if (sistema != null)
+            logOperacao.SistemaId = string.Empty;
+            logOperacao.SistemaNome = string.Empty;
+            if (!string.IsNullOrEmpty(data))
             {
-                logOperacao.SistemaId = Convert.ToString(sistema.Id);
-                logOperacao.SistemaNome = sistema.Nome;
+                int id = Convert.ToInt32(data);
+                Sistema sistema = sistemas.Find(x => x.Id == id);
+                if (sistema != null)
+                {
+                    logOperacao.SistemaId = Convert.ToString(sistema.Id);
+                    logOperacao.SistemaNome = sistema.Nome;
+                }
+                else
+                {
+                    NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = "Sistema não existe." });
+                }
+                StateHasChanged();
             }
-            else
-            {
-                logOperacao.SistemaId = string.Empty;
-                logOperacao.SistemaNome = string.Empty;
-                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = "Sistema não existe." });
-            }
-            StateHasChanged();
+
         }
 
         protected async Task EnvioFormulario(LogOperacao logOperacao)

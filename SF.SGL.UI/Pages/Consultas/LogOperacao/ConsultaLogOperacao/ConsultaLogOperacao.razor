@@ -16,14 +16,13 @@
                         <RadzenFieldset Text="Sistema">
                             <div style="margin-bottom: 1rem" class="row">
                                 <div class="col-md-12">
-                                    <RadzenLabel Text="Cod Sistema:" Component="nm_sistema" style="display:inline-block;width: 20%;overflow: hidden;text-overflow: ellipsis;" ></RadzenLabel>
-                                    <RadzenLabel Text="Nome Sistema:" Component="nm_sistema" style="display:inline-block;width: 60%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                    <RadzenLabel Text="Cod Sistema:" Component="nm_sistema" style="display:inline-block;width: 15%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                    <RadzenLabel Text="Nome Sistema:" Component="nm_sistema" style="display:inline-block;width: 35%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
                                 </div>
-                                   <div class="col-md-12">
-                                    <RadzenTextBox MaxLength="6" style="display:inline-block; width: 20%" @bind-Value="@logOperacao.SistemaId" Name="txtIdSistema" Change="@OnTxtIdSistemaChange"></RadzenTextBox>
-                                    <RadzenTextBox MaxLength="100" style="display: inline-block; width: 75%" @bind-Value="@logOperacao.SistemaNome" Name="txtNomeSistema" Disabled=true></RadzenTextBox>
-                                    <RadzenRequiredValidator Component="Nm_sistema" Text="Nome do sistema é obrigatório." style="position: absolute">
-                                    </RadzenRequiredValidator>
+                                <div class="col-md-12">
+                                    <RadzenTextBox MaxLength="6" style="display:inline-block; width: 15%" @bind-Value="@logOperacao.SistemaId" Name="txtIdSistema" Change="@OnTxtIdSistemaChange"></RadzenTextBox>
+                                    <RadzenTextBox MaxLength="100" style="display: inline-block; width: 35%" @bind-Value="@logOperacao.SistemaNome" Name="txtNomeSistema" Disabled=true></RadzenTextBox>
+                                    <RadzenButton ButtonType="ButtonType.Button" Icon="search" ButtonStyle="ButtonStyle.Primary" Style="width: 40px;" Click=@AbrirPesquisaSistema></RadzenButton>
                                 </div>
                             </div>
                         </RadzenFieldset>
@@ -31,29 +30,20 @@
                             <RadzenFieldset Text="Informações de acesso ao serviço">
                                 <div style="margin-bottom: 1rem" class="row">
                                     <div class="col-md-12">
-                                     
-
-
                                     </div>
                                 </div>
                                 <div style="margin-bottom: 1rem" class="row">
                                     <div class="col-md-12">
-                                   
-
                                     </div>
                                 </div>
                                 <div style="margin-bottom: 1rem" class="row">
                                     <div class="col-md-12">
-                                  
-
-
                                     </div>
                                 </div>
                             </RadzenFieldset>
                             <br />
                             <div class="row">
                                 <div class="col-md-12" style="display:flex; justify-content:flex-end; width:100%;">
-                                    
                                     <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Salvar" ButtonStyle="ButtonStyle.Primary" Style="width: 150px;"></RadzenButton>
                                 </div>
                             </div>

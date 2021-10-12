@@ -24,6 +24,7 @@ namespace SF.SGL.UI
             builder.Services.AddScoped<ContextMenuService>();
 
             builder.Services.AddSingleton<RadzenDataGrid<Pages.Cadastros.Sistemas.ConsultaSistemas.ConsultaSistemas.Sistema>>();
+            builder.Services.AddSingleton<RadzenDataGrid<Pages.Consultas.LogOperacao.ConsultaLogOperacao.ConsultaLogOperacao.Sistema>>();
 
             await builder.Build().RunAsync();
         }
