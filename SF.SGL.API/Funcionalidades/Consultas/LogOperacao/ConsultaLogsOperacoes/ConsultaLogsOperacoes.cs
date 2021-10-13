@@ -58,7 +58,7 @@ namespace SF.SGL.API.Funcionalidades.Consultas.LogOperacao.ConsultaLogsOperacoes
                     .ProjectTo<Sistema>(_configurationProvider)
                     .ToListAsync(cancellationToken);
 
-                FuncionalidadeLogOperacaoException.Quando(!resultado.Any(), "Não existe resultado para a pesquisa.");
+                FuncionalidadeLogOperacaoException.Quando(!resultado.Any(), "Não existem sistemas cadastrados.");
 
                 Resultado model = new()
                 {

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Configuration;
 using Radzen;
+using Radzen.Blazor;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -38,20 +40,31 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
         #region Métodos
         protected override async Task OnInitializedAsync()
         {
-            await CargaInicial();
+            await MontarMemoria();
         }
 
         public async Task AbrirPesquisaSistema()
         {
-            LogOperacao resultado = await DialogService.OpenAsync<AuxPesquisaSistema>($"Pesquisa",
+            logOperacao.SistemaId = string.Empty;
+            logOperacao.SistemaNome = string.Empty;
+
+            LogOperacao resultadoPesquisa = await DialogService.OpenAsync<AuxPesquisaSistema>($"Pesquisa",
                    new Dictionary<string, object>() { { "Sistemas", sistemas } },
                    new DialogOptions() { Width = "670px", Height = "620px", Resizable = false, Draggable = true });
 
-            logOperacao.SistemaId = resultado == null ? string.Empty : resultado.SistemaId;
-            logOperacao.SistemaNome = resultado == null ? string.Empty : resultado.SistemaNome;
+            if (resultadoPesquisa == null)
+            {
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = "Nenhum sistema foi selecionado." });
+            }
+            else
+            {
+                logOperacao.SistemaId = resultadoPesquisa.SistemaId;
+                logOperacao.SistemaNome =  resultadoPesquisa.SistemaNome;
+                Recarregar();
+            }
         }
 
-        protected async Task CargaInicial()
+        protected async Task MontarMemoria()
         {
             await Task.FromResult(logOperacao = new());
             HttpResponseMessage httpResponseMessage = await ApiAuxConsultaSistemas();
@@ -67,7 +80,12 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
             {
                 sistemas = await httpResponseMessage.Content.ReadFromJsonAsync<List<Sistema>>();
             }
-            StateHasChanged();
+            Recarregar();
+        }
+
+        public void Recarregar()
+        {
+            InvokeAsync(StateHasChanged);
         }
 
         private async Task<HttpResponseMessage> ApiAuxConsultaSistemas()
@@ -84,31 +102,37 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
             }
         }
 
+        protected async Task EnviarFormulario(LogOperacao logOperacao)
+        {
+
+        }
+        #endregion
+
+        #region Eventos
         protected void OnTxtIdSistemaChange(string data)
         {
             logOperacao.SistemaId = string.Empty;
             logOperacao.SistemaNome = string.Empty;
-            if (!string.IsNullOrEmpty(data))
+
+            if (!int.TryParse(data, out int resultado))
             {
-                int id = Convert.ToInt32(data);
-                Sistema sistema = sistemas.Find(x => x.Id == id);
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = "Código de sistema inválido." });
+            }
+            else
+            {
+                Sistema sistema = sistemas.Find(x => x.Id == resultado);
                 if (sistema != null)
                 {
                     logOperacao.SistemaId = Convert.ToString(sistema.Id);
                     logOperacao.SistemaNome = sistema.Nome;
+
                 }
                 else
                 {
                     NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = "Sistema não existe." });
                 }
-                StateHasChanged();
+                Recarregar();
             }
-
-        }
-
-        protected async Task EnvioFormulario(LogOperacao logOperacao)
-        {
-
         }
         #endregion
 

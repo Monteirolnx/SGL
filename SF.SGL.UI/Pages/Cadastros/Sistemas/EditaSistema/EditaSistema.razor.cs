@@ -37,10 +37,10 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.EditaSistema
         #region Métodos
         protected override async Task OnInitializedAsync()
         {
-            await CargaInicial();
+            await MontarMemoria();
         }
 
-        protected async Task CargaInicial()
+        protected async Task MontarMemoria()
         {
             HttpResponseMessage httpResponseMessage = await ApiConsultaSistemaPorId(Id);
             if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -67,7 +67,7 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.EditaSistema
             NavigationManager.NavigateTo("Cadastros/Sistemas");
         }
 
-        protected async Task EnvioFormulario()
+        protected async Task EnviarFormulario()
         {
             HttpResponseMessage httpResponseMessage = await ApiEditaSistema(Id, sistema);
             if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -83,7 +83,7 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.EditaSistema
                 NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Sucesso:", Detail = $"Sistema editado com sucesso." });
                 NavigationManager.NavigateTo("Cadastros/Sistemas");
             }
-            StateHasChanged();
+            Recarregar();
         }
         
         #endregion

@@ -40,10 +40,10 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.AdicionaSistema
         #region Métodos
         protected override async Task OnInitializedAsync()
         {
-            await CargaInicial();
+            await MontarMemoria();
         }
 
-        protected async Task CargaInicial()
+        protected async Task MontarMemoria()
         {
             await Task.FromResult(sistema = new());
         }
@@ -58,7 +58,7 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.AdicionaSistema
             NavigationManager.NavigateTo("Cadastros/Sistemas");
         }
 
-        protected async Task EnvioFormulario(Sistema sistema)
+        protected async Task EnviarFormulario(Sistema sistema)
         {
             HttpResponseMessage httpResponseMessage = await ApiAdicionaSistema();
             if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -74,7 +74,7 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.AdicionaSistema
                 NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Sucesso:", Detail = $"Sistema incluído com sucesso." });
                 NavigationManager.NavigateTo("Cadastros/Sistemas");
             }
-            StateHasChanged();
+            Recarregar();
         }
         #endregion
         

@@ -20,7 +20,7 @@ else if (sistema != null || erroRetornoAPI?.Message != null)
                 <RadzenHeading Size="H2" Text="Editar Sistema"></RadzenHeading>
                 <div class="row">
                     <div class="col-md-6">
-                        <RadzenTemplateForm Data="@sistema" Visible="@(sistema != null)" TItem="Sistema" Submit="@EnvioFormulario">
+                        <RadzenTemplateForm Data="@sistema" Visible="@(sistema != null)" TItem="Sistema" Submit="@EnviarFormulario">
                             <ChildContent>
                                 <RadzenFieldset Text="Parametrizar sistema">
                                     <div style="margin-bottom: 1rem" class="row">
@@ -63,7 +63,7 @@ else if (sistema != null || erroRetornoAPI?.Message != null)
                                     </RadzenFieldset>
                                     <br />
                                     <div class="row">
-                                        <div class="col-md-12" style="display:flex; justify-content:flex-end; width:100%; padding:1;">
+                                        <div class="col-md-12" style="display:flex; justify-content:flex-end; width:100%;">
                                             <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="close" Text="Cancelar" Click="@NavegarPaginaSistemas" Style="width: 150px; margin-right:5px"></RadzenButton>
                                             <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Salvar" ButtonStyle="ButtonStyle.Primary" Style="width: 150px;"></RadzenButton>
                                         </div>

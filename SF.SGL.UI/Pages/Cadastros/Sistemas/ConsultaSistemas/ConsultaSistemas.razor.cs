@@ -42,10 +42,10 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
         #region Métodos
         protected async override void OnInitialized()
         {
-            await CargaInicial();
+            await MontarMemoria();
         }
 
-        private async Task CargaInicial()
+        private async Task MontarMemoria()
         {
             desabilitaAdicao = true;
             HttpResponseMessage httpResponseMessage = await ApiConsultaSistemas();
@@ -63,7 +63,7 @@ namespace SF.SGL.UI.Pages.Cadastros.Sistemas.ConsultaSistemas
                 sistemas = await httpResponseMessage.Content.ReadFromJsonAsync<List<Sistema>>();
                 desabilitaAdicao = false;
             }
-            StateHasChanged();
+            Recarregar();
         }
 
         public void Recarregar()

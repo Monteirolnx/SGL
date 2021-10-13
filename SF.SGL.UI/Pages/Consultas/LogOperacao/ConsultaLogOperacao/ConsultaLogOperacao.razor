@@ -5,52 +5,70 @@
 @using Radzen
 @using Radzen.Blazor
 
-<RadzenProgressBar Value="100" ShowValue="false" Max="100" Style="margin-bottom: 20px" />
-<RadzenContent Container="main">
-    <ChildContent>
-        <RadzenHeading Size="H2" Text="Consultar Log Operação"></RadzenHeading>
-        <div class="row">
-            <div class="col-md-6">
-                <RadzenTemplateForm Data="@logOperacao" Visible="@(logOperacao != null)" TItem="LogOperacao" Submit="@EnvioFormulario">
-                    <ChildContent>
-                        <RadzenFieldset Text="Sistema">
-                            <div style="margin-bottom: 1rem" class="row">
-                                <div class="col-md-12">
-                                    <RadzenLabel Text="Cod Sistema:" Component="nm_sistema" style="display:inline-block;width: 15%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
-                                    <RadzenLabel Text="Nome Sistema:" Component="nm_sistema" style="display:inline-block;width: 35%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
-                                </div>
-                                <div class="col-md-12">
-                                    <RadzenTextBox MaxLength="6" style="display:inline-block; width: 15%" @bind-Value="@logOperacao.SistemaId" Name="txtIdSistema" Change="@OnTxtIdSistemaChange"></RadzenTextBox>
-                                    <RadzenTextBox MaxLength="100" style="display: inline-block; width: 35%" @bind-Value="@logOperacao.SistemaNome" Name="txtNomeSistema" Disabled=true></RadzenTextBox>
-                                    <RadzenButton ButtonType="ButtonType.Button" Icon="search" ButtonStyle="ButtonStyle.Primary" Style="width: 40px;" Click=@AbrirPesquisaSistema></RadzenButton>
-                                </div>
-                            </div>
-                        </RadzenFieldset>
-                        <RadzenFieldset Text="Parametrizar sistema">
-                            <RadzenFieldset Text="Informações de acesso ao serviço">
-                                <div style="margin-bottom: 1rem" class="row">
-                                    <div class="col-md-12">
+@if (sistemas == null && erroRetornoAPI == null)
+{
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+    <h4>Carregando...</h4>
+}
+else if (sistemas != null || erroRetornoAPI?.Message != null)
+{
+    <RadzenProgressBar Value="100" ShowValue="false" Max="100" Style="margin-bottom: 20px" />
+    <RadzenHeading Size="H2" Text="Consultar Log Operação"></RadzenHeading>
+    @if (sistemas != null)
+    {
+        <RadzenContent Container="main">
+            <ChildContent>
+                <div class="row">
+                    <div class="col-md-6">
+                        <RadzenTemplateForm Data="@logOperacao" Visible="@(logOperacao != null)" TItem="LogOperacao" Submit="@EnviarFormulario">
+                            <ChildContent>
+                                <RadzenFieldset Text="Sistema">
+                                    <div style="margin-bottom: 1rem" class="row">
+                                        <div class="col-md-12">
+                                            <RadzenLabel Text="Cod Sistema:" Component="txtIdSistema" style="display:inline-block;width: 15%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                            <RadzenLabel Text="Nome Sistema:" Component="txtNomeSistema" style="display:inline-block;width: 35%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <RadzenTextBox MaxLength="6" style="display:inline-block; width: 15%" @bind-Value="@logOperacao.SistemaId" Name="txtIdSistema" Change="@OnTxtIdSistemaChange"></RadzenTextBox>
+                                            <RadzenTextBox MaxLength="100" style="display: inline-block; width: 35%" @bind-Value="@logOperacao.SistemaNome" Name="txtNomeSistema" Disabled=true></RadzenTextBox>
+                                            <RadzenButton ButtonType="ButtonType.Button" Icon="search" ButtonStyle="ButtonStyle.Primary" Style="width: 40px;" Click=@AbrirPesquisaSistema></RadzenButton>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <RadzenRequiredValidator Component="txtIdSistema" Text="É necessário informar um sistema." style="position: absolute"></RadzenRequiredValidator>
+                                        </div>
                                     </div>
-                                </div>
-                                <div style="margin-bottom: 1rem" class="row">
-                                    <div class="col-md-12">
+                                </RadzenFieldset>
+                                <RadzenFieldset Text="Parametrizar sistema">
+                                    <RadzenFieldset Text="Informações de acesso ao serviço">
+                                        <div style="margin-bottom: 1rem" class="row">
+                                            <div class="col-md-12">
+                                            </div>
+                                        </div>
+                                        <div style="margin-bottom: 1rem" class="row">
+                                            <div class="col-md-12">
+                                            </div>
+                                        </div>
+                                        <div style="margin-bottom: 1rem" class="row">
+                                            <div class="col-md-12">
+                                            </div>
+                                        </div>
+                                    </RadzenFieldset>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12" style="display:flex; justify-content:flex-end; width:100%;">
+                                            <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Salvar" ButtonStyle="ButtonStyle.Primary" Style="width: 150px;"></RadzenButton>
+                                        </div>
                                     </div>
-                                </div>
-                                <div style="margin-bottom: 1rem" class="row">
-                                    <div class="col-md-12">
-                                    </div>
-                                </div>
-                            </RadzenFieldset>
-                            <br />
-                            <div class="row">
-                                <div class="col-md-12" style="display:flex; justify-content:flex-end; width:100%;">
-                                    <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Salvar" ButtonStyle="ButtonStyle.Primary" Style="width: 150px;"></RadzenButton>
-                                </div>
-                            </div>
-                        </RadzenFieldset>
-                    </ChildContent>
-                </RadzenTemplateForm>
-            </div>
-        </div>
-    </ChildContent>
-</RadzenContent>
+                                </RadzenFieldset>
+                            </ChildContent>
+                        </RadzenTemplateForm>
+                    </div>
+                </div>
+            </ChildContent>
+        </RadzenContent>
+    }
+    else
+    {
+        <p>@erroRetornoAPI.Message</p>
+    }
+}

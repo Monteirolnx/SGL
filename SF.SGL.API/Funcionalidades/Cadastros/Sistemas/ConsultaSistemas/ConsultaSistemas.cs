@@ -63,7 +63,7 @@ namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ConsultaSistemas
                     .ProjectTo<Sistema>(_configurationProvider)
                     .ToListAsync(cancellationToken);
 
-                FuncionalidadeSistemasException.Quando(!resultado.Any(), "Não existe resultado para a pesquisa.");
+                FuncionalidadeSistemasException.Quando(!resultado.Any(), "Não existem sistemas cadastrados.");
 
                 Resultado model = new()
                 {
