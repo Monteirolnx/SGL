@@ -18,19 +18,20 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
     {
         <RadzenContent Container="main">
             <ChildContent>
-                <div class="row">
-                    <div class="col-md-6">
-                        <RadzenTemplateForm Data="@logOperacao" Visible="@(logOperacao != null)" TItem="LogOperacao" Submit="@EnviarFormulario">
-                            <ChildContent>
+
+                <RadzenTemplateForm Data="@logOperacao" Visible="@(logOperacao != null)" TItem="LogOperacao" Submit="@EnviarFormulario">
+                    <ChildContent>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <RadzenFieldset Text="Sistema">
                                     <div style="margin-bottom: 1rem" class="row">
                                         <div class="col-md-12">
-                                            <RadzenLabel Text="Cod Sistema:" Component="txtIdSistema" style="display:inline-block;width: 15%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
-                                            <RadzenLabel Text="Nome Sistema:" Component="txtNomeSistema" style="display:inline-block;width: 35%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                            <RadzenLabel Text="Cod Sistema:" style="display:inline-block;width: 20%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                            <RadzenLabel Text="Nome Sistema:" style="display:inline-block;width: 45%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
                                         </div>
                                         <div class="col-md-12">
-                                            <RadzenTextBox MaxLength="6" style="display:inline-block; width: 15%" @bind-Value="@logOperacao.SistemaId" Name="txtIdSistema" Change="@OnTxtIdSistemaChange"></RadzenTextBox>
-                                            <RadzenTextBox MaxLength="100" style="display: inline-block; width: 35%" @bind-Value="@logOperacao.SistemaNome" Name="txtNomeSistema" Disabled=true></RadzenTextBox>
+                                            <RadzenTextBox MaxLength="6" style="display:inline-block; width: 20%" @bind-Value="@logOperacao.SistemaId" Name="txtIdSistema" Change="@OnTxtIdSistemaChange"></RadzenTextBox>
+                                            <RadzenTextBox MaxLength="100" style="display: inline-block; width: 45%" @bind-Value="@logOperacao.SistemaNome" Name="txtNomeSistema" Disabled=true></RadzenTextBox>
                                             <RadzenButton ButtonType="ButtonType.Button" Icon="search" ButtonStyle="ButtonStyle.Primary" Style="width: 40px;" Click=@AbrirPesquisaSistema></RadzenButton>
                                         </div>
                                         <div class="col-md-12">
@@ -38,32 +39,90 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                         </div>
                                     </div>
                                 </RadzenFieldset>
-                                <RadzenFieldset Text="Parametrizar sistema">
-                                    <RadzenFieldset Text="Informações de acesso ao serviço">
-                                        <div style="margin-bottom: 1rem" class="row">
-                                            <div class="col-md-12">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <RadzenFieldset Text="Filtros">
+                                    <div style="margin-bottom: 1rem" class="row">
+                                        <div class="col-md-12">
+                                            <RadzenLabel Text="Período Inicial:" style="display:inline-block;width: 208px;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                            <RadzenLabel Text="Período Final:" style="display:inline-block;width: 208px;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <RadzenDatePicker AllowClear="true" Inline="false" ShowSeconds="true" ShowTime="true" YearRange="2020:2050" Name="DatepickerPeriodoInicial" TValue="DateTime"></RadzenDatePicker>
+                                            <RadzenDatePicker AllowClear="true" Inline="false" ShowSeconds="true" ShowTime="true" YearRange="2020:2050" Name="DatepickerPeriodoFinal" TValue="DateTime"></RadzenDatePicker>
+
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 1rem" class="row">
+                                        <div class="col-md-12">
+                                            <RadzenLabel Text="Identificador Usuário:" style="display:inline-block;width: 100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <RadzenTextBox MaxLength="100" style="display: inline-block; width: 100%" Name="txtIdentificadorUsuario"></RadzenTextBox>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="padding-left: 15px;padding-right: 15px">
+                                        <div class="col-md-8" style="padding-left: 0px;padding-right: 0px">
+                                            <div class="col-md-12" style="padding-left: 0px;padding-right: 0px">
+                                                <RadzenLabel Text="Funcionalidade:" style="display:inline-block;width:  100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                            </div>
+                                            <div class="col-md-12" style="padding-left: 0px;padding-right: 0px">
+                                                <RadzenTextBox MaxLength="100" style="display: inline-block; width:  100%" Name="txtFuncionalidade"></RadzenTextBox>
                                             </div>
                                         </div>
-                                        <div style="margin-bottom: 1rem" class="row">
-                                            <div class="col-md-12">
+
+                                        <div class="col-md-2" style="padding-left: 3px;padding-right: 3px">
+                                            <div class="col-md-12" style="padding-left: 0px;padding-right: 0px">
+                                                <RadzenLabel Text="Tipo do Registro:" style="display:inline-block;width: 100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                            </div>
+                                            <div class="col-md-12" style="padding-left: 0px;padding-right: 0px">
+                                                <RadzenTextBox MaxLength="100" style="display: inline-block; width:  100%" Name="txtTipoRegistro"></RadzenTextBox>
                                             </div>
                                         </div>
-                                        <div style="margin-bottom: 1rem" class="row">
-                                            <div class="col-md-12">
+
+                                        <div class="col-md-2" style="padding-left: 0px;padding-right: 0px">
+                                            <div class="col-md-12" style="padding-left: 0px;padding-right: 0px">
+                                                <RadzenLabel Text="Subtipo do Registro:" style="display:inline-block;width: 100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                            </div>
+                                            <div class="col-md-12" style="padding-left: 0px;padding-right: 0px">
+                                                <RadzenTextBox MaxLength="100" style="display: inline-block; width:  100%" Name="txtSubtipoRegistro" Disabled=true></RadzenTextBox>
                                             </div>
                                         </div>
-                                    </RadzenFieldset>
+                                    </div>
+
+                                    <div style="margin-bottom: 1rem" class="row">
+                                        <div class="col-md-12">
+                                            <RadzenLabel Text="Mensagem de Erro:" style="display:inline-block;width: 100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <RadzenTextBox MaxLength="100" style="display: inline-block; width: 100%" Name="txtMensagemErro"></RadzenTextBox>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-bottom: 1rem" class="row">
+                                        <div class="col-md-12">
+                                            <RadzenLabel Text="Exceção Capturada:" style="display:inline-block;width: 100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <RadzenTextBox MaxLength="100" style="display: inline-block; width: 100%" Name="txtExcecaoCapturada"></RadzenTextBox>
+                                        </div>
+                                    </div>
                                     <br />
                                     <div class="row">
                                         <div class="col-md-12" style="display:flex; justify-content:flex-end; width:100%;">
-                                            <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Salvar" ButtonStyle="ButtonStyle.Primary" Style="width: 150px;"></RadzenButton>
+                                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="close" Text="Limpar" Click="@LimparConsulta" Style="width: 175px; margin-right:5px"></RadzenButton>
+                                            <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Consultar" ButtonStyle="ButtonStyle.Primary" Style="width: 175px;"></RadzenButton>
                                         </div>
                                     </div>
+
                                 </RadzenFieldset>
-                            </ChildContent>
-                        </RadzenTemplateForm>
-                    </div>
-                </div>
+                            </div>
+                        </div>
+                    </ChildContent>
+                </RadzenTemplateForm>
             </ChildContent>
         </RadzenContent>
     }

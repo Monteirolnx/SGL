@@ -43,7 +43,7 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
             await MontarMemoria();
         }
 
-        public async Task AbrirPesquisaSistema()
+        protected async Task AbrirPesquisaSistema()
         {
             logOperacao.SistemaId = string.Empty;
             logOperacao.SistemaNome = string.Empty;
@@ -59,9 +59,14 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
             else
             {
                 logOperacao.SistemaId = resultadoPesquisa.SistemaId;
-                logOperacao.SistemaNome =  resultadoPesquisa.SistemaNome;
+                logOperacao.SistemaNome = resultadoPesquisa.SistemaNome;
                 Recarregar();
             }
+        }
+
+        protected async Task LimparConsulta()
+        {
+            await OnInitializedAsync();
         }
 
         protected async Task MontarMemoria()

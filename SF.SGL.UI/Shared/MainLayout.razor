@@ -12,9 +12,8 @@
     <ChildContent>
         <div class="row justify-content-start align-items-center">
             <div class="col-4 d-flex align-items-center">
-                <RadzenSidebarToggle Click="@SidebarToggle0Click">
-                </RadzenSidebarToggle>
-                <RadzenLabel Text="SGL - Sistema de Gestão de Logs"></RadzenLabel>
+                <RadzenSidebarToggle Click="@SidebarToggle0Click"></RadzenSidebarToggle>
+                <RadzenLabel Text="SGL - Sistema de Gestão de Logs" Style="text-overflow: ellipsis"></RadzenLabel>
             </div>
             <div class="col-4 d-flex align-items-center">
                 <RadzenSwitch Disabled="false" @bind-Value="@DarkTheme" Change="@UpdateTheme" />
