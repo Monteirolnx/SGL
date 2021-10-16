@@ -64,7 +64,7 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                         </div>
                                     </div>
 
-                                    <div class="row" style="padding-left: 15px;padding-right: 15px">
+                                    <div class="row" style="padding-left: 15px;padding-right: 15px;margin-bottom: 1rem">
                                         <div class="col-md-8" style="padding-left: 0px;padding-right: 0px">
                                             <div class="col-md-12" style="padding-left: 0px;padding-right: 0px">
                                                 <RadzenLabel Text="Funcionalidade:" style="display:inline-block;width:  100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
@@ -74,12 +74,12 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                             </div>
                                         </div>
 
-                                        <div class="col-md-2" style="padding-left: 3px;padding-right: 3px">
+                                        <div class="col-md-2" style="padding-left: 3px;padding-right: 3px;">
                                             <div class="col-md-12" style="padding-left: 0px;padding-right: 0px">
                                                 <RadzenLabel Text="Tipo do Registro:" style="display:inline-block;width: 100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
                                             </div>
                                             <div class="col-md-12" style="padding-left: 0px;padding-right: 0px">
-                                                <RadzenTextBox MaxLength="100" style="display: inline-block; width:  100%" Name="txtTipoRegistro"></RadzenTextBox>
+                                                <RadzenDropDown Data="@tipoRegistros" @bind-Value="@tipoRegistro"  Style="width:100%"/>
                                             </div>
                                         </div>
 
@@ -88,7 +88,7 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                                 <RadzenLabel Text="Subtipo do Registro:" style="display:inline-block;width: 100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
                                             </div>
                                             <div class="col-md-12" style="padding-left: 0px;padding-right: 0px">
-                                                <RadzenTextBox MaxLength="100" style="display: inline-block; width:  100%" Name="txtSubtipoRegistro" Disabled=true></RadzenTextBox>
+                                                <RadzenDropDown Data="@subTipoRegistros" @bind-Value="@subTipoRegistro"  Style="width:100%"/>
                                             </div>
                                         </div>
                                     </div>

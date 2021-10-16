@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Configuration;
 using Radzen;
-using Radzen.Blazor;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
@@ -16,6 +18,12 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
         protected LogOperacao logOperacao;
         protected List<Sistema> sistemas;
         protected ErroRetornoAPI erroRetornoAPI;
+
+        EnumTipoRegistro tipoRegistro;
+        List<EnumTipoRegistro> tipoRegistros;
+
+        EnumSubTipoRegistro subTipoRegistro;
+        List<EnumSubTipoRegistro> subTipoRegistros;
 
         #region Injects
         [Inject]
@@ -40,35 +48,9 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
         #region Métodos
         protected override async Task OnInitializedAsync()
         {
+            MontarDropDown();
             await MontarMemoria();
         }
-
-        protected async Task AbrirPesquisaSistema()
-        {
-            logOperacao.SistemaId = string.Empty;
-            logOperacao.SistemaNome = string.Empty;
-
-            LogOperacao resultadoPesquisa = await DialogService.OpenAsync<AuxPesquisaSistema>($"Pesquisa",
-                   new Dictionary<string, object>() { { "Sistemas", sistemas } },
-                   new DialogOptions() { Width = "670px", Height = "620px", Resizable = false, Draggable = true });
-
-            if (resultadoPesquisa == null)
-            {
-                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = "Nenhum sistema foi selecionado." });
-            }
-            else
-            {
-                logOperacao.SistemaId = resultadoPesquisa.SistemaId;
-                logOperacao.SistemaNome = resultadoPesquisa.SistemaNome;
-                Recarregar();
-            }
-        }
-
-        protected async Task LimparConsulta()
-        {
-            await OnInitializedAsync();
-        }
-
         protected async Task MontarMemoria()
         {
             await Task.FromResult(logOperacao = new());
@@ -93,6 +75,48 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
             InvokeAsync(StateHasChanged);
         }
 
+        private void MontarDropDown()
+        {
+            tipoRegistro = EnumTipoRegistro.Selecione;
+            tipoRegistros = Enum.GetValues(typeof(EnumTipoRegistro)).Cast<EnumTipoRegistro>().ToList();
+
+            subTipoRegistro = EnumSubTipoRegistro.Selecione;
+            subTipoRegistros = Enum.GetValues(typeof(EnumSubTipoRegistro)).Cast<EnumSubTipoRegistro>().ToList();
+        }
+
+        protected async Task AbrirPesquisaSistema()
+        {
+            logOperacao.SistemaId = string.Empty;
+            logOperacao.SistemaNome = string.Empty;
+
+            LogOperacao resultadoPesquisa = await DialogService.OpenAsync<AuxPesquisaSistema>($"Pesquisa",
+                   new Dictionary<string, object>() { { "Sistemas", sistemas } },
+                   new DialogOptions() { Width = "670px", Height = "620px", Resizable = false, Draggable = true });
+
+            if (resultadoPesquisa == null)
+            {
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = "Nenhum sistema foi selecionado." });
+            }
+            else
+            {
+                logOperacao.SistemaId = resultadoPesquisa.SistemaId;
+                logOperacao.SistemaNome = resultadoPesquisa.SistemaNome;
+                Recarregar();
+            }
+        }
+
+        protected async Task EnviarFormulario(LogOperacao logOperacao)
+        {
+
+        }
+
+        protected async Task LimparConsulta()
+        {
+            await OnInitializedAsync();
+        }
+        #endregion
+
+        #region Chamadas Api
         private async Task<HttpResponseMessage> ApiAuxConsultaSistemas()
         {
             try
@@ -107,10 +131,6 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
             }
         }
 
-        protected async Task EnviarFormulario(LogOperacao logOperacao)
-        {
-
-        }
         #endregion
 
         #region Eventos
@@ -164,7 +184,7 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
 
             public string SistemaNome { get; set; }
         }
-
+        
         public class Sistema
         {
             public int Id { get; set; }
@@ -175,6 +195,54 @@ namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao
         public record ErroRetornoAPI
         {
             public string Message { get; set; }
+        }
+        #endregion
+
+        #region Enums
+        public enum EnumTipoRegistro
+        {
+            [EnumMember(Value = "0")]
+            [Display(Name = "Selecione")]
+            [Description("Selecione")]
+            Selecione = 0,
+
+            [EnumMember(Value = "1")]
+            [Display(Name = "Falha")]
+            [Description("Falha")]
+            FALHA = 1,
+
+            [EnumMember(Value = "2")]
+            [Display(Name = "Sucesso")]
+            [Description("Sucesso")]
+            SUCESSO = 2
+        }
+
+        public enum EnumSubTipoRegistro
+        {
+            [EnumMember(Value = "0")]
+            [Display(Name = "Selecione")]
+            [Description("Selecione")]
+            Selecione = 0,
+
+            [EnumMember(Value = "1")]
+            [Display(Name = "Geral")]
+            [Description("Geral")]
+            GERAL = 1,
+
+            [EnumMember(Value = "2")]
+            [Display(Name = "Integração")]
+            [Description("Integração")]
+            INTEGRACAO = 2,
+
+            [EnumMember(Value = "3")]
+            [Display(Name = "Processo Batch - Aplicação")]
+            [Description("Processo Batch - Aplicação")]
+            PROCESSO_BATCH_APLICACAO = 3,
+
+            [EnumMember(Value = "4")]
+            [Display(Name = "Processo Batch - Banco de Dados")]
+            [Description("Processo Batch - Banco de Dados")]
+            PROCESSO_BATCH_BANCO_DE_DADOS = 4,
         }
         #endregion
     }
