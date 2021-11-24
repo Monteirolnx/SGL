@@ -1,41 +1,23 @@
-﻿using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using SF.SGL.API.Filtros;
+﻿namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema;
 
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema
+[ApiController, Route("api/[controller]")]
+public class EditaSistemaController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class EditaSistemaController : ControllerBase
+    [HttpGet,Route("ConsultaSistemaPorId/{id}")]
+    public async Task<IActionResult> ConsultaSistemaPorId([FromServices] IMediator mediator,int id)
     {
-        private readonly IMediator _mediator;
+        ConsultaSistemaPorId.Resultado resultado = await mediator.Send(new ConsultaSistemaPorId.Query() { Id = id });
+        return Ok(resultado.Sistema);
+    }
 
-        public EditaSistemaController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+    [HttpPut, Route("Edita/{id}"), ModelValidation]
+    public async Task<IActionResult> Edita([FromServices]IMediator mediator,int id, EditaSistema.Command command)
+    {
+        if (id != command.Id)
+            return BadRequest();
 
-        [HttpGet]
-        [Route("ConsultaSistemaPorId/{id}")]
-        public async Task<IActionResult> ConsultaSistemaPorId(int id)
-        {
-            ConsultaSistemaPorId.Command resultado = await _mediator.Send(new ConsultaSistemaPorId.Query() { Id = id });
-            return Ok(resultado);
-        }
+        await mediator.Send(command);
 
-        [HttpPut]
-        [Route("Edita/{id}")]
-        [ModelValidation]
-        public async Task<IActionResult> Edita(int id, EditaSistema.Command command)
-        {
-            if (id != command.Id)
-                return BadRequest();
-
-            await _mediator.Send(command);
-
-            return Ok();
-        }
-
+        return Ok();
     }
 }

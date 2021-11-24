@@ -1,19 +1,16 @@
-﻿using System;
+﻿namespace SF.SGL.API.Funcionalidades.Consultas.LogOperacao.Excecoes;
 
-namespace SF.SGL.API.Funcionalidades.Consultas.LogOperacao.Excecoes
+public class FuncionalidadeLogOperacaoException : Exception
 {
-    public class FuncionalidadeLogOperacaoException : Exception
+    public FuncionalidadeLogOperacaoException(string erro) : base(erro)
     {
-        public FuncionalidadeLogOperacaoException(string erro) : base(erro)
-        {
-        }
+    }
 
-        public static void Quando(bool existeErro, string erro)
+    public static void Quando(bool existeErro, string erro)
+    {
+        if (existeErro)
         {
-            if (existeErro)
-            {
-                throw new FuncionalidadeLogOperacaoException(erro);
-            }
+            throw new FuncionalidadeLogOperacaoException(erro);
         }
     }
 }

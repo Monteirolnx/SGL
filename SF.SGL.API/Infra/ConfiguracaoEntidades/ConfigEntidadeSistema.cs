@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SF.SGL.Dominio.Entidades;
-
-namespace SF.SGL.Infra.Data.ConfiguracaoEntidades
+﻿namespace SF.SGL.API.Infra.ConfiguracaoEntidades
 {
     internal class ConfigEntidadeSistema : IEntityTypeConfiguration<EntidadeSistema>
     {

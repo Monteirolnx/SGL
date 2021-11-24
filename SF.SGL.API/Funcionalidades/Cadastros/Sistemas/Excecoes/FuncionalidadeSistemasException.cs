@@ -1,19 +1,16 @@
-﻿using System;
+﻿namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Excecoes;
 
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Excecoes
+public class FuncionalidadeSistemasException : Exception
 {
-    public class FuncionalidadeSistemasException : Exception
+    public FuncionalidadeSistemasException(string erro) : base(erro)
     {
-        public FuncionalidadeSistemasException(string erro) : base(erro)
-        {
-        }
+    }
 
-        public static void Quando(bool existeErro, string erro)
+    public static void Quando(bool existeErro, string erro)
+    {
+        if (existeErro)
         {
-            if (existeErro)
-            {
-                throw new FuncionalidadeSistemasException(erro);
-            }
+            throw new FuncionalidadeSistemasException(erro);
         }
     }
 }

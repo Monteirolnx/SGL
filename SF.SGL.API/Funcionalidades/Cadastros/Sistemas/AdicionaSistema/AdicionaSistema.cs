@@ -1,59 +1,50 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using MediatR;
-using SF.SGL.Dominio.Entidades;
-using SF.SGL.Infra.Data.Contextos;
+﻿namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.AdicionaSistema;
 
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.AdicionaSistema
+public class AdicionaSistema
 {
-    public class AdicionaSistema
+    public class MappingProfile : Profile
     {
-        public class MappingProfile : Profile
+        public MappingProfile()
         {
-            public MappingProfile()
-            {
-                CreateMap<EntidadeSistema, Command>().ReverseMap();
-            }
+            CreateMap<EntidadeSistema, Command>().ReverseMap();
+        }
+    }
+
+    public class Command : IRequest<int>
+    {
+        [Required(ErrorMessage = "Nome do sistema é obrigatório.")]
+        public string Nome { get; set; }
+
+        [Required(ErrorMessage = "Url do serviço do sistema é obrigatório.")]
+        public string UrlServicoConsultaLog { get; set; }
+
+        [Required(ErrorMessage = "Login do usuário do sistema é obrigatório.")]
+        public string UsuarioLogin { get; set; }
+
+        [Required(ErrorMessage = "Senha do usuário do sistema é obrigatório.")]
+        public string UsuarioSenha { get; set; }
+    }
+
+    public class CommandHandler : IRequestHandler<Command, int>
+    {
+        private readonly SGLContexto _sglContexto;
+        private readonly IMapper _mapper;
+
+        public CommandHandler(SGLContexto sglContexto, IMapper mapper)
+        {
+            _sglContexto = sglContexto;
+            _mapper = mapper;
         }
 
-        public class Command : IRequest<int>
+        public async Task<int> Handle(Command command, CancellationToken cancellationToken)
         {
-            [Required(ErrorMessage = "Nome do sistema é obrigatório.")]
-            public string Nome { get; set; }
+            EntidadeSistema entidadeSistema = _mapper.Map<EntidadeSistema>(command);
 
-            [Required(ErrorMessage = "Url do serviço do sistema é obrigatório.")]
-            public string UrlServicoConsultaLog { get; set; }
+            await _sglContexto.AddAsync(entidadeSistema, cancellationToken);
 
-            [Required(ErrorMessage = "Login do usuário do sistema é obrigatório.")]
-            public string UsuarioLogin { get; set; }
+            await _sglContexto.SaveChangesAsync(cancellationToken);
 
-            [Required(ErrorMessage = "Senha do usuário do sistema é obrigatório.")]
-            public string UsuarioSenha { get; set; }
-        }
-
-        public class CommandHandler : IRequestHandler<Command, int>
-        {
-            private readonly SGLContexto _sglContexto;
-            private readonly IMapper _mapper;
-
-            public CommandHandler(SGLContexto sglContexto, IMapper mapper)
-            {
-                _sglContexto = sglContexto;
-                _mapper = mapper;
-            }
-
-            public async Task<int> Handle(Command command, CancellationToken cancellationToken)
-            {
-                EntidadeSistema entidadeSistema = _mapper.Map<EntidadeSistema>(command);
-
-                await _sglContexto.AddAsync(entidadeSistema, cancellationToken);
-
-                await _sglContexto.SaveChangesAsync(cancellationToken);
-
-                return entidadeSistema.Id;
-            }
+            return entidadeSistema.Id;
         }
     }
 }

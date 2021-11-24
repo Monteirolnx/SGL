@@ -1,28 +1,14 @@
-﻿using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.DeletaSistema;
 
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.DeletaSistema
+[ApiController, Route("api/[controller]")]
+public class DeletaSistemaController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class DeletaSistemaController : ControllerBase
+    [HttpDelete,Route("Deleta/{id}")]
+    public async Task<IActionResult> Deleta([FromServices] IMediator mediator,int id)
     {
-        private readonly IMediator _mediator;
+        DeletaSistema.Command deletaSistemaCommand = await mediator.Send(new DeletaSistema.Query { Id = id });
+        await mediator.Send(deletaSistemaCommand);
 
-        public DeletaSistemaController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
-        [HttpDelete]
-        [Route("Deleta/{id}")]
-        public async Task<IActionResult> Deleta(int id)
-        {
-            DeletaSistema.Command command = await _mediator.Send(new DeletaSistema.Query { Id = id });
-            await _mediator.Send(command);
-
-            return Ok();
-        }
+        return Ok();
     }
 }

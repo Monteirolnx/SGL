@@ -1,87 +1,74 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Excecoes;
-using SF.SGL.Dominio.Entidades;
-using SF.SGL.Infra.Data.Contextos;
-
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.DeletaSistema
+﻿namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.DeletaSistema;
+public class DeletaSistema
 {
-    public class DeletaSistema
+    public class MappingProfile : Profile
     {
-        public class MappingProfile : Profile
+        public MappingProfile()
         {
-            public MappingProfile()
-            {
-                CreateMap<EntidadeSistema, Command>().ReverseMap();
-            }
+            CreateMap<EntidadeSistema, Command>().ReverseMap();
+        }
+    }
+
+    public record Query : IRequest<Command>
+    {
+        public int Id { get; init; }
+    }
+
+    public class QueryHandler : IRequestHandler<Query, Command>
+    {
+        private readonly SGLContexto _sglContexto;
+        private readonly AutoMapper.IConfigurationProvider _configurationProvider;
+
+        public QueryHandler(SGLContexto sglContexto, AutoMapper.IConfigurationProvider configurationProvider)
+        {
+            _sglContexto = sglContexto;
+            _configurationProvider = configurationProvider;
         }
 
-        public record Query : IRequest<Command>
+        public async Task<Command> Handle(Query query, CancellationToken cancellationToken)
         {
-            public int Id { get; init; }
+            Command command = await _sglContexto.EntidadeSistema.Where(s => s.Id == query.Id)
+                   .ProjectTo<Command>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
+
+            FuncionalidadeSistemasException.Quando(command is null, $"Não existe sistema com o código {query.Id}.");
+
+            return command;
+        }
+    }
+
+    public record Command : IRequest
+    {
+        public int Id { get; set; }
+
+        public string Nome { get; set; }
+
+        public string UrlServicoConsultaLog { get; set; }
+
+        public string UsuarioLogin { get; set; }
+
+        public string UsuarioSenha { get; set; }
+    }
+
+    public class CommandHandler : IRequestHandler<Command>
+    {
+        private readonly SGLContexto _sglContexto;
+        private readonly IMapper _mapper;
+
+        public CommandHandler(SGLContexto sglContexto, IMapper mapper)
+        {
+            _sglContexto = sglContexto;
+            _mapper = mapper;
         }
 
-        public class QueryHandler : IRequestHandler<Query, Command>
+        public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
         {
-            private readonly SGLContexto _sglContexto;
-            private readonly IConfigurationProvider _configurationProvider;
+            EntidadeSistema entidadeSistema = _mapper.Map<EntidadeSistema>(command);
 
-            public QueryHandler(SGLContexto sglContexto, IConfigurationProvider configurationProvider)
-            {
-                _sglContexto = sglContexto;
-                _configurationProvider = configurationProvider;
-            }
+            await Task.FromResult(_sglContexto.EntidadeSistema.Remove(entidadeSistema));
 
-            public async Task<Command> Handle(Query query, CancellationToken cancellationToken)
-            {
-                Command command = await _sglContexto.EntidadeSistema.Where(s => s.Id == query.Id)
-                       .ProjectTo<Command>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
+            await _sglContexto.SaveChangesAsync(cancellationToken);
 
-                FuncionalidadeSistemasException.Quando(command is null, $"Não existe sistema com o código {query.Id}.");
-
-                return command;
-            }
-        }
-
-        public record Command : IRequest
-        {
-            public int Id { get; set; }
-
-            public string Nome { get; set; }
-
-            public string UrlServicoConsultaLog { get; set; }
-
-            public string UsuarioLogin { get; set; }
-
-            public string UsuarioSenha { get; set; }
-        }
-
-        public class CommandHandler : IRequestHandler<Command>
-        {
-            private readonly SGLContexto _sglContexto;
-            private readonly IMapper _mapper;
-
-            public CommandHandler(SGLContexto sglContexto, IMapper mapper)
-            {
-                _sglContexto = sglContexto;
-                _mapper = mapper;
-            }
-
-            public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
-            {
-                EntidadeSistema entidadeSistema = _mapper.Map<EntidadeSistema>(command);
-
-                await Task.FromResult(_sglContexto.EntidadeSistema.Remove(entidadeSistema));
-
-                await _sglContexto.SaveChangesAsync(cancellationToken);
-
-                return default;
-            }
+            return default;
         }
     }
 }

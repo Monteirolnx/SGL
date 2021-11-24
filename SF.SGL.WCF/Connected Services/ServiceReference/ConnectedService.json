@@ -1,0 +1,16 @@
+//{
+//  "ExtendedData": {
+//    "inputs": [
+//      "http://cosip.sf.prefeitura.sp.gov.br/PROJETO.Service/ConsultarLogService.svc?wsdl"
+//    ],
+//    "collectionTypes": [
+//      "System.Array",
+//      "System.Collections.Generic.Dictionary`2"
+//    ],
+//    "namespaceMappings": [
+//      "*, ServiceReference"
+//    ],
+//    "targetFramework": "net5.0",
+//    "typeReuseMode": "All"
+//  }
+//}

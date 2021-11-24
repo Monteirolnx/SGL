@@ -1,64 +1,61 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Excecoes;
-using SF.SGL.Dominio.Entidades;
-using SF.SGL.Infra.Data.Contextos;
+﻿namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema;
 
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema
+public class ConsultaSistemaPorId
 {
-    public class ConsultaSistemaPorId
+    public class MappingProfile : Profile
     {
-        public record Query : IRequest<Command>
+        public MappingProfile()
         {
-            public int Id { get; init; }
+            CreateMap<EntidadeSistema, Sistema>();
         }
+    }
 
-        public class MappingProfile : Profile
+    public record Query : IRequest<Resultado>
+    {
+        public int Id { get; init; }
+    }
+
+    public record Resultado
+    {
+        public Sistema Sistema { get; init; }
+    }
+
+    public record Sistema
+    {
+        public int Id { get; init; }
+
+        public string Nome { get; init; }
+
+        public string UrlServicoConsultaLog { get; init; }
+
+        public string UsuarioLogin { get; init; }
+
+        public string UsuarioSenha { get; init; }
+    }
+
+    public class QueryHandler : IRequestHandler<Query, Resultado>
+    {
+        private readonly SGLContexto _sglContexto;
+        private readonly AutoMapper.IConfigurationProvider _configurationProvider;
+
+        public QueryHandler(SGLContexto sglContexto, AutoMapper.IConfigurationProvider configurationProvider)
         {
-            public MappingProfile()
+            _sglContexto = sglContexto;
+            _configurationProvider = configurationProvider;
+        }
+        public async Task<Resultado> Handle(Query query, CancellationToken cancellationToken)
+        {
+            Sistema sistema = await _sglContexto.EntidadeSistema.Where(s => s.Id == query.Id)
+                .ProjectTo<Sistema>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
+
+            FuncionalidadeSistemasException.Quando(sistema is null, $"Não existe sistema com o código {query.Id}.");
+
+            Resultado resultado = new()
             {
-                CreateMap<EntidadeSistema, Command>();
-            }
+                Sistema = sistema
+            };
+
+            return resultado;
         }
-
-        public record Command
-        {
-            public int Id { get; init; }
-
-            public string Nome { get; init; }
-
-            public string UrlServicoConsultaLog { get; init; }
-
-            public string UsuarioLogin { get; init; }
-
-            public string UsuarioSenha { get; init; }
-        }
-
-        public class CommandHandler : IRequestHandler<Query, Command>
-        {
-            private readonly SGLContexto _sglContexto;
-            private readonly IConfigurationProvider _configurationProvider;
-
-            public CommandHandler(SGLContexto sglContexto, IConfigurationProvider configurationProvider)
-            {
-                _sglContexto = sglContexto;
-                _configurationProvider = configurationProvider;
-            }
-            public async Task<Command> Handle(Query query, CancellationToken cancellationToken)
-            {
-                Command command = await _sglContexto.EntidadeSistema.Where(s => s.Id == query.Id)
-                    .ProjectTo<Command>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
-
-                FuncionalidadeSistemasException.Quando(command is null, $"Não existe sistema com o código {query.Id}.");
-
-                return command;
-            }
-        }
-
     }
 }

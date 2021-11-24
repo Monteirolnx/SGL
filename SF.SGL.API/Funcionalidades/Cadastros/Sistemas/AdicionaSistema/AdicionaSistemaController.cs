@@ -1,28 +1,12 @@
-﻿using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using SF.SGL.API.Filtros;
+﻿namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.AdicionaSistema;
 
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.AdicionaSistema
+[ApiController, Route("api/[controller]")]
+public class AdicionaSistemaController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AdicionaSistemaController : ControllerBase
+    [HttpPost, Route("Adiciona"), ModelValidation]
+    public async Task<IActionResult> Adiciona([FromServices] IMediator mediator, AdicionaSistema.Command command)
     {
-        private readonly IMediator _mediator;
-
-        public AdicionaSistemaController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
-        [HttpPost]
-        [Route("Adiciona")]
-        [ModelValidation]
-        public async Task<IActionResult> Adiciona(AdicionaSistema.Command command)
-        {
-            int iD = await _mediator.Send(command);
-            return Ok(iD);
-        }
+        int iD = await mediator.Send(command);
+        return Ok(iD);
     }
 }

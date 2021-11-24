@@ -1,26 +1,20 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿namespace SF.SGL.API.Funcionalidades.Consultas.LogOperacao.ConsultaLogsOperacoes;
 
-namespace SF.SGL.API.Funcionalidades.Consultas.LogOperacao.ConsultaLogsOperacoes
+[ApiController, Route("api/[controller]")]
+public class ConsultaLogsOperacoesController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ConsultaLogsOperacoesController : ControllerBase
+    [HttpGet, Route("AuxConsultaSistemas")]
+    public async Task<IActionResult> AuxConsultaSistemas([FromServices] IMediator mediator)
     {
-        private readonly IMediator _mediator;
+        AuxConsultaSistemas.Resultado resultado = await mediator.Send(new AuxConsultaSistemas.Query());
+        return Ok(resultado.Resultados);
+    }
 
-        public ConsultaLogsOperacoesController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+    [HttpPost, Route("Consultar")]
+    public async Task<IActionResult> Consultar([FromServices] IMediator mediator, ConsultaLogsOperacoes.Query query)
+    {
+        ConsultaLogsOperacoes.Resultado resultado = await mediator.Send(query);
 
-        [HttpGet]
-        [Route("AuxConsultaSistemas")]
-        public async Task<IActionResult> AuxConsultaSistemas()
-        {
-            AuxConsultaSistemas.Resultado resultado = await _mediator.Send(new AuxConsultaSistemas.Query());
-            return Ok(resultado.Resultados);
-        }
+        return Ok(resultado);
     }
 }

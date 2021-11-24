@@ -1,10 +1,10 @@
-﻿using System.Data;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using SF.SGL.Dominio.Entidades;
+using SF.SGL.API.Dominio.Entidades;
+using System.Data;
+using System.Threading.Tasks;
 
-namespace SF.SGL.Infra.Data.Contextos
+namespace SF.SGL.API.Infra.Contexto
 {
     public class SGLContexto : DbContext
     {
@@ -12,7 +12,7 @@ namespace SF.SGL.Infra.Data.Contextos
 
         public DbSet<EntidadeSistema> EntidadeSistema { get; set; }
 
-        public DbSet<EntidadeParametroExpurgo> EntidadeExpurgo {  get; set; }
+        public DbSet<EntidadeParametroExpurgo> EntidadeExpurgo { get; set; }
 
         public SGLContexto(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {

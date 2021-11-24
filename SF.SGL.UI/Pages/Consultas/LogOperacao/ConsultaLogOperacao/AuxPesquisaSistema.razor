@@ -53,8 +53,8 @@ else if (Sistemas != null)
         <br />
         <div class="row">
             <div class="col-md-12" style="display:flex; justify-content:flex-end; width:100%;">
-                <RadzenButton Click="@((args) => DialogService.Close(new LogOperacao{SistemaId= string.Empty, SistemaNome = string.Empty}))" ButtonStyle="ButtonStyle.Secondary" Text="Cancelar" Style="width: 150px; margin-right:10px;"></RadzenButton>
-                <RadzenButton Click="@((args) => DialogService.Close(new LogOperacao{SistemaId= Convert.ToString(SistemaSelecionado[0].Id), SistemaNome = Sistemas[0].Nome}))" Text="OK" Style="width: 150px;" Disabled=@DesabilitarOk></RadzenButton>
+                <RadzenButton Click="@((args) => DialogService.Close(new RetornoPesquisaSistema{SistemaId= string.Empty, SistemaNome = string.Empty}))" ButtonStyle="ButtonStyle.Secondary" Text="Cancelar" Style="width: 150px; margin-right:10px;"></RadzenButton>
+                <RadzenButton Click="@((args) => DialogService.Close(new RetornoPesquisaSistema{SistemaId= Convert.ToString(SistemaSelecionado[0].Id), SistemaNome = Sistemas[0].Nome}))" Text="OK" Style="width: 150px;" Disabled=@DesabilitarOk></RadzenButton>
             </div>
         </div>
     }
