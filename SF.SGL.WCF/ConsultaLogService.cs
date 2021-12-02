@@ -9,11 +9,11 @@ public class ConsultaLogService
         BasicHttpBinding binding = new();
         binding.Name = "BasicHttpBinding_IServicoLog";
         binding.Security.Mode = BasicHttpSecurityMode.TransportWithMessageCredential;
-        binding.MaxReceivedMessageSize = 20000000;
-        binding.MaxBufferSize = 20000000;
+        binding.MaxReceivedMessageSize = int.MaxValue;
+        binding.MaxBufferSize = int.MaxValue;
         binding.ReaderQuotas.MaxDepth = 32;
-        binding.ReaderQuotas.MaxArrayLength = 20000000;
-        binding.ReaderQuotas.MaxStringContentLength = 200000000;
+        binding.ReaderQuotas.MaxArrayLength = int.MaxValue;
+        binding.ReaderQuotas.MaxStringContentLength = int.MaxValue;
 
         using ServicoLogClient proxy = new(binding, remoteAddress);
         proxy.ClientCredentials.UserName.UserName = sistema.UsuarioLogin;
@@ -25,21 +25,33 @@ public class ConsultaLogService
         };
 
         ParametroConsultaLogOperacaoDTO parametros = new();
-        //parametros.CodigoLogOperacao
-        //parametros.CodigoIdentificadorUsuario
-        //parametros.PeriodoInicial
-        //parametros.PeriodoFinal
-        //parametros.HorarioInicial
-        //parametros.HorarioFinal
-        //parametros.Funcionalidade
+        parametros.PeriodoInicial = parametroConsultaLogOperacao.PeriodoInicial.HasValue ? parametroConsultaLogOperacao.PeriodoInicial : null;
+        parametros.PeriodoFinal = parametroConsultaLogOperacao.PeriodoFinal.HasValue ? parametroConsultaLogOperacao.PeriodoFinal : null;
+
+        parametros.HorarioInicial =
+            parametroConsultaLogOperacao.HorarioInicial.HasValue &&
+            parametroConsultaLogOperacao.HorarioInicial.Value.Ticks > 0 ? parametroConsultaLogOperacao.HorarioInicial.Value : null;
+
+        parametros.HorarioFinal =
+            parametroConsultaLogOperacao.HorarioFinal.HasValue &&
+            parametroConsultaLogOperacao.HorarioFinal.Value.Ticks > 0 ? parametroConsultaLogOperacao.HorarioFinal.Value : null;
+
+        parametros.CodigoIdentificadorUsuario = parametroConsultaLogOperacao.CodigoIdentificadorUsuario;
+
+        parametros.Funcionalidade = parametroConsultaLogOperacao.Funcionalidade;
+        parametros.MensagemErro = parametroConsultaLogOperacao.MensagemErro;
+
         parametros.TipoRegistro = parametroConsultaLogOperacao.TipoRegistro;
+        parametros.SubTipoRegistro = parametroConsultaLogOperacao.SubTipoRegistro;
 
+        parametros.ExcecaoCapturada = parametroConsultaLogOperacao.ExcecaoCapturada;
 
-
+        #region Fixos no fonte
         parametros.PaginaAtual = parametroConsultaLogOperacao.PaginaAtual;
         parametros.QuantidadeRegistroPagina = 10000;
         parametros.CampoOrdenacao = "DataOcorrencia";
         parametros.DirecaoOrdenacao = 2;
+        #endregion
 
         RepostaConsultaLogOperacaoDTO resposta = await proxy.ConsultarLogOperacaoAsync(parametros);
         return resposta;

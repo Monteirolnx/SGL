@@ -87,8 +87,6 @@ public class ConsultaLogsOperacoes
 
         public DateTime DataOcorrencia { get; set; }
 
-        public TimeSpan HoraOcorrencia { get; set; }
-
         public string NomeFuncionalidade { get; set; }
 
         public int TipoRegistro { get; set; }
@@ -135,7 +133,7 @@ public class ConsultaLogsOperacoes
             resultado.CodigoRetorno = repostaConsultaLogOperacaoDTO.CodigoRetorno;
             resultado.MensagemRetorno = repostaConsultaLogOperacaoDTO.MensagemRetorno;
             resultado.QuantidadeTotalRegistrosEncontrados = repostaConsultaLogOperacaoDTO.QuantidadeTotalRegistrosEncontrados;
-
+            
             if (resultado.QuantidadeTotalRegistrosEncontrados > 0)
             {
                 resultado.LogOperacao = new List<LogOperacao>();
@@ -146,11 +144,10 @@ public class ConsultaLogsOperacoes
                         CodigoIdentificadorCertificado = item.CodigoIdentificadorCertificado,
                         CodigoIdentificadorUsuario = item.CodigoIdentificadorUsuario,
                         CodigoLogOperacao = item.CodigoLogOperacao,
-                        DataOcorrencia = item.DataOcorrencia,
+                        DataOcorrencia = RecuperarDataHoraOcorrecia(item.DataOcorrencia, item.HoraOcorrencia),
                         DetalhesDaExcecao = item.DetalhesDaExcecao,
                         EnderecoIp = item.EnderecoIp,
                         ExcecaoCapturada = item.ExcecaoCapturada,
-                        HoraOcorrencia = item.HoraOcorrencia,
                         MensagemErro = item.MensagemErro,
                         NomeFuncionalidade = item.NomeFuncionalidade,
                         NomeUsuario = item.NomeUsuario,
@@ -161,6 +158,11 @@ public class ConsultaLogsOperacoes
                 }
             }
             return resultado;
+        }
+
+        private static DateTime RecuperarDataHoraOcorrecia(DateTime dataOcorrencia, TimeSpan horaOcorrencia)
+        {
+            return new DateTime(dataOcorrencia.Year, dataOcorrencia.Month, dataOcorrencia.Day, horaOcorrencia.Hours, horaOcorrencia.Minutes, horaOcorrencia.Seconds);
         }
     }
 }

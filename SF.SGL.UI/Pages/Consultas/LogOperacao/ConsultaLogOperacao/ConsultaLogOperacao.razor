@@ -49,17 +49,17 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                             <RadzenLabel Text="Período Final:" style="display:inline-block;width: 208px;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
                                         </div>
                                         <div class="col-md-12">
-                                            <RadzenDatePicker AllowClear="true" Inline="false" ShowSeconds="true" ShowTime="true" YearRange="2020:2050" Name="DatepickerPeriodoInicial" TValue="DateTime"></RadzenDatePicker>
-                                            <RadzenDatePicker AllowClear="true" Inline="false" ShowSeconds="true" ShowTime="true" YearRange="2020:2050" Name="DatepickerPeriodoFinal" TValue="DateTime"></RadzenDatePicker>
-
+                                            <RadzenDatePicker Name="DatepickerPeriodoInicial" AllowClear="true" TValue="DateTime?" ShowTime="true" ShowSeconds="true" HoursStep="1" MinutesStep="5" SecondsStep="10" YearRange="2020:2050" Change=@(args => OnChangeRecuperarFiltroPeriodoInicial(args)) />
+                                            <RadzenDatePicker Name="DatepickerPeriodoFinal" AllowClear="true" TValue="DateTime?" ShowTime="true" ShowSeconds="true" HoursStep="1" MinutesStep="5" SecondsStep="10" YearRange="2020:2050" Change=@(args => OnChangeRecuperarFiltroPeriodoFinal(args)) />
                                         </div>
                                     </div>
+
                                     <div style="margin-bottom: 1rem" class="row">
                                         <div class="col-md-12">
                                             <RadzenLabel Text="Identificador Usuário:" style="display:inline-block;width: 100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
                                         </div>
                                         <div class="col-md-12">
-                                            <RadzenTextBox MaxLength="100" style="display: inline-block; width: 100%" Name="txtIdentificadorUsuario"></RadzenTextBox>
+                                            <RadzenTextBox Name="txtIdentificadorUsuario" @bind-Value="@parametroConsultaLogOperacao.CodigoIdentificadorUsuario" MaxLength="100" style="display: inline-block; width: 100%"></RadzenTextBox>
                                         </div>
                                     </div>
 
@@ -69,7 +69,7 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                                 <RadzenLabel Text="Funcionalidade:" style="display:inline-block;width: 100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
                                             </div>
                                             <div class="col-md-12" style="padding-left: 0px;padding-right: 0px">
-                                                <RadzenTextBox @bind-Value="@parametroConsultaLogOperacao.Funcionalidade" Name="txtFuncionalidade" MaxLength="100" style="display: inline-block; width:  100%"></RadzenTextBox>
+                                                <RadzenTextBox Name="txtFuncionalidade" @bind-Value="@parametroConsultaLogOperacao.Funcionalidade" MaxLength="100" style="display: inline-block; width:  100%"></RadzenTextBox>
                                             </div>
                                         </div>
 
@@ -97,7 +97,7 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                             <RadzenLabel Text="Mensagem de Erro:" style="display:inline-block;width: 100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
                                         </div>
                                         <div class="col-md-12">
-                                            <RadzenTextBox MaxLength="100" style="display: inline-block; width: 100%" Name="txtMensagemErro"></RadzenTextBox>
+                                            <RadzenTextBox Name="txtMensagemErro" @bind-Value="@parametroConsultaLogOperacao.MensagemErro" MaxLength="100" style="display: inline-block; width: 100%"></RadzenTextBox>
                                         </div>
                                     </div>
 
@@ -106,14 +106,15 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                             <RadzenLabel Text="Exceção Capturada:" style="display:inline-block;width: 100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
                                         </div>
                                         <div class="col-md-12">
-                                            <RadzenTextBox MaxLength="100" style="display: inline-block; width: 100%" Name="txtExcecaoCapturada"></RadzenTextBox>
+                                            <RadzenTextBox Name="txtExcecaoCapturada" @bind-Value="@parametroConsultaLogOperacao.ExcecaoCapturada" MaxLength="100" style="display: inline-block; width: 100%"></RadzenTextBox>
                                         </div>
                                     </div>
                                     <br />
+
                                     <div class="row">
                                         <div class="col-md-12" style="display:flex; justify-content:flex-end; width:100%;">
                                             <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="close" Text="Limpar" Click="@LimparConsulta" Style="width: 175px; margin-right:5px" Disabled=@DesabilitarBtnLimpar></RadzenButton>
-                                            
+
                                             <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Consultar" ButtonStyle="ButtonStyle.Primary" Style="width: 175px;" Disabled=@DesabilitarBtnConsultar></RadzenButton>
                                         </div>
                                     </div>
@@ -124,29 +125,36 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                     </ChildContent>
                 </RadzenTemplateForm>
             </ChildContent>
-
         </RadzenContent>
+        <br />
 
-        @if (logsOperacoes != null)
+        @if (logsOperacoes == null && BuscandoRegistros == true)
         {
+            <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+            <h4>Carregando...</h4>
+        }
+        else
+        {
+            <RadzenProgressBar Value="100" ShowValue="false" Max="100" Style="margin-bottom: 20px" />
+            <p>Total de registros encontrados: @TotalRegistrosPesquisa</p>
             <RadzenContent Container="main2">
                 <ChildContent>
                     <div class="row">
                         <div class="col-md-12">
                             <RadzenDataGrid @ref="GridConsultaLogOperacao"
-                                            AllowFiltering="true"
-                                            AllowColumnResize="true"
-                                            EmptyText="A pesquisa não retornou resultados."
-                                            FilterMode="FilterMode.Simple"
-                                            PageSize="100"
-                                            PagerPosition="PagerPosition.TopAndBottom"
-                                            AllowPaging="true"
-                                            AllowSorting="true"
-                                            FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                            LogicalFilterOperator="LogicalFilterOperator.Or"
-                                            AllowVirtualization="true"
-                                            Data="@logsOperacoes"
-                                            TItem="LogOperacao">
+                                AllowFiltering="true"
+                                AllowColumnResize="true"
+                                EmptyText="A pesquisa não retornou resultados."
+                                FilterMode="FilterMode.Simple"
+                                PageSize="100"
+                                PagerPosition="PagerPosition.TopAndBottom"
+                                AllowPaging="true"
+                                AllowSorting="true"
+                                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                LogicalFilterOperator="LogicalFilterOperator.Or"
+                                AllowVirtualization="true"
+                                Data="@logsOperacoes"
+                                TItem="LogOperacao">
 
                                 <Columns>
                                     <RadzenDataGridColumn TItem="LogOperacao" Property="CodigoLogOperacao" Filterable="true" Title="CÓDIGO DO LOG" Frozen="false" Width="100px" TextAlign="TextAlign.Center" />
@@ -155,7 +163,6 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                     <RadzenDataGridColumn TItem="LogOperacao" Property="NomeFuncionalidade" Title="FUNCIONALIDADE" Width="300px" />
                                     <RadzenDataGridColumn TItem="LogOperacao" Property="MensagemErro" Title="MENSAGEM DE ERRO" Width="400px" />
                                     <RadzenDataGridColumn TItem="LogOperacao" Property="ExcecaoCapturada" Title="EXCEÇÃO CAPTURADA" Width="400px" />
-
 
                                 </Columns>
                             </RadzenDataGrid>
