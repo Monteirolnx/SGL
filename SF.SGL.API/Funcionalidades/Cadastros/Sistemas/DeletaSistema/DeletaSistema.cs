@@ -1,4 +1,6 @@
-﻿namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.DeletaSistema;
+﻿using SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Excecoes;
+
+namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.DeletaSistema;
 public class DeletaSistema
 {
     public class MappingProfile : Profile

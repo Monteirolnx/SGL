@@ -1,45 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Excecoes;
+﻿using SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Excecoes;
+using SF.SGL.API.Funcionalidades.Consultas.LogAuditoria.Excecoes;
 using SF.SGL.API.Funcionalidades.Consultas.LogOperacao.Excecoes;
 
-namespace SF.SGL.API.Middleware
+namespace SF.SGL.API.Middleware;
+
+public class ErrorHandlerMiddleware
 {
-    public class ErrorHandlerMiddleware
+    private readonly RequestDelegate _next;
+
+    public ErrorHandlerMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+    }
 
-        public ErrorHandlerMiddleware(RequestDelegate next)
+    public async Task Invoke(HttpContext context)
+    {
+        try
         {
-            _next = next;
+            await _next(context);
         }
-
-        public async Task Invoke(HttpContext context)
+        catch (Exception error)
         {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception error)
-            {
-                HttpResponse response = context.Response;
-                response.ContentType = "application/json";
+            HttpResponse response = context.Response;
+            response.ContentType = "application/json";
 
-                response.StatusCode = error switch
-                {
-                    FuncionalidadeSistemasException => (int)HttpStatusCode.BadRequest,// custom application error
-                    FuncionalidadeLogOperacaoException => (int)HttpStatusCode.BadRequest,// custom application error
-                    KeyNotFoundException => (int)HttpStatusCode.NotFound,// not found error
-                    _ => (int)HttpStatusCode.InternalServerError,// unhandled error
-                };
+            response.StatusCode = error switch
+            {
+                FuncionalidadeSistemasException => (int)HttpStatusCode.BadRequest,
+                FuncionalidadeLogAuditoriaException => (int)HttpStatusCode.BadRequest,
+                FuncionalidadeLogOperacaoException => (int)HttpStatusCode.BadRequest,
 
-                string result = JsonSerializer.Serialize(new { message = error?.Message });
-                await response.WriteAsync(result);
-            }
+                KeyNotFoundException => (int)HttpStatusCode.NotFound,
+                _ => (int)HttpStatusCode.InternalServerError,
+            };
+
+            string result = JsonSerializer.Serialize(new { message = error?.Message });
+            await response.WriteAsync(result);
         }
     }
 }

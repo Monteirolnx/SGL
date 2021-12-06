@@ -1,8 +1,8 @@
-﻿namespace SF.SGL.WCF;
+﻿namespace SF.SGL.WCF.ConsultaLogServices;
 
-public class ConsultaLogService
+public class ConsultaLogOperacaoService
 {
-    public static async Task<RepostaConsultaLogOperacaoDTO> ConsultarLogOperacaoAsync(Sistema sistema, ParametroConsultaLogOperacao parametroConsultaLogOperacao)
+    public static async Task<RepostaConsultaLogOperacaoDTO> ConsultarAsync(Sistema sistema, ParametroConsultaLogOperacao parametroConsultaLogOperacao)
     {
         EndpointAddress remoteAddress = new(sistema.UrlServicoConsultaLog);
 
@@ -56,46 +56,46 @@ public class ConsultaLogService
         RepostaConsultaLogOperacaoDTO resposta = await proxy.ConsultarLogOperacaoAsync(parametros);
         return resposta;
     }
-}
 
-public record Sistema
-{
-    public string UrlServicoConsultaLog { get; init; }
+    public record Sistema
+    {
+        public string UrlServicoConsultaLog { get; init; }
 
-    public string UsuarioLogin { get; init; }
+        public string UsuarioLogin { get; init; }
 
-    public string UsuarioSenha { get; init; }
-}
+        public string UsuarioSenha { get; init; }
+    }
 
-public class ParametroConsultaLogOperacao
-{
-    public int? CodigoLogOperacao { get; set; }
+    public record ParametroConsultaLogOperacao
+    {
+        public int? CodigoLogOperacao { get; set; }
 
-    public string CodigoIdentificadorUsuario { get; set; }
+        public string CodigoIdentificadorUsuario { get; set; }
 
-    public DateTime? PeriodoInicial { get; set; }
+        public DateTime? PeriodoInicial { get; set; }
 
-    public DateTime? PeriodoFinal { get; set; }
+        public DateTime? PeriodoFinal { get; set; }
 
-    public TimeSpan? HorarioInicial { get; set; }
+        public TimeSpan? HorarioInicial { get; set; }
 
-    public TimeSpan? HorarioFinal { get; set; }
+        public TimeSpan? HorarioFinal { get; set; }
 
-    public string Funcionalidade { get; set; }
+        public string Funcionalidade { get; set; }
 
-    public int? TipoRegistro { get; set; }
+        public int? TipoRegistro { get; set; }
 
-    public int? SubTipoRegistro { get; set; }
+        public int? SubTipoRegistro { get; set; }
 
-    public string MensagemErro { get; set; }
+        public string MensagemErro { get; set; }
 
-    public string ExcecaoCapturada { get; set; }
+        public string ExcecaoCapturada { get; set; }
 
-    public string CampoOrdenacao { get; set; }
+        public string CampoOrdenacao { get; set; }
 
-    public int DirecaoOrdenacao { get; set; }
+        public int DirecaoOrdenacao { get; set; }
 
-    public int PaginaAtual { get; set; }
+        public int PaginaAtual { get; set; }
 
-    public int QuantidadeRegistroPagina { get; set; }
+        public int QuantidadeRegistroPagina { get; set; }
+    }
 }

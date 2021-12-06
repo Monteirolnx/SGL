@@ -16,9 +16,4 @@ global using System.Collections.Generic;
 global using System.ComponentModel;
 global using System.ComponentModel.DataAnnotations;
 global using System.Reflection;
-global using System.Linq;
-#endregion
-
-#region Usings Internos
-global using static SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao.ConsultaLogOperacao;
 #endregion

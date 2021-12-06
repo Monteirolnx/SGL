@@ -7,12 +7,12 @@ public class ConsultaLogsOperacoes
         public MappingProfile()
         {
             CreateMap<EntidadeSistema, Sistema>();
-            CreateMap<WCF.Sistema, Sistema>().ReverseMap();
-            CreateMap<WCF.ParametroConsultaLogOperacao, Query>().ReverseMap();
+            CreateMap<WCF.ConsultaLogServices.ConsultaLogOperacaoService.Sistema, Sistema>().ReverseMap();
+            CreateMap<WCF.ConsultaLogServices.ConsultaLogOperacaoService.ParametroConsultaLogOperacao, Query>().ReverseMap();
         }
     }
 
-    public record Query : IRequest<Resultado>
+    public record Query : IRequest<RepostaConsultaLogOperacao>
     {
         public int SistemaId { get; set; }
 
@@ -62,7 +62,7 @@ public class ConsultaLogsOperacoes
         public string UsuarioSenha { get; init; }
     }
 
-    public class Resultado
+    public class RepostaConsultaLogOperacao
     {
         public int CodigoRetorno { get; set; }
 
@@ -100,7 +100,7 @@ public class ConsultaLogsOperacoes
         public string DetalhesDaExcecao { get; set; }
     }
 
-    public class QueryHandler : IRequestHandler<Query, Resultado>
+    public class QueryHandler : IRequestHandler<Query, RepostaConsultaLogOperacao>
     {
         private readonly SGLContexto _sglContexto;
         private readonly IMapper _mapper;
@@ -113,56 +113,61 @@ public class ConsultaLogsOperacoes
             _configurationProvider = configurationProvider;
         }
 
-        public async Task<Resultado> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<RepostaConsultaLogOperacao> Handle(Query query, CancellationToken cancellationToken)
         {
             Sistema sistema = await _sglContexto.EntidadeSistema.Where(s => s.Id == query.SistemaId)
                    .ProjectTo<Sistema>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
 
-            WCF.Sistema sistemaWCF = _mapper.Map<WCF.Sistema>(sistema);
-            WCF.ParametroConsultaLogOperacao parametroConsultaLogAuditoriaWCF = _mapper.Map<WCF.ParametroConsultaLogOperacao>(query);
-            RepostaConsultaLogOperacaoDTO repostaConsultaLogOperacaoDTO = await WCF.ConsultaLogService.ConsultarLogOperacaoAsync(sistemaWCF, parametroConsultaLogAuditoriaWCF);
+            WCF.ConsultaLogServices.ConsultaLogOperacaoService.Sistema sistemaWCF = 
+                _mapper.Map<WCF.ConsultaLogServices.ConsultaLogOperacaoService.Sistema>(sistema);
 
-            Resultado resultado = MontarResultado(repostaConsultaLogOperacaoDTO);
+            WCF.ConsultaLogServices.ConsultaLogOperacaoService.ParametroConsultaLogOperacao parametroConsultaLogOperacaoWCF = 
+                _mapper.Map<WCF.ConsultaLogServices.ConsultaLogOperacaoService.ParametroConsultaLogOperacao>(query);
+
+            RepostaConsultaLogOperacaoDTO repostaConsultaLogOperacaoDTO = 
+                await WCF.ConsultaLogServices.ConsultaLogOperacaoService.ConsultarAsync(sistemaWCF, parametroConsultaLogOperacaoWCF);
+
+            RepostaConsultaLogOperacao resultado = MontarResultado(repostaConsultaLogOperacaoDTO);
 
             return resultado;
-        }
+        }        
+    }
 
-        private static Resultado MontarResultado(RepostaConsultaLogOperacaoDTO repostaConsultaLogOperacaoDTO)
+    private static RepostaConsultaLogOperacao MontarResultado(RepostaConsultaLogOperacaoDTO repostaConsultaLogOperacaoDTO)
+    {
+        RepostaConsultaLogOperacao repostaConsultaLogOperacao = new();
+        repostaConsultaLogOperacao.CodigoRetorno = repostaConsultaLogOperacaoDTO.CodigoRetorno;
+        repostaConsultaLogOperacao.MensagemRetorno = repostaConsultaLogOperacaoDTO.MensagemRetorno;
+        repostaConsultaLogOperacao.QuantidadeTotalRegistrosEncontrados = repostaConsultaLogOperacaoDTO.QuantidadeTotalRegistrosEncontrados;
+
+        if (repostaConsultaLogOperacao.QuantidadeTotalRegistrosEncontrados > 0)
         {
-            Resultado resultado = new();
-            resultado.CodigoRetorno = repostaConsultaLogOperacaoDTO.CodigoRetorno;
-            resultado.MensagemRetorno = repostaConsultaLogOperacaoDTO.MensagemRetorno;
-            resultado.QuantidadeTotalRegistrosEncontrados = repostaConsultaLogOperacaoDTO.QuantidadeTotalRegistrosEncontrados;
-            
-            if (resultado.QuantidadeTotalRegistrosEncontrados > 0)
+            repostaConsultaLogOperacao.LogOperacao = new List<LogOperacao>();
+            foreach (LogOperacaoDTO item in repostaConsultaLogOperacaoDTO.LogOperacao)
             {
-                resultado.LogOperacao = new List<LogOperacao>();
-                foreach (LogOperacaoDTO item in repostaConsultaLogOperacaoDTO.LogOperacao)
+                LogOperacao logOperacaoDTO = new()
                 {
-                    LogOperacao logOperacaoDTO = new()
-                    {
-                        CodigoIdentificadorCertificado = item.CodigoIdentificadorCertificado,
-                        CodigoIdentificadorUsuario = item.CodigoIdentificadorUsuario,
-                        CodigoLogOperacao = item.CodigoLogOperacao,
-                        DataOcorrencia = RecuperarDataHoraOcorrecia(item.DataOcorrencia, item.HoraOcorrencia),
-                        DetalhesDaExcecao = item.DetalhesDaExcecao,
-                        EnderecoIp = item.EnderecoIp,
-                        ExcecaoCapturada = item.ExcecaoCapturada,
-                        MensagemErro = item.MensagemErro,
-                        NomeFuncionalidade = item.NomeFuncionalidade,
-                        NomeUsuario = item.NomeUsuario,
-                        SubTipoRegistro = item.SubTipoRegistro,
-                        TipoRegistro = item.TipoRegistro
-                    };
-                    resultado.LogOperacao.Add(logOperacaoDTO);
-                }
+                    CodigoIdentificadorCertificado = item.CodigoIdentificadorCertificado,
+                    CodigoIdentificadorUsuario = item.CodigoIdentificadorUsuario,
+                    CodigoLogOperacao = item.CodigoLogOperacao,
+                    DataOcorrencia = RecuperarDataHoraOcorrecia(item.DataOcorrencia, item.HoraOcorrencia),
+                    DetalhesDaExcecao = item.DetalhesDaExcecao,
+                    EnderecoIp = item.EnderecoIp,
+                    ExcecaoCapturada = item.ExcecaoCapturada,
+                    MensagemErro = item.MensagemErro,
+                    NomeFuncionalidade = item.NomeFuncionalidade,
+                    NomeUsuario = item.NomeUsuario,
+                    SubTipoRegistro = item.SubTipoRegistro,
+                    TipoRegistro = item.TipoRegistro
+                };
+                repostaConsultaLogOperacao.LogOperacao.Add(logOperacaoDTO);
             }
-            return resultado;
         }
+        return repostaConsultaLogOperacao;
+    }
 
-        private static DateTime RecuperarDataHoraOcorrecia(DateTime dataOcorrencia, TimeSpan horaOcorrencia)
-        {
-            return new DateTime(dataOcorrencia.Year, dataOcorrencia.Month, dataOcorrencia.Day, horaOcorrencia.Hours, horaOcorrencia.Minutes, horaOcorrencia.Seconds);
-        }
+    private static DateTime RecuperarDataHoraOcorrecia(DateTime dataOcorrencia, TimeSpan horaOcorrencia)
+    {
+        return new DateTime(dataOcorrencia.Year, dataOcorrencia.Month, dataOcorrencia.Day, horaOcorrencia.Hours, horaOcorrencia.Minutes, horaOcorrencia.Seconds);
     }
 }

@@ -3,18 +3,18 @@
 [ApiController, Route("api/[controller]")]
 public class ConsultaLogsOperacoesController : ControllerBase
 {
-    [HttpGet, Route("AuxConsultaSistemas")]
-    public async Task<IActionResult> AuxConsultaSistemas([FromServices] IMediator mediator)
+    [HttpGet, Route("AuxConsultaSistemasLogOper")]
+    public async Task<IActionResult> AuxConsultaSistemasLogOper([FromServices] IMediator mediator)
     {
-        AuxConsultaSistemas.Resultado resultado = await mediator.Send(new AuxConsultaSistemas.Query());
+        AuxConsultaSistemasLogOper.Resultado resultado = await mediator.Send(new AuxConsultaSistemasLogOper.Query());
         return Ok(resultado.Resultados);
     }
 
-    [HttpPost, Route("Consultar")]
-    public async Task<IActionResult> Consultar([FromServices] IMediator mediator, ConsultaLogsOperacoes.Query query)
+    [HttpPost, Route("ConsultarLogOper")]
+    public async Task<IActionResult> ConsultarLogOper([FromServices] IMediator mediator, ConsultaLogsOperacoes.Query query)
     {
-        ConsultaLogsOperacoes.Resultado resultado = await mediator.Send(query);
+        ConsultaLogsOperacoes.RepostaConsultaLogOperacao repostaConsultaLogOperacao = await mediator.Send(query);
 
-        return Ok(resultado);
+        return Ok(repostaConsultaLogOperacao);
     }
 }

@@ -1,32 +1,27 @@
-﻿namespace SF.SGL.UI.Pages.Consultas.LogOperacao.ConsultaLogOperacao;
+﻿namespace SF.SGL.UI.Pages.Consultas.LogAuditoria.ConsultaLogAuditoria;
 
-public partial class ConsultaLogOperacao
+public partial class ConsultaLogAuditoria
 {
-    
-    protected ParametroConsultaLogOperacao parametroConsultaLogOperacao;
+    protected ParametroConsultaLogAuditoria parametroConsultaLogAuditoria;
     protected ErroRetornoAPI erroRetornoAPI;
-    protected RespostaConsultaLogOperacao respostaConsultaLogOperacao;
+    protected RepostaConsultaLogAuditoria repostaConsultaLogAuditoria;
 
-    string tipoRegistro;
-    List<string> tipoRegistros = new();
+    string tipoOperacao;
+    List<string> tiposOperacao = new();
 
-    string subTipoRegistro;
-    List<string> subTipoRegistros = new();
+    protected IEnumerable<LogAuditoria> LogsAuditoria { get; set; }
 
     protected List<Sistema> Sistemas { get; set; }
-    
-    protected IEnumerable<LogOperacao> LogsOperacoes { get; set; }
 
-    protected bool BuscandoRegistros { get; set; } = false;
-
-    protected int TotalRegistrosPesquisa { get; set; }
-    
     protected bool DesabilitarBtnPesquisarSistema { get; set; } = false;
 
     protected bool DesabilitarBtnLimpar { get; set; } = false;
 
     protected bool DesabilitarBtnConsultar { get; set; } = false;
-   
+
+    protected bool BuscandoRegistros { get; set; } = false;
+
+    protected int TotalRegistrosPesquisa { get; set; }
 
     #region Injects
     [Inject]
@@ -45,7 +40,7 @@ public partial class ConsultaLogOperacao
     protected IConfiguration Configuration { get; set; }
 
     [Inject]
-    protected RadzenDataGrid<LogOperacao> GridConsultaLogOperacao { get; set; }
+    protected RadzenDataGrid<LogAuditoria> GridConsultaLogAuditoria { get; set; }
 
     [Inject]
     protected HttpClient HttpClient { get; set; }
@@ -62,25 +57,17 @@ public partial class ConsultaLogOperacao
 
     protected void LimparComponentes()
     {
-        LogsOperacoes = null;
+        LogsAuditoria = null;
     }
 
     protected void MontarDropDowns()
     {
-        tipoRegistros = new();
-        tipoRegistro = TipoRegistro.Todos.ToString();
-        Array valoresTipoRegistro = Enum.GetValues(typeof(TipoRegistro));
-        foreach (Enum valor in valoresTipoRegistro)
+        tiposOperacao = new();
+        tipoOperacao = TipoOperacao.Todas.ToString();
+        Array valoresTipoOperacao = Enum.GetValues(typeof(TipoOperacao));
+        foreach (Enum valor in valoresTipoOperacao)
         {
-            tipoRegistros.Add(RetornaDescricaoEnum(valor));
-        }
-
-        subTipoRegistros = new();
-        subTipoRegistro = SubTipoRegistro.Todos.ToString();
-        Array valoresSubTipoRegistro = Enum.GetValues(typeof(SubTipoRegistro));
-        foreach (Enum valor in valoresSubTipoRegistro)
-        {
-            subTipoRegistros.Add(RetornaDescricaoEnum(valor));
+            tiposOperacao.Add(RetornaDescricaoEnum(valor));
         }
     }
 
@@ -99,8 +86,8 @@ public partial class ConsultaLogOperacao
 
     protected async Task MontarMemoria()
     {
-        await Task.FromResult(parametroConsultaLogOperacao = new());
-        HttpResponseMessage httpResponseMessage = await ApiAuxConsultaSistemasLogOper();
+        await Task.FromResult(parametroConsultaLogAuditoria = new());
+        HttpResponseMessage httpResponseMessage = await ApiAuxConsultaSistemasLogAudit();
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -127,39 +114,20 @@ public partial class ConsultaLogOperacao
         DesabilitarBtnLimpar = valor;
     }
 
-    protected void RecuperarFiltros(ref ParametroConsultaLogOperacao parametroConsultaLogOperacao)
-    {
-        parametroConsultaLogOperacao.TipoRegistro = tipoRegistro switch
-        {
-            "Sucesso" => 0,
-            "Falha" => 1,
-            _ => null,
-        };
-
-        parametroConsultaLogOperacao.SubTipoRegistro = subTipoRegistro switch
-        {
-            "Geral" => 3,
-            "Integração" => 2,
-            "Processo Batch - Aplicação" => 1,
-            "Processo Batch - Banco de Dados" => 0,
-            _ => null,
-        };
-    }
-
     protected async Task LimparConsulta()
     {
         await OnInitializedAsync();
     }
 
-    protected async Task EnviarFormulario(ParametroConsultaLogOperacao parametroConsultaLogOperacao)
+    protected async Task EnviarFormulario(ParametroConsultaLogAuditoria parametroConsultaLogAuditoria)
     {
-        LogsOperacoes = null;
+        LogsAuditoria = null;
         TotalRegistrosPesquisa = 0;
         BuscandoRegistros = true;
         DesabilitarBotoes(true);
 
-        RecuperarFiltros(ref parametroConsultaLogOperacao);
-        HttpResponseMessage httpResponseMessage = await ApiConsultarLogOperacao(parametroConsultaLogOperacao);
+        RecuperarFiltros(ref parametroConsultaLogAuditoria);
+        HttpResponseMessage httpResponseMessage = await ApiConsultarLogOperacao(parametroConsultaLogAuditoria);
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -170,30 +138,39 @@ public partial class ConsultaLogOperacao
         }
         else
         {
-            respostaConsultaLogOperacao = await httpResponseMessage.Content.ReadFromJsonAsync<RespostaConsultaLogOperacao>();
-            if (!string.IsNullOrEmpty(respostaConsultaLogOperacao.MensagemRetorno) && (respostaConsultaLogOperacao.MensagemRetorno.Contains("Erro") || respostaConsultaLogOperacao.MensagemRetorno.Contains("Timeout")))
+            repostaConsultaLogAuditoria = await httpResponseMessage.Content.ReadFromJsonAsync<RepostaConsultaLogAuditoria>();
+            if (!string.IsNullOrEmpty(repostaConsultaLogAuditoria.MensagemRetorno) && (repostaConsultaLogAuditoria.MensagemRetorno.Contains("Erro") || repostaConsultaLogAuditoria.MensagemRetorno.Contains("Timeout")))
             {
-                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = respostaConsultaLogOperacao.MensagemRetorno });
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = repostaConsultaLogAuditoria.MensagemRetorno });
             }
             else
             {
-                LogsOperacoes = respostaConsultaLogOperacao.LogOperacao;
-                TotalRegistrosPesquisa = respostaConsultaLogOperacao.QuantidadeTotalRegistrosEncontrados;
+                LogsAuditoria = repostaConsultaLogAuditoria.LogAuditoria;
+                TotalRegistrosPesquisa = repostaConsultaLogAuditoria.QuantidadeTotalRegistrosEncontrados;
             }
+
         }
 
         BuscandoRegistros = false;
         DesabilitarBotoes(false);
         Recarregar();
     }
+
+    protected void RecuperarFiltros(ref ParametroConsultaLogAuditoria parametroConsultaLogAuditoria)
+    {
+        if (tipoOperacao.Equals("Todas"))
+            parametroConsultaLogAuditoria.Operacao = string.Empty;
+        else
+            parametroConsultaLogAuditoria.Operacao = tipoOperacao;
+    }
     #endregion
 
     #region Chamadas Api
-    protected async Task<HttpResponseMessage> ApiAuxConsultaSistemasLogOper()
+    protected async Task<HttpResponseMessage> ApiAuxConsultaSistemasLogAudit()
     {
         try
         {
-            string serviceEndpoint = "api/ConsultaLogsOperacoes/AuxConsultaSistemasLogOper";
+            string serviceEndpoint = "api/ConsultaLogsAuditoria/AuxConsultaSistemasLogAudit";
             UriBuilder uriBuilder = new(string.Concat(Configuration["EnderecoBaseSGLAPI"], serviceEndpoint));
             return await HttpClient.GetAsync(uriBuilder.Uri);
         }
@@ -203,13 +180,13 @@ public partial class ConsultaLogOperacao
         }
     }
 
-    protected async Task<HttpResponseMessage> ApiConsultarLogOperacao(ParametroConsultaLogOperacao parametroConsultaLogOperacao)
+    protected async Task<HttpResponseMessage> ApiConsultarLogOperacao(ParametroConsultaLogAuditoria parametroConsultaLogAuditoria)
     {
         try
         {
-            string serviceEndpoint = $"api/ConsultaLogsOperacoes/ConsultarLogOper";
+            string serviceEndpoint = $"api/ConsultaLogsAuditoria/ConsultarLogAudit";
             UriBuilder uriBuilder = new(string.Concat(Configuration["EnderecoBaseSGLAPI"], serviceEndpoint));
-            return await HttpClient.PostAsJsonAsync(uriBuilder.Uri, parametroConsultaLogOperacao);
+            return await HttpClient.PostAsJsonAsync(uriBuilder.Uri, parametroConsultaLogAuditoria);
         }
         catch (Exception)
         {
@@ -222,14 +199,14 @@ public partial class ConsultaLogOperacao
 
     protected void OnChangeRecuperarFiltroPeriodoInicial(DateTime? periodoInicial)
     {
-        parametroConsultaLogOperacao.PeriodoInicial = periodoInicial ?? null;
-        parametroConsultaLogOperacao.HorarioInicial = periodoInicial.HasValue ? periodoInicial.Value.TimeOfDay : null;
+        parametroConsultaLogAuditoria.PeriodoInicial = periodoInicial ?? null;
+        parametroConsultaLogAuditoria.HorarioInicial = periodoInicial.HasValue ? periodoInicial.Value.TimeOfDay : null;
     }
 
     protected void OnChangeRecuperarFiltroPeriodoFinal(DateTime? periodoFinal)
     {
-        parametroConsultaLogOperacao.PeriodoFinal = periodoFinal ?? null;
-        parametroConsultaLogOperacao.HorarioFinal = periodoFinal.HasValue ? periodoFinal.Value.TimeOfDay : null;
+        parametroConsultaLogAuditoria.PeriodoFinal = periodoFinal ?? null;
+        parametroConsultaLogAuditoria.HorarioFinal = periodoFinal.HasValue ? periodoFinal.Value.TimeOfDay : null;
     }
     #endregion
 
@@ -257,13 +234,14 @@ public partial class ConsultaLogOperacao
         public string Nome { get; set; }
     }
 
-    public class ParametroConsultaLogOperacao
+
+    protected class ParametroConsultaLogAuditoria
     {
         public int? SistemaId { get; set; }
 
         public string SistemaNome { get; set; }
 
-        public int? CodigoLogOperacao { get; set; }
+        public int? CodigoLogAuditoria { get; set; }
 
         public string CodigoIdentificadorUsuario { get; set; }
 
@@ -277,13 +255,7 @@ public partial class ConsultaLogOperacao
 
         public string Funcionalidade { get; set; }
 
-        public int? TipoRegistro { get; set; }
-
-        public int? SubTipoRegistro { get; set; }
-
-        public string MensagemErro { get; set; }
-
-        public string ExcecaoCapturada { get; set; }
+        public string Operacao { get; set; }
 
         public string CampoOrdenacao { get; set; }
 
@@ -294,25 +266,25 @@ public partial class ConsultaLogOperacao
         public int QuantidadeRegistroPagina { get; set; }
     }
 
-    public record ErroRetornoAPI
+    protected record ErroRetornoAPI
     {
         public string Message { get; set; }
     }
 
-    public class RespostaConsultaLogOperacao
+    protected class RepostaConsultaLogAuditoria
     {
         public int CodigoRetorno { get; set; }
 
-        public List<LogOperacao> LogOperacao { get; set; }
+        public List<LogAuditoria> LogAuditoria { get; set; }
 
         public string MensagemRetorno { get; set; }
 
         public int QuantidadeTotalRegistrosEncontrados { get; set; }
     }
 
-    public class LogOperacao
+    public class LogAuditoria
     {
-        public int CodigoLogOperacao { get; set; }
+        public int CodigoLogAuditoria { get; set; }
 
         public string CodigoIdentificadorUsuario { get; set; }
 
@@ -328,47 +300,41 @@ public partial class ConsultaLogOperacao
 
         public string NomeFuncionalidade { get; set; }
 
-        public int TipoRegistro { get; set; }
+        public string NomeOperacao { get; set; }
 
-        public int SubTipoRegistro { get; set; }
-
-        public string MensagemErro { get; set; }
-
-        public string ExcecaoCapturada { get; set; }
-
-        public string DetalhesDaExcecao { get; set; }
+        public string Conteudo { get; set; }
     }
     #endregion
 
     #region Enums
-    public enum TipoRegistro
+    public enum TipoOperacao
     {
-        [Description("Todos")]
-        Todos,
+        [Description("Todas")]
+        Todas,
 
-        [Description("Sucesso")]
-        Sucesso,
+        [Description("Consulta")]
+        Consulta,
 
-        [Description("Falha")]
-        Falha
-    }
+        [Description("Inclusao")]
+        Inclusao,
 
-    public enum SubTipoRegistro
-    {
-        [Description("Todos")]
-        Todos,
+        [Description("Alteracao")]
+        Alteracao,
 
-        [Description("Geral")]
-        Geral,
+        [Description("Exclusao")]
+        Exclusao,
 
-        [Description("Integração")]
+        [Description("Login")]
+        Login,
+
+        [Description("Logout")]
+        Logout,
+
+        [Description("Integracao")]
         Integracao,
 
-        [Description("Processo Batch - Aplicação")]
-        Processo_Batch_Aplicacao,
-
-        [Description("Processo Batch - Banco de Dados")]
-        Processo_Batch_Banco_de_Dados,
+        [Description("Rotina")]
+        Rotina,
     }
     #endregion
 }

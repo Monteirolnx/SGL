@@ -1,4 +1,6 @@
-﻿namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema;
+﻿using SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Excecoes;
+
+namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema;
 
 public class ConsultaSistemaPorId
 {

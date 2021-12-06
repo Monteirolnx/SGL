@@ -531,7 +531,7 @@ namespace SF_SGL_WFC.ServiceReference
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name = "RepostaConsultaLogAuditoriaDTO", Namespace = "http://schemas.datacontract.org/2004/07/SF.SGL.DTO.Externo")]
     [System.SerializableAttribute()]
-    public partial class RepostaConsultaLogAuditoriaDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged
+    public partial class RespostaConsultaLogAuditoriaDTO : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged
     {
 
         [System.NonSerializedAttribute()]
@@ -1293,10 +1293,10 @@ namespace SF_SGL_WFC.ServiceReference
     {
 
         [System.ServiceModel.OperationContractAttribute(Action = "http://tempuri.org/IServicoLog/ConsultarLogAuditoria", ReplyAction = "http://tempuri.org/IServicoLog/ConsultarLogAuditoriaResponse")]
-        SF_SGL_WFC.ServiceReference.RepostaConsultaLogAuditoriaDTO ConsultarLogAuditoria(SF_SGL_WFC.ServiceReference.ParametroConsultaLogAuditoriaDTO parametroConsulta);
+        SF_SGL_WFC.ServiceReference.RespostaConsultaLogAuditoriaDTO ConsultarLogAuditoria(SF_SGL_WFC.ServiceReference.ParametroConsultaLogAuditoriaDTO parametroConsulta);
 
         [System.ServiceModel.OperationContractAttribute(Action = "http://tempuri.org/IServicoLog/ConsultarLogAuditoria", ReplyAction = "http://tempuri.org/IServicoLog/ConsultarLogAuditoriaResponse")]
-        System.Threading.Tasks.Task<SF_SGL_WFC.ServiceReference.RepostaConsultaLogAuditoriaDTO> ConsultarLogAuditoriaAsync(SF_SGL_WFC.ServiceReference.ParametroConsultaLogAuditoriaDTO parametroConsulta);
+        System.Threading.Tasks.Task<SF_SGL_WFC.ServiceReference.RespostaConsultaLogAuditoriaDTO> ConsultarLogAuditoriaAsync(SF_SGL_WFC.ServiceReference.ParametroConsultaLogAuditoriaDTO parametroConsulta);
 
         [System.ServiceModel.OperationContractAttribute(Action = "http://tempuri.org/IServicoLog/ConsultarLogOperacao", ReplyAction = "http://tempuri.org/IServicoLog/ConsultarLogOperacaoResponse")]
         SF_SGL_WFC.ServiceReference.RepostaConsultaLogOperacaoDTO ConsultarLogOperacao(SF_SGL_WFC.ServiceReference.ParametroConsultaLogOperacaoDTO parametroConsulta);
@@ -1339,12 +1339,12 @@ namespace SF_SGL_WFC.ServiceReference
         {
         }
 
-        public SF_SGL_WFC.ServiceReference.RepostaConsultaLogAuditoriaDTO ConsultarLogAuditoria(SF_SGL_WFC.ServiceReference.ParametroConsultaLogAuditoriaDTO parametroConsulta)
+        public SF_SGL_WFC.ServiceReference.RespostaConsultaLogAuditoriaDTO ConsultarLogAuditoria(SF_SGL_WFC.ServiceReference.ParametroConsultaLogAuditoriaDTO parametroConsulta)
         {
             return base.Channel.ConsultarLogAuditoria(parametroConsulta);
         }
 
-        public System.Threading.Tasks.Task<SF_SGL_WFC.ServiceReference.RepostaConsultaLogAuditoriaDTO> ConsultarLogAuditoriaAsync(SF_SGL_WFC.ServiceReference.ParametroConsultaLogAuditoriaDTO parametroConsulta)
+        public System.Threading.Tasks.Task<SF_SGL_WFC.ServiceReference.RespostaConsultaLogAuditoriaDTO> ConsultarLogAuditoriaAsync(SF_SGL_WFC.ServiceReference.ParametroConsultaLogAuditoriaDTO parametroConsulta)
         {
             return base.Channel.ConsultarLogAuditoriaAsync(parametroConsulta);
         }

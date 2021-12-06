@@ -1,7 +1,8 @@
-﻿using SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Excecoes;
+﻿using SF.SGL.API.Funcionalidades.Consultas.LogAuditoria.Excecoes;
 
-namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.ConsultaSistemas;
-public class ConsultaSistemas
+namespace SF.SGL.API.Funcionalidades.Consultas.LogAuditoria.ConsultaLogsAuditoria;
+
+public class AuxConsultaSistemasLogAudit
 {
     public class MappingProfile : Profile
     {
@@ -13,12 +14,11 @@ public class ConsultaSistemas
 
     public record Query : IRequest<Resultado>
     {
-
     }
 
     public record Resultado
     {
-        public IEnumerable<Sistema> Sistemas { get; set; }
+        public IEnumerable<Sistema> Resultados { get; set; }
     }
 
     public record Sistema
@@ -26,14 +26,7 @@ public class ConsultaSistemas
         public int Id { get; init; }
 
         public string Nome { get; init; }
-
-        public string UrlServicoConsultaLog { get; init; }
-
-        public string UsuarioLogin { get; init; }
-
-        public string UsuarioSenha { get; init; }
     }
-
 
     public class QueryHandler : IRequestHandler<Query, Resultado>
     {
@@ -52,11 +45,11 @@ public class ConsultaSistemas
                 .ProjectTo<Sistema>(_configurationProvider)
                 .ToListAsync(cancellationToken);
 
-            FuncionalidadeSistemasException.Quando(!sistemas.Any(), "Não existem sistemas cadastrados.");
+            FuncionalidadeLogAuditoriaException.Quando(!sistemas.Any(), "Não existem sistemas cadastrados.");
 
             Resultado resultado = new()
             {
-                Sistemas = sistemas
+                Resultados = sistemas
             };
 
             return resultado;
