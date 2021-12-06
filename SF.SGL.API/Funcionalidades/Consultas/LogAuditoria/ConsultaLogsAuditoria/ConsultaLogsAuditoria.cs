@@ -69,7 +69,7 @@ public class ConsultaLogsAuditoria
 
     public class LogAuditoria
     {
-        //public int CodigoLogAuditoria { get; set; }
+        public int CodigoLogAuditoria { get; set; }
 
         public string CodigoIdentificadorUsuario { get; set; }
 
@@ -134,6 +134,7 @@ public class ConsultaLogsAuditoria
                 {
                     LogAuditoria logAuditoriaDTO = new()
                     {
+                        CodigoLogAuditoria = item.CodigoLogAuditoria,
                         CodigoIdentificadorCertificado = item.CodigoIdentificadorCertificado,
                         CodigoIdentificadorUsuario = item.CodigoIdentificadorUsuario,
                         DataOcorrencia = RecuperarDataHoraOcorrecia(item.DataOcorrencia, item.HoraOcorrencia),

@@ -1,8 +1,5 @@
 ﻿@layout MainLayout
 
-@using Radzen
-@using Radzen.Blazor
-
 @if (sistemas == null && erroRetornoAPI == null)
 {
     <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
@@ -35,7 +32,7 @@ else if (sistemas != null || erroRetornoAPI?.Message != null)
                                 TItem="Sistema">
 
                             <Columns>
-                                <RadzenDataGridColumn TItem="Sistema" Property="Id" Filterable="true" Title="ID" Frozen="false" Width="100px" TextAlign="TextAlign.Center" />
+                                <RadzenDataGridColumn TItem="Sistema" Property="Id" Filterable="true" Title="ID" Frozen="false" Width="100px" TextAlign="TextAlign.Center" Visible="false" />
                                 <RadzenDataGridColumn TItem="Sistema" Property="Nome" Title="Nome" Width="250px"  />
                                 <RadzenDataGridColumn TItem="Sistema" Property="UrlServicoConsultaLog" Title="Url Servico ConsultaLog" />
                                 <RadzenDataGridColumn TItem="Sistema" Property="UsuarioLogin" Title="Usuario Login" Width="200px"/>
