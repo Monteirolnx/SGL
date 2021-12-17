@@ -26,7 +26,7 @@ else if (Sistemas != null || erroRetornoAPI?.Message != null)
                                             <RadzenLabel Text="Nome Sistema:" style="display:inline-block;width: 45%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
                                         </div>
                                         <div class="col-md-12">
-                                            <RadzenDropDown Name="txtIdSistema" AllowClear="true" AllowFiltering="true" Placeholder="Selecione" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@Sistemas TextProperty="Nome" ValueProperty="Id" @bind-Value=@parametroConsultaLogOperacao.SistemaId Style="width:450px" />
+                                            <RadzenDropDown Name="txtIdSistema" AllowClear="true" AllowFiltering="true" Placeholder="Selecione" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@Sistemas TextProperty="Nome" ValueProperty="Id" @bind-Value=@parametroConsultaLogOperacao.SistemaId style="display: block; width: 75%" />
                                         </div>
                                         <div class="col-md-12">
                                             <RadzenRequiredValidator Component="txtIdSistema" Text="É necessário informar um sistema." style="position: absolute"></RadzenRequiredValidator>

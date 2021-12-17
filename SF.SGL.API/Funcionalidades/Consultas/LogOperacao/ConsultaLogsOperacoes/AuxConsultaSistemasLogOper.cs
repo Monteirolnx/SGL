@@ -43,6 +43,7 @@ public class AuxConsultaSistemasLogOper
         {
             List<Sistema> sistemas = await _sglContexto.EntidadeSistema
                 .ProjectTo<Sistema>(_configurationProvider)
+                .OrderBy(x => x.Nome)
                 .ToListAsync(cancellationToken);
 
             FuncionalidadeLogOperacaoException.Quando(!sistemas.Any(), "Não existem sistemas cadastrados.");

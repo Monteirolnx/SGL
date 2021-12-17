@@ -6,7 +6,7 @@ public class EditaSistemaController : ControllerBase
     [HttpGet,Route("ConsultaSistemaPorId/{id}")]
     public async Task<IActionResult> ConsultaSistemaPorId([FromServices] IMediator mediator,int id)
     {
-        ConsultaSistemaPorId.Resultado resultado = await mediator.Send(new ConsultaSistemaPorId.Query() { Id = id });
+        AuxConsultaSistemaPorId.Resultado resultado = await mediator.Send(new AuxConsultaSistemaPorId.Query() { Id = id });
         return Ok(resultado.Sistema);
     }
 

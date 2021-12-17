@@ -56,7 +56,7 @@ public partial class EditaSistema
 
     protected void NavegarPaginaSistemas()
     {
-        NavigationManager.NavigateTo("Cadastros/Sistemas");
+        NavigationManager.NavigateTo("cadastros/sistemas");
     }
 
     protected async Task EnviarFormulario()
@@ -73,7 +73,7 @@ public partial class EditaSistema
         else
         {
             NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Sucesso:", Detail = $"Sistema editado com sucesso." });
-            NavigationManager.NavigateTo("Cadastros/Sistemas");
+            NavigationManager.NavigateTo("cadastros/sistemas");
         }
         Recarregar();
     }

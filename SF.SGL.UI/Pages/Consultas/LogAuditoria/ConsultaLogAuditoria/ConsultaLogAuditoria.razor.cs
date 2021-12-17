@@ -235,7 +235,7 @@ public partial class ConsultaLogAuditoria
     }
 
 
-    protected class ParametroConsultaLogAuditoria
+    public class ParametroConsultaLogAuditoria
     {
         public int? SistemaId { get; set; }
 
@@ -266,12 +266,12 @@ public partial class ConsultaLogAuditoria
         public int QuantidadeRegistroPagina { get; set; }
     }
 
-    protected record ErroRetornoAPI
+    public record ErroRetornoAPI
     {
         public string Message { get; set; }
     }
 
-    protected class RepostaConsultaLogAuditoria
+    public class RepostaConsultaLogAuditoria
     {
         public int CodigoRetorno { get; set; }
 

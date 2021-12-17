@@ -2,7 +2,7 @@
 
 namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema;
 
-public class ConsultaSistemaPorId
+public class AuxConsultaSistemaPorId
 {
     public class MappingProfile : Profile
     {

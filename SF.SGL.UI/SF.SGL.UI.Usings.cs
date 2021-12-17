@@ -14,6 +14,10 @@ global using System.Net.Http.Json;
 global using System.Threading.Tasks;
 global using System.Collections.Generic;
 global using System.ComponentModel;
-global using System.ComponentModel.DataAnnotations;
 global using System.Reflection;
+global using System.Threading;
+#endregion
+
+#region Usings Internos
+global using SF.SGL.UI.Util;
 #endregion

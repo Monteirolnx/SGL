@@ -43,6 +43,7 @@ public class AuxConsultaSistemasLogAudit
         {
             List<Sistema> sistemas = await _sglContexto.EntidadeSistema
                 .ProjectTo<Sistema>(_configurationProvider)
+                .OrderBy(x => x.Nome)
                 .ToListAsync(cancellationToken);
 
             FuncionalidadeLogAuditoriaException.Quando(!sistemas.Any(), "Não existem sistemas cadastrados.");

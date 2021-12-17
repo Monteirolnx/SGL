@@ -50,6 +50,7 @@ public class ConsultaSistemas
         {
             List<Sistema> sistemas = await _sglContexto.EntidadeSistema
                 .ProjectTo<Sistema>(_configurationProvider)
+                .OrderBy(s => s.Nome)
                 .ToListAsync(cancellationToken);
 
             FuncionalidadeSistemasException.Quando(!sistemas.Any(), "Não existem sistemas cadastrados.");

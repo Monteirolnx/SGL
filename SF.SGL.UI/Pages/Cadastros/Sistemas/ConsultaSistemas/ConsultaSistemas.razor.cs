@@ -63,14 +63,14 @@ public partial class ConsultaSistemas
 
     protected void NavegarPaginaAdicionarSistema()
     {
-        NavigationManager.NavigateTo("Cadastros/Sistemas/adicionasistema");
+        NavigationManager.NavigateTo("cadastros/sistemas/adicionasistema");
     }
     #endregion
 
     #region Eventos
     protected void GridEditButtonClick(dynamic data)
     {
-        NavigationManager.NavigateTo($"Cadastros/Sistemas/Editasistema/{data.Id}");
+        NavigationManager.NavigateTo($"cadastros/sistemas/editasistema/{data.Id}");
     }
 
     protected async Task GridDeleteButtonClick(dynamic data)

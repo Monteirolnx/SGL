@@ -6,6 +6,7 @@ global using MediatR;
 
 global using System;
 global using System.Data;
+global using System.Net.Mail;
 global using System.ComponentModel.DataAnnotations;
 global using System.Collections.Generic;
 global using System.Linq;

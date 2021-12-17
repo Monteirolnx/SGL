@@ -46,10 +46,10 @@ public partial class AdicionaSistema
 
     protected void NavegarPaginaSistemas()
     {
-        NavigationManager.NavigateTo("Cadastros/Sistemas");
+        NavigationManager.NavigateTo("cadastros/sistemas");
     }
 
-    protected async Task EnviarFormulario(Sistema sistema)
+    protected async Task EnviarFormulario()
     {
         HttpResponseMessage httpResponseMessage = await ApiAdicionaSistema();
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -63,7 +63,7 @@ public partial class AdicionaSistema
         else
         {
             NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Sucesso:", Detail = $"Sistema incluído com sucesso." });
-            NavigationManager.NavigateTo("Cadastros/Sistemas");
+            NavigationManager.NavigateTo("cadastros/sistemas");
         }
         Recarregar();
     }
