@@ -34,7 +34,7 @@ public partial class EditaSistema
 
     protected async Task MontarMemoria()
     {
-        HttpResponseMessage httpResponseMessage = await ApiConsultaSistemaPorId(Id);
+        HttpResponseMessage httpResponseMessage = await ChamarApiConsultaSistemaPorId(Id);
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -56,12 +56,12 @@ public partial class EditaSistema
 
     protected void NavegarPaginaSistemas()
     {
-        NavigationManager.NavigateTo("Cadastros/Sistemas");
+        NavigationManager.NavigateTo("cadastros/sistemas");
     }
 
     protected async Task EnviarFormulario()
     {
-        HttpResponseMessage httpResponseMessage = await ApiEditaSistema(Id, sistema);
+        HttpResponseMessage httpResponseMessage = await ChamarApiEditaSistema(Id, sistema);
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -73,7 +73,7 @@ public partial class EditaSistema
         else
         {
             NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Sucesso:", Detail = $"Sistema editado com sucesso." });
-            NavigationManager.NavigateTo("Cadastros/Sistemas");
+            NavigationManager.NavigateTo("cadastros/sistemas");
         }
         Recarregar();
     }
@@ -81,7 +81,7 @@ public partial class EditaSistema
     #endregion
 
     #region Chamadas Api
-    private async Task<HttpResponseMessage> ApiConsultaSistemaPorId(int id)
+    private async Task<HttpResponseMessage> ChamarApiConsultaSistemaPorId(int id)
     {
         try
         {
@@ -95,7 +95,7 @@ public partial class EditaSistema
         }
     }
 
-    private async Task<HttpResponseMessage> ApiEditaSistema(int id, Sistema sistema)
+    private async Task<HttpResponseMessage> ChamarApiEditaSistema(int id, Sistema sistema)
     {
         try
         {

@@ -1,0 +1,63 @@
+﻿@layout MainLayout
+
+@if (monitoramentos == null && erroRetornoAPI == null)
+{
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+    <h4>Carregando...</h4>
+}
+else if (monitoramentos != null || erroRetornoAPI?.Message != null)
+{
+    <RadzenProgressBar Value="100" ShowValue="false" Max="100" Style="margin-bottom: 20px" />
+    <RadzenHeading Size="H2" Text="Monitoramentos"></RadzenHeading>
+    <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Adicionar Monitoramento" Click="@NavegarPaginaAdicionarMonitoramento" Disabled="@desabilitaAdicao"></RadzenButton>
+    @if (monitoramentos != null)
+    {
+        <RadzenContent Container="main">
+            <ChildContent>
+                <div class="row">
+                    <div class="col-md-12">
+                        <RadzenDataGrid @ref="GridConsultaMonitoramentos"
+                                AllowFiltering="true"
+                                AllowColumnResize="true"
+                                EmptyText="A pesquisa não retornou resultados."
+                                FilterMode="FilterMode.Simple"
+                                PageSize="25"
+                                PagerPosition="PagerPosition.TopAndBottom"
+                                AllowPaging="true"
+                                AllowSorting="true"
+                                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                LogicalFilterOperator="LogicalFilterOperator.Or"
+                                AllowVirtualization="true"
+                                Data="@monitoramentos"
+                                TItem="Monitoramento">
+
+                            <Columns>
+                                <RadzenDataGridColumn TItem="Monitoramento" Property="Id" Filterable="true" Title="ID" Frozen="false" Width="100px" TextAlign="TextAlign.Center" Visible="false" />
+                                <RadzenDataGridColumn TItem="Monitoramento" Property="Sistema.Nome" Title="Sistema" Width="250px" />
+                                <RadzenDataGridColumn TItem="Monitoramento" Property="Nome" Title="Nome" Width="350px" />
+                                <RadzenDataGridColumn TItem="Monitoramento" Property="Guid" Title="Guid" Width="150px" />
+
+                                <RadzenDataGridColumn TItem="Monitoramento" Filterable="false" Sortable="false" Width="90px" TextAlign="TextAlign.Center">
+                                    <Template Context="edicao">
+                                        <RadzenButton ButtonStyle="ButtonStyle.Info" Text="Editar" Icon="edit" Size="ButtonSize.Small" Click="@(() => GridEditButtonClick(edicao))" @onclick:stopPropagation="true">
+                                        </RadzenButton>
+                                    </Template>
+                                </RadzenDataGridColumn>
+                                <RadzenDataGridColumn TItem="Monitoramento" Filterable="false" Sortable="false" Width="90px" TextAlign="TextAlign.Center">
+                                    <Template Context="exclusao">
+                                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="Excluir" Icon="close" Size="ButtonSize.Small" Click="@(() => GridDeleteButtonClick(exclusao))" @onclick:stopPropagation="true">
+                                        </RadzenButton>
+                                    </Template>
+                                </RadzenDataGridColumn>
+                            </Columns>
+                        </RadzenDataGrid>
+                    </div>
+                </div>
+            </ChildContent>
+        </RadzenContent>
+    }
+    else
+    {
+        <p>@erroRetornoAPI.Message</p>
+    }
+}

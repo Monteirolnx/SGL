@@ -4,7 +4,7 @@ public partial class ConsultaLogAuditoria
 {
     protected ParametroConsultaLogAuditoria parametroConsultaLogAuditoria;
     protected ErroRetornoAPI erroRetornoAPI;
-    protected RepostaConsultaLogAuditoria repostaConsultaLogAuditoria;
+    protected RespostaConsultaLogAuditoria respostaConsultaLogAuditoria;
 
     string tipoOperacao;
     List<string> tiposOperacao = new();
@@ -13,7 +13,7 @@ public partial class ConsultaLogAuditoria
 
     protected List<Sistema> Sistemas { get; set; }
 
-    protected bool DesabilitarBtnPesquisarSistema { get; set; } = false;
+    protected bool DesabilitarCampo { get; set; } = false;
 
     protected bool DesabilitarBtnLimpar { get; set; } = false;
 
@@ -87,7 +87,7 @@ public partial class ConsultaLogAuditoria
     protected async Task MontarMemoria()
     {
         await Task.FromResult(parametroConsultaLogAuditoria = new());
-        HttpResponseMessage httpResponseMessage = await ApiAuxConsultaSistemasLogAudit();
+        HttpResponseMessage httpResponseMessage = await ChamarApiAuxConsultaSistemasLogAudit();
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -110,8 +110,9 @@ public partial class ConsultaLogAuditoria
 
     protected void DesabilitarBotoes(bool valor)
     {
-        DesabilitarBtnPesquisarSistema = valor;
+        DesabilitarCampo = valor;
         DesabilitarBtnLimpar = valor;
+        DesabilitarBtnConsultar = valor;
     }
 
     protected async Task LimparConsulta()
@@ -127,7 +128,7 @@ public partial class ConsultaLogAuditoria
         DesabilitarBotoes(true);
 
         RecuperarFiltros(ref parametroConsultaLogAuditoria);
-        HttpResponseMessage httpResponseMessage = await ApiConsultarLogOperacao(parametroConsultaLogAuditoria);
+        HttpResponseMessage httpResponseMessage = await ChamarApiConsultarLogAuditoria(parametroConsultaLogAuditoria);
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -138,15 +139,15 @@ public partial class ConsultaLogAuditoria
         }
         else
         {
-            repostaConsultaLogAuditoria = await httpResponseMessage.Content.ReadFromJsonAsync<RepostaConsultaLogAuditoria>();
-            if (!string.IsNullOrEmpty(repostaConsultaLogAuditoria.MensagemRetorno) && (repostaConsultaLogAuditoria.MensagemRetorno.Contains("Erro") || repostaConsultaLogAuditoria.MensagemRetorno.Contains("Timeout")))
+            respostaConsultaLogAuditoria = await httpResponseMessage.Content.ReadFromJsonAsync<RespostaConsultaLogAuditoria>();
+            if (!string.IsNullOrEmpty(respostaConsultaLogAuditoria.MensagemRetorno) && (respostaConsultaLogAuditoria.MensagemRetorno.Contains("Erro") || respostaConsultaLogAuditoria.MensagemRetorno.Contains("Timeout")))
             {
-                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = repostaConsultaLogAuditoria.MensagemRetorno });
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Erro:", Detail = respostaConsultaLogAuditoria.MensagemRetorno });
             }
             else
             {
-                LogsAuditoria = repostaConsultaLogAuditoria.LogAuditoria;
-                TotalRegistrosPesquisa = repostaConsultaLogAuditoria.QuantidadeTotalRegistrosEncontrados;
+                LogsAuditoria = respostaConsultaLogAuditoria.LogAuditoria;
+                TotalRegistrosPesquisa = respostaConsultaLogAuditoria.QuantidadeTotalRegistrosEncontrados;
             }
 
         }
@@ -166,7 +167,7 @@ public partial class ConsultaLogAuditoria
     #endregion
 
     #region Chamadas Api
-    protected async Task<HttpResponseMessage> ApiAuxConsultaSistemasLogAudit()
+    protected async Task<HttpResponseMessage> ChamarApiAuxConsultaSistemasLogAudit()
     {
         try
         {
@@ -180,11 +181,11 @@ public partial class ConsultaLogAuditoria
         }
     }
 
-    protected async Task<HttpResponseMessage> ApiConsultarLogOperacao(ParametroConsultaLogAuditoria parametroConsultaLogAuditoria)
+    protected async Task<HttpResponseMessage> ChamarApiConsultarLogAuditoria(ParametroConsultaLogAuditoria parametroConsultaLogAuditoria)
     {
         try
         {
-            string serviceEndpoint = $"api/ConsultaLogsAuditoria/ConsultarLogAudit";
+            string serviceEndpoint = $"api/ConsultaLogsAuditoria/ConsultaLogAudit";
             UriBuilder uriBuilder = new(string.Concat(Configuration["EnderecoBaseSGLAPI"], serviceEndpoint));
             return await HttpClient.PostAsJsonAsync(uriBuilder.Uri, parametroConsultaLogAuditoria);
         }
@@ -235,7 +236,7 @@ public partial class ConsultaLogAuditoria
     }
 
 
-    protected class ParametroConsultaLogAuditoria
+    public class ParametroConsultaLogAuditoria
     {
         public int? SistemaId { get; set; }
 
@@ -266,12 +267,12 @@ public partial class ConsultaLogAuditoria
         public int QuantidadeRegistroPagina { get; set; }
     }
 
-    protected record ErroRetornoAPI
+    public record ErroRetornoAPI
     {
         public string Message { get; set; }
     }
 
-    protected class RepostaConsultaLogAuditoria
+    public class RespostaConsultaLogAuditoria
     {
         public int CodigoRetorno { get; set; }
 

@@ -1,8 +1,8 @@
-﻿using SF.SGL.API.Funcionalidades.Consultas.LogOperacao.Excecoes;
+﻿using SF.SGL.API.Funcionalidades.Cadastros.Sistemas.Excecoes;
 
-namespace SF.SGL.API.Funcionalidades.Consultas.LogOperacao.ConsultaLogsOperacoes;
+namespace SF.SGL.API.Funcionalidades.Cadastros.Sistemas.EditaSistema;
 
-public class AuxConsultaSistemasLogOper
+public class AuxConsultaSistemaPorId
 {
     public class MappingProfile : Profile
     {
@@ -14,11 +14,12 @@ public class AuxConsultaSistemasLogOper
 
     public record Query : IRequest<Resultado>
     {
+        public int Id { get; init; }
     }
 
     public record Resultado
     {
-        public IEnumerable<Sistema> Resultados { get; set; }
+        public Sistema Sistema { get; init; }
     }
 
     public record Sistema
@@ -26,6 +27,12 @@ public class AuxConsultaSistemasLogOper
         public int Id { get; init; }
 
         public string Nome { get; init; }
+
+        public string UrlServicoConsultaLog { get; init; }
+
+        public string UsuarioLogin { get; init; }
+
+        public string UsuarioSenha { get; init; }
     }
 
     public class QueryHandler : IRequestHandler<Query, Resultado>
@@ -38,18 +45,16 @@ public class AuxConsultaSistemasLogOper
             _sglContexto = sglContexto;
             _configurationProvider = configurationProvider;
         }
-
         public async Task<Resultado> Handle(Query query, CancellationToken cancellationToken)
         {
-            List<Sistema> sistemas = await _sglContexto.EntidadeSistema
-                .ProjectTo<Sistema>(_configurationProvider)
-                .ToListAsync(cancellationToken);
+            Sistema sistema = await _sglContexto.EntidadeSistema.Where(s => s.Id == query.Id)
+                .ProjectTo<Sistema>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
 
-            FuncionalidadeLogOperacaoException.Quando(!sistemas.Any(), "Não existem sistemas cadastrados.");
+            FuncionalidadeSistemasException.Quando(sistema is null, $"Não existe sistema com o código {query.Id}.");
 
             Resultado resultado = new()
             {
-                Resultados = sistemas
+                Sistema = sistema
             };
 
             return resultado;

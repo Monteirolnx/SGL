@@ -1,0 +1,89 @@
+﻿@page "/cadastros/monitoramentos/adicionamonitoramento"
+
+@layout MainLayout
+
+<RadzenProgressBar Value="100" ShowValue="false" Max="100" Style="margin-bottom: 20px" />
+<RadzenContent Container="main">
+    <ChildContent>
+        <RadzenHeading Size="H2" Text="Adicionar Monitoramento"></RadzenHeading>
+        <div class="row">
+            <div class="col-md-8">
+                <RadzenTemplateForm Data="@monitoramento" Visible="@(monitoramento != null)" TItem="Monitoramento" Submit="@EnviarFormulario">
+                    <ChildContent>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <RadzenFieldset Text="Sistema">
+                                    <div style="margin-bottom: 1rem" class="row">
+                                        <div class="col-md-12">
+                                            <RadzenLabel Text="Nome Sistema:" style="width: 100%"></RadzenLabel>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <RadzenDropDown Name="drpSistemas" AllowClear="true" AllowFiltering="true" Placeholder="Selecione" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@Sistemas TextProperty="Nome" ValueProperty="Id" @bind-Value=@monitoramento.SistemaId style="display: block; width: 75%" />
+                                        </div>
+                                        <div class="col-md-12">
+                                            <RadzenRequiredValidator Component="drpSistemas" Text="É necessário informar um sistema." style="position: absolute"></RadzenRequiredValidator>
+                                        </div>
+                                    </div>
+                                </RadzenFieldset>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <RadzenFieldset Text="Parametrizar monitoramento">
+                                    <div style="margin-bottom: 1rem" class="row">
+                                        <div class="col-md-12">
+                                            <RadzenLabel Text="Guid:" style="width: 100%"></RadzenLabel>
+                                            <RadzenTextBox Name="txtGUIDMonitoramento" Disabled="true" Value=@Convert.ToString(monitoramento.Guid) style="width: 45%"></RadzenTextBox>
+                                            <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="content_copy" Text="@state.Texto" Disabled=@state.IsDisabled Click="@CopiarTextoAreaTransferencia" Style="width: 150px; margin-left:5px"></RadzenButton>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 1rem" class="row">
+                                        <div class="col-md-12">
+                                            <RadzenLabel Text="Nome:" style="width: 100%"></RadzenLabel>
+                                            <RadzenTextBox Name="txtNomeMonitoramento" MaxLength="100" style="display: block; width: 100%" @bind-Value="@monitoramento.Nome"></RadzenTextBox>
+                                            <RadzenRequiredValidator Component="txtNomeMonitoramento" Text="Nome do monitoramento é obrigatório." style="position: absolute"></RadzenRequiredValidator>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 1rem" class="row">
+                                        <div class="col-md-12">
+                                            <RadzenLabel Text="Descrição:" style="width: 100%"></RadzenLabel>
+                                            <RadzenTextArea Name="txtDescricaoMonitoramento" Rows="3" MaxLength="255" Class="w-100" @bind-Value="@monitoramento.Descricao" />
+                                        </div>
+                                        <div class="col-md-12">
+                                            <RadzenRequiredValidator Component="txtDescricaoMonitoramento" Text="Descrição do monitoramento é obrigatório." style="position: absolute"></RadzenRequiredValidator>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 1rem" class="row">
+                                        <div class="col-md-12">
+                                            <RadzenLabel Text="Contato:" style="width: 100%"></RadzenLabel>
+                                            <RadzenTextBox Name="txtMonitoramentoContato" MaxLength="500" style="display: block; width: 100%" @bind-Value="@monitoramento.Contato"></RadzenTextBox>
+                                            <RadzenRequiredValidator Component="txtMonitoramentoContato" Text="Contato do monitoramento é obrigatório." style="position: absolute">
+                                            </RadzenRequiredValidator>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 1rem" class="row">
+                                        <div class="col-md-12">
+                                            <RadzenLabel Text="Ações:" style="width: 100%"></RadzenLabel>
+                                            <RadzenTextArea Name="txtMonitoramentoAcao" Rows="3" MaxLength="255" Class="w-100" @bind-Value="@monitoramento.Acao" />
+                                        </div>
+                                        <div class="col-md-12">
+                                            <RadzenRequiredValidator Component="txtMonitoramentoAcao" Text="Ação do monitoramento é obrigatória." style="position: absolute"></RadzenRequiredValidator>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12" style="display:flex; justify-content:flex-end; width:100%;">
+                                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="close" Text="Cancelar" Click="@NavegarPaginaMonitoramentos" Style="width: 150px; margin-right:5px"></RadzenButton>
+                                            <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Salvar" ButtonStyle="ButtonStyle.Primary" Style="width: 150px;"></RadzenButton>
+                                        </div>
+                                    </div>
+                                </RadzenFieldset>
+                            </div>
+                        </div>
+                    </ChildContent>
+                </RadzenTemplateForm>
+            </div>
+        </div>
+    </ChildContent>
+</RadzenContent>

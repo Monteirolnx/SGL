@@ -13,7 +13,7 @@ public class AdicionaParametrizacao
     public class Command : IRequest<int>
     {
         [Required]
-        public int EntidadeSistemaId { get; set; }
+        public int SistemaId { get; set; }
 
         [Required]
         public int ParametroExpurgoLogOperacao { get; set; }

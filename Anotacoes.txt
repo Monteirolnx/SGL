@@ -6,6 +6,9 @@ Architecture eBook:
 
 Architecting for maintainability through Vertical Slices:
     https://www.ghyston.com/insights/architecting-for-maintainability-through-vertical-slices
+
+Bring Your Apps to Life With SignalR and .NET 6   
+    https://www.telerik.com/blogs/bring-your-apps-life-signalr-dotnet-6
  
  ===================================================================================================================================
 

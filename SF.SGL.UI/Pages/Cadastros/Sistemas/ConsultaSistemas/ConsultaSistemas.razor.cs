@@ -38,7 +38,7 @@ public partial class ConsultaSistemas
     private async Task MontarMemoria()
     {
         desabilitaAdicao = true;
-        HttpResponseMessage httpResponseMessage = await ApiConsultaSistemas();
+        HttpResponseMessage httpResponseMessage = await ChamarApiConsultaSistemas();
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -63,14 +63,14 @@ public partial class ConsultaSistemas
 
     protected void NavegarPaginaAdicionarSistema()
     {
-        NavigationManager.NavigateTo("Cadastros/Sistemas/adicionasistema");
+        NavigationManager.NavigateTo("cadastros/sistemas/adicionasistema");
     }
     #endregion
 
     #region Eventos
     protected void GridEditButtonClick(dynamic data)
     {
-        NavigationManager.NavigateTo($"Cadastros/Sistemas/Editasistema/{data.Id}");
+        NavigationManager.NavigateTo($"cadastros/sistemas/editasistema/{data.Id}");
     }
 
     protected async Task GridDeleteButtonClick(dynamic data)
@@ -105,7 +105,7 @@ public partial class ConsultaSistemas
     #endregion
 
     #region Chamadas Api
-    protected async Task<HttpResponseMessage> ApiConsultaSistemas()
+    protected async Task<HttpResponseMessage> ChamarApiConsultaSistemas()
     {
         try
         {

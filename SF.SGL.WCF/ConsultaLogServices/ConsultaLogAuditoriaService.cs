@@ -48,7 +48,6 @@ public class ConsultaLogAuditoriaService
         parametros.DirecaoOrdenacao = 2;
         #endregion
 
-
         RespostaConsultaLogAuditoriaDTO resposta = await proxy.ConsultarLogAuditoriaAsync(parametros);
         return resposta;
     }
