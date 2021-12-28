@@ -15,13 +15,12 @@ public class EntidadeMonitoramento
     public string Contato { get; set; }
 
     public int SistemaId { get; set; }
-
+    
     [JsonIgnore]
     public EntidadeSistema EntidadeSistema { get; set; }
 
     public EntidadeMonitoramento(Guid guid, string nome, string descricao, string acao, string contato, int sistemaId)
     {
-
         Guid = ValidarGuid(guid);
         Nome = ValidarNome(nome);
         Descricao = ValidarDescricao(descricao);

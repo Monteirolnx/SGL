@@ -1,0 +1,157 @@
+﻿@page "/Consultas/LogExecucaoMonitoramento/ConsultaLogExecucaoMonitoramento"
+
+@layout MainLayout
+
+@if (Sistemas == null && erroRetornoAPI == null)
+{
+    <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+    <h4>Carregando...</h4>
+}
+else if (Sistemas != null || erroRetornoAPI?.Message != null)
+{
+    <RadzenProgressBar Value="100" ShowValue="false" Max="100" Style="margin-bottom: 20px" />
+    <RadzenHeading Size="H2" Text="Consultar Log de Execução de Monitoramento"></RadzenHeading>
+       <div class="col-4 d-flex align-items-center">
+                <RadzenSwitch Disabled="false" @bind-Value="@ModoEscutaHabilitado" Change="@ConectarDesconctarHub" />
+                <span>&nbsp; &nbsp;</span>
+                <label class="white-text">Modo escuta</label>
+            </div>
+    @if (Sistemas != null)
+    {
+        <RadzenContent Container="main">
+            <ChildContent>
+                <RadzenTemplateForm Data="@parametroConsultaLogExecMonitoramento" Visible="@(parametroConsultaLogExecMonitoramento != null)" TItem="ParametroConsultaLogExecMonitoramento" Submit="@EnviarFormulario">
+                    <ChildContent>
+                        <RadzenAccordion>
+                            <Items>
+                                <RadzenAccordionItem Text="Filtros" Icon="filter_alt">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <RadzenFieldset Text="Sistema">
+                                                <div style="margin-bottom: 1rem" class="row">
+                                                    <div class="col-md-12">
+                                                        <RadzenLabel Text="Nome Sistema:" style="display:inline-block;width: 45%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <RadzenDropDown Name="drpSistemas" Disabled="@DesabilitarCampo" Change=@(args => OnChangePesquisarMonitoramento(args)) AllowClear="true" AllowFiltering="true" Placeholder="Selecione" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@Sistemas TextProperty="Nome" ValueProperty="Id" @bind-Value=@parametroConsultaLogExecMonitoramento.SistemaId style="display: block; width: 75%" />
+                                                    </div>
+                                                </div>
+                                            </RadzenFieldset>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <RadzenFieldset Text="Monitoramento">
+                                                <div style="margin-bottom: 1rem" class="row">
+                                                    <div class="col-md-12">
+                                                        <RadzenLabel Text="Nome Monitoramento:" style="display:inline-block;width: 45%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <RadzenDropDown Name="drpMonitoramentos" Disabled="@DesabilitarCampo" AllowClear="true" Change=@OnChangeAlternarMonitoramento AllowFiltering="true" Placeholder="Selecione" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data=@Monitoramentos TextProperty="Nome" ValueProperty="Id" @bind-Value=@parametroConsultaLogExecMonitoramento.MonitoramentoId style="display: block; width: 75%" />
+                                                    </div>
+                                                </div>
+                                            </RadzenFieldset>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <RadzenFieldset Text="Filtros">
+                                                <div style="margin-bottom: 1rem" class="row">
+                                                    <div class="col-md-12">
+                                                        <RadzenLabel Text="Tipo do Registro:" style="display:inline-block;width: 100%;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                                        <RadzenDropDown Data="@tipoRegistros" Disabled="@DesabilitarCampo" Change=@OnChangeAlternarTipoRegistro @bind-Value="@tipoRegistro" Style="width:25%" />
+                                                    </div>
+                                                </div>
+                                                <div style="margin-bottom: 1rem" class="row">
+                                                    <div class="col-md-12">
+                                                        <RadzenLabel Text="Período Inicial:" style="display:inline-block;width: 208px;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                                        <RadzenLabel Text="Período Final:" style="display:inline-block;width: 208px;overflow: hidden;text-overflow: ellipsis;"></RadzenLabel>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <RadzenDatePicker Name="DatepickerPeriodoInicial" Disabled="@DesabilitarCampo" AllowClear="true" TValue="DateTime?" ShowTime="true" ShowSeconds="true" HoursStep="1" MinutesStep="5" SecondsStep="10" YearRange="2020:2050" Change=@(args => OnChangeRecuperarFiltroPeriodoInicial(args)) />
+                                                        <RadzenDatePicker Name="DatepickerPeriodoFinal" Disabled="@DesabilitarCampo" AllowClear="true" TValue="DateTime?" ShowTime="true" ShowSeconds="true" HoursStep="1" MinutesStep="5" SecondsStep="10" YearRange="2020:2050" Change=@(args => OnChangeRecuperarFiltroPeriodoFinal(args)) />
+                                                    </div>
+                                                      <div class="col-md-12">
+                                                        *Selecionar período desabilita modo escuta automaticamente.
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="row">
+                                                    <div class="col-md-12" style="display:flex; justify-content:flex-end; width:100%;">
+                                                        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="close" Text="Limpar" Click="@LimparConsulta" Style="width: 175px; margin-right:5px" Disabled=@DesabilitarBtnLimpar></RadzenButton>
+
+                                                        <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Consultar (modo escuta deslig.)" ButtonStyle="ButtonStyle.Primary" Style="width: 315px;" Disabled=@DesabilitarBtnConsultar></RadzenButton>
+                                                    </div>
+                                                </div>
+
+                                            </RadzenFieldset>
+                                        </div>
+                                    </div>
+                                </RadzenAccordionItem>
+                            </Items>
+                        </RadzenAccordion>
+                    </ChildContent>
+                </RadzenTemplateForm>
+            </ChildContent>
+        </RadzenContent>
+        <br />
+
+        @if (LogsExecucoesMonitoramentos == null && BuscandoRegistros == true)
+        {
+            <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+            <h4>Carregando...</h4>
+        }
+        else
+        {
+            <RadzenProgressBar Value="100" ShowValue="false" Max="100" Style="margin-bottom: 20px" />
+            <p>Total de registros encontrados: @TotalRegistrosPesquisa</p>
+            <RadzenContent Container="main2">
+                <ChildContent>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <RadzenDataGrid @ref="GridConsultaLogMonitoramento"
+                                AllowFiltering="DesabilitarBtnConsultar?false:true"
+                                AllowColumnResize="true"
+                                EmptyText="A pesquisa não retornou resultados."
+                                FilterMode="FilterMode.Simple"
+                                PageSize="100"
+                                PagerPosition="PagerPosition.TopAndBottom"
+                                AllowPaging="true"
+                                AllowSorting="false"
+                                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                LogicalFilterOperator="LogicalFilterOperator.Or"
+                                AllowVirtualization="true"
+                                Data="@LogsExecucoesMonitoramentos"
+                                TItem="LogExecMonitoramento">
+
+                                <Columns>
+                                    <RadzenDataGridColumn TItem="LogExecMonitoramento" Visible="false" Property="Id" Filterable="true" Title="CÓDIGO DO LOG" Frozen="false" Width="80px" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="LogExecMonitoramento" Property="Data" Filterable="false" Title="DATA/HORA" Width="120px" />
+                                    <RadzenDataGridColumn TItem="LogExecMonitoramento" Property="SistemaNome" Title="NOME SISTEMA" Width="150px" />
+                                    <RadzenDataGridColumn TItem="LogExecMonitoramento" Property="MonitoramentoNome" Title="NOME MONITORAMENTO" Width="150px" />
+                                    <RadzenDataGridColumn TItem="LogExecMonitoramento" Property="Mensagem" Title="MENSAGEM" Width="300px" />
+                                    <RadzenDataGridColumn TItem="LogExecMonitoramento" TextAlign="TextAlign.Center" Property="Status" Title="STATUS" Filterable="false" Width="50px">
+                                        <Template Context="data">
+                                            @if (data.Status)
+                                            {
+                                                <img src="/circle_green.ico" />
+                                            }
+                                            else
+                                            {
+                                                <img src="/circle_red.ico" />
+                                            }
+                                        </Template>
+
+                                    </RadzenDataGridColumn>
+                                </Columns>
+                            </RadzenDataGrid>
+                        </div>
+                    </div>
+                </ChildContent>
+            </RadzenContent>
+        }
+    }
+    else
+    {
+        <p>@erroRetornoAPI.Message</p>
+    }
+}

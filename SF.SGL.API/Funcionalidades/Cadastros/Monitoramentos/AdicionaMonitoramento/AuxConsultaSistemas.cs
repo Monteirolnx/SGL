@@ -2,7 +2,7 @@
 
 namespace SF.SGL.API.Funcionalidades.Cadastros.Monitoramentos.AdicionaMonitoramento;
 
-public class AuxConsultaSistemasCadMonit
+public class AuxConsultaSistemas
 {
     public class MappingProfile : Profile
     {

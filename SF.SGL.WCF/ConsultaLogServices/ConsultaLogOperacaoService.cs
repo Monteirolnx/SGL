@@ -9,8 +9,6 @@ public class ConsultaLogOperacaoService
         BasicHttpBinding binding = new();
         binding.Name = "BasicHttpBinding_IServicoLog";
         binding.Security.Mode = BasicHttpSecurityMode.TransportWithMessageCredential;
-        binding.OpenTimeout = new TimeSpan(0, 0, 5);
-        binding.ReceiveTimeout = new TimeSpan(0, 0, 5);
         binding.MaxReceivedMessageSize = int.MaxValue;
         binding.MaxBufferSize = int.MaxValue;
         binding.ReaderQuotas.MaxDepth = 32;

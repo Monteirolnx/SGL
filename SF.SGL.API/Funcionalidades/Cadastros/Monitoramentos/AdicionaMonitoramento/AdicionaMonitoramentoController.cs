@@ -6,7 +6,7 @@ public class AdicionaMonitoramentoController : ControllerBase
     [HttpGet, Route("AuxConsultaSistemasCadMonit")]
     public async Task<IActionResult> AuxConsultaSistemasCadMonit([FromServices] IMediator mediator)
     {
-        AuxConsultaSistemasCadMonit.Resultado resultado = await mediator.Send(new AuxConsultaSistemasCadMonit.Query());
+        AuxConsultaSistemas.Resultado resultado = await mediator.Send(new AuxConsultaSistemas.Query());
         return Ok(resultado.Resultados);
     }
 

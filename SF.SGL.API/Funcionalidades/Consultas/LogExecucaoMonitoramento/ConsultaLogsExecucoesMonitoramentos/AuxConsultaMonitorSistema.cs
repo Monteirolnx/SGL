@@ -1,31 +1,34 @@
-﻿using SF.SGL.API.Funcionalidades.Consultas.LogAuditoria.Excecoes;
+﻿using SF.SGL.API.Funcionalidades.Consultas.LogExecucaoMonitoramento.Excecoes;
 
-namespace SF.SGL.API.Funcionalidades.Consultas.LogAuditoria.ConsultaLogsAuditoria;
+namespace SF.SGL.API.Funcionalidades.Consultas.LogExecucaoMonitoramento.ConsultaLogsExecucoesMonitoramentos;
 
-public class AuxConsultaSistemasLogAudit
+public class AuxConsultaMonitorSistema
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-            CreateMap<EntidadeSistema, Sistema>();
+            CreateMap<EntidadeMonitoramento, Monitoramento>().ReverseMap();
         }
     }
 
     public record Query : IRequest<Resultado>
     {
+        public int Id { get; init; }
     }
 
     public record Resultado
     {
-        public IEnumerable<Sistema> Resultados { get; set; }
+        public IEnumerable<Monitoramento> Monitoramentos { get; set; }
     }
 
-    public record Sistema
+    public record Monitoramento
     {
         public int Id { get; init; }
 
         public string Nome { get; init; }
+
+        public int SistemaId { get; set; }
     }
 
     public class QueryHandler : IRequestHandler<Query, Resultado>
@@ -41,19 +44,21 @@ public class AuxConsultaSistemasLogAudit
 
         public async Task<Resultado> Handle(Query query, CancellationToken cancellationToken)
         {
-            List<Sistema> sistemas = await _sglContexto.EntidadeSistema
-                .ProjectTo<Sistema>(_configurationProvider)
+            List<Monitoramento> monitoramentos = await _sglContexto.EntidadeMonitoramento
+                .ProjectTo<Monitoramento>(_configurationProvider)
+                .Where(x => x.SistemaId == query.Id)
                 .OrderBy(x => x.Nome)
                 .ToListAsync(cancellationToken);
 
-            FuncionalidadeLogAuditoriaException.Quando(!sistemas.Any(), "Não existem sistemas cadastrados.");
+            FuncionalidadeLogMonitoramentoException.Quando(!monitoramentos.Any(), "Não existem monitoramentos cadastrados para esse sistema.");
 
             Resultado resultado = new()
             {
-                Resultados = sistemas
+                Monitoramentos = monitoramentos
             };
 
             return resultado;
         }
     }
+
 }

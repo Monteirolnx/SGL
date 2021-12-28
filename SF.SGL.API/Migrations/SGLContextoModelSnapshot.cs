@@ -23,12 +23,50 @@ namespace SF.SGL.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("SF.SGL.API.Dominio.Entidades.EntidadeExecucaoMonitoramento", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("cd_execucao_monitoramento");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Data")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("dt_execucao_monitoramento");
+
+                    b.Property<Guid>("Guid")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("gd_guid");
+
+                    b.Property<string>("Mensagem")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("nm_execucao_monitoramento_mensagem");
+
+                    b.Property<int>("MonitoramentoId")
+                        .HasColumnType("int")
+                        .HasColumnName("cd_monitoramento");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit")
+                        .HasColumnName("nm_execucao_monitoramento_status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MonitoramentoId");
+
+                    b.ToTable("execucao_monitoramento", "dbo");
+                });
+
             modelBuilder.Entity("SF.SGL.API.Dominio.Entidades.EntidadeMonitoramento", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("cd_monitoramento ");
+                        .HasColumnName("cd_monitoramento");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
@@ -49,11 +87,6 @@ namespace SF.SGL.API.Migrations
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("nm_monitoramento_descricao");
 
-                    b.Property<int?>("EntidadeSistemaId")
-                        .IsRequired()
-                        .HasColumnType("int")
-                        .HasColumnName("cd_sistema");
-
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("gd_monitoramento");
@@ -62,11 +95,15 @@ namespace SF.SGL.API.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
-                        .HasColumnName("nm_monitoramento ");
+                        .HasColumnName("nm_monitoramento");
+
+                    b.Property<int>("SistemaId")
+                        .HasColumnType("int")
+                        .HasColumnName("cd_sistema");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EntidadeSistemaId");
+                    b.HasIndex("SistemaId");
 
                     b.ToTable("monitoramento", "dbo");
                 });
@@ -80,10 +117,6 @@ namespace SF.SGL.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("EntidadeSistemaId")
-                        .HasColumnType("int")
-                        .HasColumnName("cd_sistema");
-
                     b.Property<int>("ParametroExpurgoLogAuditoria")
                         .HasMaxLength(3)
                         .HasColumnType("int")
@@ -94,9 +127,13 @@ namespace SF.SGL.API.Migrations
                         .HasColumnType("int")
                         .HasColumnName("pr_expurgo_log_operacao");
 
+                    b.Property<int>("SistemaId")
+                        .HasColumnType("int")
+                        .HasColumnName("cd_sistema");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("EntidadeSistemaId");
+                    b.HasIndex("SistemaId");
 
                     b.ToTable("parametro_expurgo_log", "dbo");
                 });
@@ -139,11 +176,22 @@ namespace SF.SGL.API.Migrations
                     b.ToTable("sistema", "dbo");
                 });
 
+            modelBuilder.Entity("SF.SGL.API.Dominio.Entidades.EntidadeExecucaoMonitoramento", b =>
+                {
+                    b.HasOne("SF.SGL.API.Dominio.Entidades.EntidadeMonitoramento", "EntidadeMonitoramento")
+                        .WithMany()
+                        .HasForeignKey("MonitoramentoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EntidadeMonitoramento");
+                });
+
             modelBuilder.Entity("SF.SGL.API.Dominio.Entidades.EntidadeMonitoramento", b =>
                 {
                     b.HasOne("SF.SGL.API.Dominio.Entidades.EntidadeSistema", "EntidadeSistema")
                         .WithMany()
-                        .HasForeignKey("EntidadeSistemaId")
+                        .HasForeignKey("SistemaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -154,7 +202,7 @@ namespace SF.SGL.API.Migrations
                 {
                     b.HasOne("SF.SGL.API.Dominio.Entidades.EntidadeSistema", "EntidadeSistema")
                         .WithMany()
-                        .HasForeignKey("EntidadeSistemaId")
+                        .HasForeignKey("SistemaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

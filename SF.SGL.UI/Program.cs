@@ -15,22 +15,21 @@ public class Program
         builder.Services.AddScoped<ContextMenuService>();
         builder.Services.AddScoped<ClipboardService>();
 
-        #region Monitoramentos
+        #region Cadastros        
         builder.Services.AddSingleton<RadzenDataGrid<Pages.Cadastros.Monitoramentos.ConsultaMonitoramentos.ConsultaMonitoramentos.Monitoramento>>();
-        #endregion
-
-        #region Sistemas
+        
         builder.Services.AddSingleton<RadzenDataGrid<Pages.Cadastros.Sistemas.ConsultaSistemas.ConsultaSistemas.Sistema>>();
         #endregion
 
-        #region Consulta Log Auditoria
+        #region Consultas
         builder.Services.AddSingleton<RadzenDataGrid<Pages.Consultas.LogAuditoria.ConsultaLogAuditoria.ConsultaLogAuditoria.LogAuditoria>>();
-        #endregion
 
-        #region Consulta Log Operacao
         builder.Services.AddSingleton<RadzenDataGrid<Pages.Consultas.LogOperacao.ConsultaLogOperacao.ConsultaLogOperacao.LogOperacao>>();
+
+        builder.Services.AddSingleton<RadzenDataGrid<Pages.Consultas.LogExecucaoMonitoramento.ConsultaLogExecucaoMonitoramento.ConsultaLogExecucaoMonitoramento.LogExecMonitoramento>>();
         #endregion
 
         await builder.Build().RunAsync();
+
     }
 }

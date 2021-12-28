@@ -41,7 +41,7 @@ public partial class EditaMonitoramento
     {
         HabilitarBotaoCopiar();
 
-        HttpResponseMessage httpResponseMessage = await ApiConsultaMonitoramentoPorId(Id);
+        HttpResponseMessage httpResponseMessage = await ChamarApiConsultaMonitoramentoPorId(Id);
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -90,7 +90,7 @@ public partial class EditaMonitoramento
 
     protected async Task EnviarFormulario()
     {
-        HttpResponseMessage httpResponseMessage = await ApiEditaMonitoramento(Id, monitoramento);
+        HttpResponseMessage httpResponseMessage = await ChamarApiEditaMonitoramento(Id, monitoramento);
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -110,7 +110,7 @@ public partial class EditaMonitoramento
     #endregion
 
     #region Chamadas Api
-    private async Task<HttpResponseMessage> ApiConsultaMonitoramentoPorId(int id)
+    private async Task<HttpResponseMessage> ChamarApiConsultaMonitoramentoPorId(int id)
     {
         try
         {
@@ -124,7 +124,7 @@ public partial class EditaMonitoramento
         }
     }
 
-    private async Task<HttpResponseMessage> ApiEditaMonitoramento(int id, Monitoramento monitoramento)
+    private async Task<HttpResponseMessage> ChamarApiEditaMonitoramento(int id, Monitoramento monitoramento)
     {
         try
         {

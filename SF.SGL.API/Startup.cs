@@ -26,8 +26,25 @@ public class Startup
 
         services.AddDbContext<SGLContexto>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DetaultConnection"),
-            b => b.MigrationsAssembly(typeof(SGLContexto).Assembly.FullName)));
+            b =>
+            {
+                b.MigrationsHistoryTable("EFMigrationsHistory", "dbo");
+                b.MigrationsAssembly(typeof(SGLContexto).Assembly.FullName);
+            }));
 
+        services.AddMemoryCache();
+
+        services.AddSignalR();
+
+        services.AddControllers();
+
+        services.AddSingleton<SGLHub>();
+
+        services.AddResponseCompression(opts =>
+         {
+             opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                 new[] { "application/octet-stream" });
+         });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,8 +62,10 @@ public class Startup
 
         app.UseHttpsRedirection();
 
-        app.UseRouting();
+        //app.UseHsts();
 
+        app.UseRouting();
+            
         app.UseAuthorization();
 
         app.UseMiddleware<ErrorHandlerMiddleware>();
@@ -54,6 +73,14 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+        });
+
+        app.UseResponseCompression();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapHub<SGLHub>("/sf_sgl_api_hub");
         });
 
         contexto.Database.Migrate();

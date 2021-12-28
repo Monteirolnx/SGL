@@ -10,6 +10,8 @@ public class SGLContexto : DbContext
 
     public DbSet<EntidadeMonitoramento> EntidadeMonitoramento { get; set; }
 
+    public DbSet<EntidadeExecucaoMonitoramento> EntidadeExecucaoMonitoramento { get; set; }
+
     public SGLContexto(DbContextOptions dbContextOptions) : base(dbContextOptions)
     {
     }

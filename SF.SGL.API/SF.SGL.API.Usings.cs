@@ -28,6 +28,8 @@ global using Microsoft.AspNetCore.Builder;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.AspNetCore.Http;
+global using Microsoft.Extensions.Caching.Memory;
+global using Microsoft.AspNetCore.ResponseCompression;
 #endregion
 
 #region Usings Internos
@@ -37,4 +39,5 @@ global using SF.SGL.API.Filtros;
 global using SF.SGL.API.Dominio.Validacao;
 global using SF.SGL.API.Middleware;
 global using SF_SGL_WFC.ServiceReference;
+global using SF.SGL.API.Hub;
 #endregion

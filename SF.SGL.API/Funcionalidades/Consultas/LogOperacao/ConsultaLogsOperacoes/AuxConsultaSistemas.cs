@@ -2,7 +2,7 @@
 
 namespace SF.SGL.API.Funcionalidades.Consultas.LogOperacao.ConsultaLogsOperacoes;
 
-public class AuxConsultaSistemasLogOper
+public class AuxConsultaSistemas
 {
     public class MappingProfile : Profile
     {

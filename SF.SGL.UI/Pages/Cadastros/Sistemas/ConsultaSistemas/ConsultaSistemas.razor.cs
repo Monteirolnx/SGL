@@ -38,7 +38,7 @@ public partial class ConsultaSistemas
     private async Task MontarMemoria()
     {
         desabilitaAdicao = true;
-        HttpResponseMessage httpResponseMessage = await ApiConsultaSistemas();
+        HttpResponseMessage httpResponseMessage = await ChamarApiConsultaSistemas();
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -105,7 +105,7 @@ public partial class ConsultaSistemas
     #endregion
 
     #region Chamadas Api
-    protected async Task<HttpResponseMessage> ApiConsultaSistemas()
+    protected async Task<HttpResponseMessage> ChamarApiConsultaSistemas()
     {
         try
         {

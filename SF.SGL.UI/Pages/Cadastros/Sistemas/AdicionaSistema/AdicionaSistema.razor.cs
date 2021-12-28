@@ -51,7 +51,7 @@ public partial class AdicionaSistema
 
     protected async Task EnviarFormulario()
     {
-        HttpResponseMessage httpResponseMessage = await ApiAdicionaSistema();
+        HttpResponseMessage httpResponseMessage = await ChamarApiAdicionaSistema();
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -70,7 +70,7 @@ public partial class AdicionaSistema
     #endregion
 
     #region Chamadas Api
-    protected async Task<HttpResponseMessage> ApiAdicionaSistema()
+    protected async Task<HttpResponseMessage> ChamarApiAdicionaSistema()
     {
         try
         {

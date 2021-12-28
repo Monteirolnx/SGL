@@ -47,7 +47,7 @@
             await Task.FromResult(monitoramento = new());
             CriarGUID();
 
-            HttpResponseMessage httpResponseMessage = await ApiAuxConsultaSistemasCadMonitoramento();
+            HttpResponseMessage httpResponseMessage = await ChamarApiAuxConsultaSistemasCadMonitoramento();
             if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 InformarFallhaComunicacaoAPI();
@@ -97,7 +97,7 @@
 
         protected async Task EnviarFormulario()
         {
-            HttpResponseMessage httpResponseMessage = await ApiAdicionaMonitoramento();
+            HttpResponseMessage httpResponseMessage = await ChamarApiAdicionaMonitoramento();
             if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 InformarFallhaComunicacaoAPI();
@@ -121,7 +121,7 @@
         #endregion
 
         #region Chamadas Api
-        protected async Task<HttpResponseMessage> ApiAuxConsultaSistemasCadMonitoramento()
+        protected async Task<HttpResponseMessage> ChamarApiAuxConsultaSistemasCadMonitoramento()
         {
             try
             {
@@ -135,7 +135,7 @@
             }
         }
 
-        protected async Task<HttpResponseMessage> ApiAdicionaMonitoramento()
+        protected async Task<HttpResponseMessage> ChamarApiAdicionaMonitoramento()
         {
             try
             {

@@ -2,7 +2,6 @@
 
 public partial class ConsultaLogOperacao
 {
-    
     protected ParametroConsultaLogOperacao parametroConsultaLogOperacao;
     protected ErroRetornoAPI erroRetornoAPI;
     protected RespostaConsultaLogOperacao respostaConsultaLogOperacao;
@@ -21,7 +20,7 @@ public partial class ConsultaLogOperacao
 
     protected int TotalRegistrosPesquisa { get; set; }
     
-    protected bool DesabilitarBtnPesquisarSistema { get; set; } = false;
+    protected bool DesabilitarCampo{ get; set; } = false;
 
     protected bool DesabilitarBtnLimpar { get; set; } = false;
 
@@ -100,7 +99,7 @@ public partial class ConsultaLogOperacao
     protected async Task MontarMemoria()
     {
         await Task.FromResult(parametroConsultaLogOperacao = new());
-        HttpResponseMessage httpResponseMessage = await ApiAuxConsultaSistemasLogOper();
+        HttpResponseMessage httpResponseMessage = await ChamarApiAuxConsultaSistemasLogOper();
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -121,10 +120,11 @@ public partial class ConsultaLogOperacao
         InvokeAsync(StateHasChanged);
     }
 
-    protected void DesabilitarBotoes(bool valor)
+    protected void DesabilitarComponentes(bool valor)
     {
-        DesabilitarBtnPesquisarSistema = valor;
+        DesabilitarCampo = valor;
         DesabilitarBtnLimpar = valor;
+        DesabilitarBtnConsultar = valor;
     }
 
     protected void RecuperarFiltros(ref ParametroConsultaLogOperacao parametroConsultaLogOperacao)
@@ -156,10 +156,10 @@ public partial class ConsultaLogOperacao
         LogsOperacoes = null;
         TotalRegistrosPesquisa = 0;
         BuscandoRegistros = true;
-        DesabilitarBotoes(true);
+        DesabilitarComponentes(true);
 
         RecuperarFiltros(ref parametroConsultaLogOperacao);
-        HttpResponseMessage httpResponseMessage = await ApiConsultarLogOperacao(parametroConsultaLogOperacao);
+        HttpResponseMessage httpResponseMessage = await ChamarApiConsultarLogOperacao(parametroConsultaLogOperacao);
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -183,13 +183,13 @@ public partial class ConsultaLogOperacao
         }
 
         BuscandoRegistros = false;
-        DesabilitarBotoes(false);
+        DesabilitarComponentes(false);
         Recarregar();
     }
     #endregion
 
     #region Chamadas Api
-    protected async Task<HttpResponseMessage> ApiAuxConsultaSistemasLogOper()
+    protected async Task<HttpResponseMessage> ChamarApiAuxConsultaSistemasLogOper()
     {
         try
         {
@@ -203,11 +203,11 @@ public partial class ConsultaLogOperacao
         }
     }
 
-    protected async Task<HttpResponseMessage> ApiConsultarLogOperacao(ParametroConsultaLogOperacao parametroConsultaLogOperacao)
+    protected async Task<HttpResponseMessage> ChamarApiConsultarLogOperacao(ParametroConsultaLogOperacao parametroConsultaLogOperacao)
     {
         try
         {
-            string serviceEndpoint = $"api/ConsultaLogsOperacoes/ConsultarLogOper";
+            string serviceEndpoint = $"api/ConsultaLogsOperacoes/ConsultaLogOper";
             UriBuilder uriBuilder = new(string.Concat(Configuration["EnderecoBaseSGLAPI"], serviceEndpoint));
             return await HttpClient.PostAsJsonAsync(uriBuilder.Uri, parametroConsultaLogOperacao);
         }

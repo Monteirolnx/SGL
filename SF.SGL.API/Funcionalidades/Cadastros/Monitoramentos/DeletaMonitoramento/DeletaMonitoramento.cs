@@ -60,11 +60,13 @@ public class DeletaMonitoramento
     {
         private readonly SGLContexto _sglContexto;
         private readonly IMapper _mapper;
+        private readonly IMemoryCache _memoryCache;
 
-        public CommandHandler(SGLContexto sglContexto, IMapper mapper)
+        public CommandHandler(SGLContexto sglContexto, IMapper mapper, IMemoryCache memoryCache)
         {
             _sglContexto = sglContexto;
             _mapper = mapper;
+            _memoryCache = memoryCache;
         }
 
         public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
@@ -74,6 +76,13 @@ public class DeletaMonitoramento
             await Task.FromResult(_sglContexto.EntidadeMonitoramento.Remove(entidadeMonitoramento));
 
             await _sglContexto.SaveChangesAsync(cancellationToken);
+
+            List<EntidadeMonitoramento> monitoramentos = await _sglContexto.EntidadeMonitoramento
+                      .OrderBy(s => s.Guid)
+                      .ToListAsync(cancellationToken);
+
+
+            _memoryCache.Set("MonitoramentosCache", monitoramentos, TimeSpan.FromDays(1));
 
             return default;
         }

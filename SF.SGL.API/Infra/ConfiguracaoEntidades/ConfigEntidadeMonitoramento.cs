@@ -11,7 +11,7 @@ internal class ConfigEntidadeMonitoramento : IEntityTypeConfiguration<EntidadeMo
 
         builder
             .Property(m => m.Id).UseIdentityColumn()
-            .HasColumnName("cd_monitoramento ");
+            .HasColumnName("cd_monitoramento");
 
         builder.Property(m => m.Guid)
             .IsRequired()
@@ -20,7 +20,7 @@ internal class ConfigEntidadeMonitoramento : IEntityTypeConfiguration<EntidadeMo
         builder.Property(m => m.Nome)
             .HasMaxLength(100)
             .IsRequired()
-            .HasColumnName("nm_monitoramento ");
+            .HasColumnName("nm_monitoramento");
 
         builder.Property(m => m.Descricao)
             .HasMaxLength(255)

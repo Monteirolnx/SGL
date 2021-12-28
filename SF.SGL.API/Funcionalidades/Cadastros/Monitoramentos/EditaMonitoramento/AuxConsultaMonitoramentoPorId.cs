@@ -24,21 +24,21 @@ public class AuxConsultaMonitoramentoPorId
 
     public record Monitoramento
     {
-        public int Id { get; set; }
+        public int Id { get; init; }
 
-        public Guid Guid { get; set; }
+        public Guid Guid { get; init; }
         
-        public string Nome { get; set; }
+        public string Nome { get; init; }
         
-        public string Descricao { get; set; }
+        public string Descricao { get; init; }
         
-        public string Acao { get; set; }
+        public string Acao { get; init; }
         
-        public string Contato { get; set; }
+        public string Contato { get; init; }
         
-        public int SistemaId { get; set; }
+        public int SistemaId { get; init; }
 
-        public Sistema Sistema { get; set; }
+        public Sistema Sistema { get; init; }
     }
 
     public record Sistema
@@ -60,9 +60,6 @@ public class AuxConsultaMonitoramentoPorId
         }
         public async Task<Resultado> Handle(Query query, CancellationToken cancellationToken)
         {
-            //Monitoramento monitoramento = await _sglContexto.EntidadeMonitoramento.Where(s => s.Id == query.Id)
-            //    .ProjectTo<Monitoramento>(_configurationProvider).SingleOrDefaultAsync(cancellationToken);
-
             var consultaDb = await _sglContexto.EntidadeMonitoramento
             .ProjectTo<Monitoramento>(_configurationProvider)
             .Join(_sglContexto.EntidadeSistema,
@@ -81,7 +78,7 @@ public class AuxConsultaMonitoramentoPorId
                 SistemaId = monitoramento.Id,
                 SistemaNome = sistema.Nome
             })
-            .Where(s => s.SistemaId == query.Id)
+            .Where(m => m.SistemaId == query.Id)
             .SingleOrDefaultAsync(cancellationToken);
 
             FuncionalidadeMonitoramentoException.Quando(consultaDb is null, $"Não existe monitoramento com o código {query.Id}.");
