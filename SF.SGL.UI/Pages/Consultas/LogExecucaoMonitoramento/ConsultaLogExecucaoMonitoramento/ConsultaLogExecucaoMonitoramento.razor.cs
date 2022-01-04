@@ -9,7 +9,6 @@ public partial class ConsultaLogExecucaoMonitoramento
     string tipoRegistro;
     List<string> tipoRegistros = new();
 
-
     protected List<LogExecMonitoramento> LogsExecucoesMonitoramentos { get; set; }
 
     protected List<Sistema> Sistemas { get; set; }
@@ -62,7 +61,11 @@ public partial class ConsultaLogExecucaoMonitoramento
         LimparGridExecucoesMonitoramentos();
         MontarDropDowns();
 
-        await AtivarModoEscuta();
+        if (ModoEscutaHabilitado)
+        {
+            await AtivarModoEscuta();
+        }
+        
         await MontarMemoria();
     }
 
@@ -87,8 +90,10 @@ public partial class ConsultaLogExecucaoMonitoramento
                 LogExecMonitoramento logExecMonitoramento = new();
                 logExecMonitoramento = JsonConvert.DeserializeObject<LogExecMonitoramento>(message);
 
-                if ((parametroConsultaLogExecMonitoramento.SistemaId.HasValue && logExecMonitoramento.SistemaId == parametroConsultaLogExecMonitoramento.SistemaId && parametroConsultaLogExecMonitoramento.MonitoramentoId is null) ||
-                (parametroConsultaLogExecMonitoramento.MonitoramentoId.HasValue && (logExecMonitoramento.MonitoramentoId == parametroConsultaLogExecMonitoramento.MonitoramentoId)) ||
+                if (
+                (parametroConsultaLogExecMonitoramento.SistemaId.HasValue && logExecMonitoramento.SistemaId == parametroConsultaLogExecMonitoramento.SistemaId && parametroConsultaLogExecMonitoramento.MonitoramentoId is null && 
+                (parametroConsultaLogExecMonitoramento.Status is null ||logExecMonitoramento.Status == parametroConsultaLogExecMonitoramento.Status)) ||
+                (parametroConsultaLogExecMonitoramento.MonitoramentoId.HasValue && (logExecMonitoramento.MonitoramentoId == parametroConsultaLogExecMonitoramento.MonitoramentoId)) && (parametroConsultaLogExecMonitoramento.Status is null || logExecMonitoramento.Status == parametroConsultaLogExecMonitoramento.Status) ||
                 (parametroConsultaLogExecMonitoramento.Status.HasValue && (logExecMonitoramento.Status == parametroConsultaLogExecMonitoramento.Status)) ||
                 (parametroConsultaLogExecMonitoramento.SistemaId is null && parametroConsultaLogExecMonitoramento.MonitoramentoId is null && parametroConsultaLogExecMonitoramento.Status is null))
                 {
@@ -98,7 +103,7 @@ public partial class ConsultaLogExecucaoMonitoramento
                 LogsExecucoesMonitoramentos = LogsExecucoesMonitoramentos.OrderByDescending(x => x.Data).ToList();
                 TotalRegistrosPesquisa = LogsExecucoesMonitoramentos.Count;
                 GridConsultaLogMonitoramento.Reset();
-                
+
                 Recarregar();
             }
         });
@@ -133,11 +138,13 @@ public partial class ConsultaLogExecucaoMonitoramento
     protected async Task MontarMemoria()
     {
         await Task.FromResult(parametroConsultaLogExecMonitoramento = new());
-        parametroConsultaLogExecMonitoramento.PeriodoInicial = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
-
+        if (ModoEscutaHabilitado)
+        {
+            parametroConsultaLogExecMonitoramento.PeriodoInicial = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+            await ConsultarLogExecMonitoramento();
+        }        
         await CarregarSistemas();
-        await ConsultarLogExecMonitoramento();
-
+        
         Recarregar();
     }
 
@@ -160,7 +167,7 @@ public partial class ConsultaLogExecucaoMonitoramento
 
     private async Task ConsultarLogExecMonitoramento()
     {
-        HttpResponseMessage httpResponseMessage = await ChamarApiConsultarLogExecMonitoramento(parametroConsultaLogExecMonitoramento);
+        HttpResponseMessage httpResponseMessage = await ChamarApiConsultarLogExecMonitoramento();
         if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             InformarFallhaComunicacaoAPI();
@@ -194,7 +201,7 @@ public partial class ConsultaLogExecucaoMonitoramento
         await OnInitializedAsync();
     }
 
-    protected async Task EnviarFormulario(ParametroConsultaLogExecMonitoramento parametroConsultaLogExecMonitoramento)
+    protected async Task EnviarFormulario()
     {
         if (parametroConsultaLogExecMonitoramento.PeriodoFinal.HasValue && parametroConsultaLogExecMonitoramento.PeriodoFinal < parametroConsultaLogExecMonitoramento.PeriodoInicial)
         {
@@ -234,6 +241,7 @@ public partial class ConsultaLogExecucaoMonitoramento
         }
         else
         {
+            parametroConsultaLogExecMonitoramento.PeriodoInicial = null;
             DesabilitarBtnConsultar = false;
             await HubConexao.StopAsync();
             await HubConexao.DisposeAsync();
@@ -270,13 +278,17 @@ public partial class ConsultaLogExecucaoMonitoramento
         }
     }
 
-    protected async Task<HttpResponseMessage> ChamarApiConsultarLogExecMonitoramento(ParametroConsultaLogExecMonitoramento parametroConsultaLogAuditoria)
+    protected async Task<HttpResponseMessage> ChamarApiConsultarLogExecMonitoramento()
     {
         try
         {
+            if (parametroConsultaLogExecMonitoramento.PeriodoInicial is null)
+            {
+                parametroConsultaLogExecMonitoramento.PeriodoInicial = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0).AddMonths(-2);
+            }
             string serviceEndpoint = $"api/ConsultaLogsExecMonitoramentos/ConsultaLogsExecMonitoramentos";
             UriBuilder uriBuilder = new(string.Concat(Configuration["EnderecoBaseSGLAPI"], serviceEndpoint));
-            return await HttpClient.PostAsJsonAsync(uriBuilder.Uri, parametroConsultaLogAuditoria);
+            return await HttpClient.PostAsJsonAsync(uriBuilder.Uri, parametroConsultaLogExecMonitoramento);
         }
         catch (Exception)
         {

@@ -2,7 +2,6 @@
 
 @layout MainLayout
 
-
 @if (Sistemas == null && erroRetornoAPI == null)
 {
     <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
@@ -125,7 +124,7 @@ else if (Sistemas != null || erroRetornoAPI?.Message != null)
                                 TItem="LogAuditoria">
 
                                 <Columns>
-                                    <RadzenDataGridColumn TItem="LogAuditoria" Property="CodigoLogAuditoria" Filterable="true" Title="CÓDIGO DO LOG" Frozen="false" Width="120px" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="LogAuditoria" Property="CodigoLogAuditoria" Visible="false" Filterable="true" Title="CÓDIGO DO LOG" Frozen="false" Width="120px" TextAlign="TextAlign.Center" />
                                     <RadzenDataGridColumn TItem="LogAuditoria" Property="DataOcorrencia" Title="DATA/HORA" Width="150px" />
                                     <RadzenDataGridColumn TItem="LogAuditoria" Property="CodigoIdentificadorUsuario" Title="IDENTIFICADOR USUÁRIO" Width="180px" />
                                     <RadzenDataGridColumn TItem="LogAuditoria" Property="NomeFuncionalidade" Title="FUNCIONALIDADE" Width="150px" />

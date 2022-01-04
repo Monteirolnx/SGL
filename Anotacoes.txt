@@ -9,8 +9,11 @@ Architecting for maintainability through Vertical Slices:
 
 Bring Your Apps to Life With SignalR and .NET 6   
     https://www.telerik.com/blogs/bring-your-apps-life-signalr-dotnet-6
+
+How to send emails in .Net Core Web API
+    https://medium.com/@ajidejibola/how-to-send-emails-in-net-core-web-api-547243226453
  
- ===================================================================================================================================
+====================================================================================================================================
 
 === Videos:
 
@@ -20,4 +23,4 @@ Vertical Slice Architecture con Asp.Net Core | Latino .NET Online
 Clean Architecture with ASP.NET Core with Steve "Ardalis" Smith (2020-06-01):
     https://www.youtube.com/watch?v=joNTQy-KXiU
 
-    ===================================================================================================================================
+===================================================================================================================================
