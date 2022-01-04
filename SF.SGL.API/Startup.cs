@@ -1,3 +1,5 @@
+using static SF.SGL.API.Funcionalidades.Cadastros.ExecucaoMonitoramento.ExecucaoMonitoramento;
+
 namespace SF.SGL.API;
 
 public class Startup
@@ -9,7 +11,6 @@ public class Startup
 
     public IConfiguration Configuration { get; }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
@@ -36,8 +37,6 @@ public class Startup
 
         services.AddSignalR();
 
-        services.AddControllers();
-
         services.AddSingleton<SGLHub>();
 
         services.AddResponseCompression(opts =>
@@ -45,9 +44,12 @@ public class Startup
              opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                  new[] { "application/octet-stream" });
          });
+
+        services.AddSingleton<IEmailSender, AuxEnviaEmail>();
+
+        services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SGLContexto contexto)
     {
         if (env.IsDevelopment())
@@ -61,11 +63,10 @@ public class Startup
                    .AllowCredentials());
 
         app.UseHttpsRedirection();
-
-        //app.UseHsts();
+         
 
         app.UseRouting();
-            
+
         app.UseAuthorization();
 
         app.UseMiddleware<ErrorHandlerMiddleware>();

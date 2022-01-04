@@ -1,6 +1,4 @@
-﻿using SF.SGL.API.Funcionalidades.Consultas.LogExecucaoMonitoramento.Excecoes;
-
-namespace SF.SGL.API.Funcionalidades.Consultas.LogExecucaoMonitoramento.ConsultaLogsExecucoesMonitoramentos;
+﻿namespace SF.SGL.API.Funcionalidades.Consultas.LogExecucaoMonitoramento.ConsultaLogsExecucoesMonitoramentos;
 
 public class ConsultaLogsExecMonitoramentos
 {
@@ -89,12 +87,10 @@ public class ConsultaLogsExecMonitoramentos
              })
              .Where(x => (query.SistemaId == null || x.SistemaId == query.SistemaId)
                     && (query.MonitoramentoId == null || x.MonitoramentoId == query.MonitoramentoId))
-             .Where(x => query.PeriodoInicial == null || x.Data > query.PeriodoInicial)
-             .Where(x => query.PeriodoFinal == null || x.Data < query.PeriodoFinal)
+             .Where(x => query.PeriodoInicial == null || x.Data >= query.PeriodoInicial)
+             .Where(x => query.PeriodoFinal == null || x.Data <= query.PeriodoFinal)
              .Where(x=>(query.Status == null || x.Status == query.Status))
              .ToListAsync(cancellationToken);
-
-            FuncionalidadeLogMonitoramentoException.Quando(!consultaDb.Any(), "Pesquisa não retornou resultados.");
 
             foreach (var item in consultaDb)
             {

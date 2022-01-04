@@ -10,10 +10,9 @@ public class ExecucaoMonitoramentoController : ControllerBase
 
         if (command.Status == false)
         {
-            // retorna 202
+            return Accepted();
         }
 
-        //return Created 201
-        return CreatedAtAction(nameof(Adiciona), new { Guid = command.Guid }, iD);
+        return CreatedAtAction(nameof(Adiciona), new { command.Guid }, iD);
     }
 }

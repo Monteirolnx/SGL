@@ -4,6 +4,8 @@ global using AutoMapper.QueryableExtensions;
 
 global using MediatR;
 
+global using MimeKit;
+
 global using System;
 global using System.Data;
 global using System.Net.Mail;
@@ -15,6 +17,7 @@ global using System.Threading.Tasks;
 global using System.Text.Json.Serialization;
 global using System.Net;
 global using System.Text.Json;
+global using System.Text;
 
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.Filters;
@@ -30,6 +33,7 @@ global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.Extensions.Caching.Memory;
 global using Microsoft.AspNetCore.ResponseCompression;
+global using Microsoft.Extensions.Options;
 #endregion
 
 #region Usings Internos

@@ -44,6 +44,8 @@ public class AdicionaMonitoramento
 
         public async Task<int> Handle(Command command, CancellationToken cancellationToken)
         {
+            command.Contato = command.Contato.Trim();
+
             EntidadeMonitoramento entidadeMonitoramento = _mapper.Map<EntidadeMonitoramento>(command);
 
             await _sglContexto.AddAsync(entidadeMonitoramento, cancellationToken);
