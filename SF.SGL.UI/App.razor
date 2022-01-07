@@ -1,10 +1,37 @@
-﻿<Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-    </Found>
-    <NotFound>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p>Erro ao obter a rotina.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
+﻿@inject NavigationManager Navigation
+@inject IConfiguration Configuration
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="true">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+
+                <Authorizing>
+                    <Loading />
+                </Authorizing>
+
+                <NotAuthorized>
+                    @if (!context.User.Identity.IsAuthenticated)
+                    {
+                        <RedirecionaLogin />
+                    } 
+                    else
+                    {
+                        <div class="pa-3">
+                            Usuário não autorizado.
+                        </div>                             
+                    }
+                </NotAuthorized>
+
+            </AuthorizeRouteView>
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <div class="pa-3">
+                   Página não encontrada.
+                </div>          
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+

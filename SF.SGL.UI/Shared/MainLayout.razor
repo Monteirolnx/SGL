@@ -1,34 +1,32 @@
 ﻿@inherits SF.SGL.UI.Shared.MainLayoutComponent
 
-@using Radzen
-@using Radzen.Blazor
+<AuthorizeView>
+    <Authorized>
+        <RadzenHeader>
+            <ChildContent>
+                <div class="row justify-content-start align-items-center">
+                    <div class="col-4 d-flex align-items-center">
+                        <RadzenSidebarToggle Click="@SidebarToggle0Click"></RadzenSidebarToggle>
+                        <RadzenLabel Text="SGL - Sistema de Gestão de Logs" Style="text-overflow: ellipsis"></RadzenLabel>
+                    </div>
+                    <div class="col-4 d-flex align-items-center">
+                        <RadzenSwitch Disabled="false" @bind-Value="@DarkTheme" Change="@UpdateTheme" />
+                        <span>&nbsp; &nbsp;</span>
+                        <label class="white-text"> Modo escuro </label>
+                    </div>
+                    <div class="col-4 text-right">
+                        <RadzenButton ButtonStyle="ButtonStyle.Secondary"
+                                      Text="Sair" Size="ButtonSize.Small"
+                                      Style="margin-right:20px">
+                        </RadzenButton>
+                    </div>
+                </div>
+            </ChildContent>
+        </RadzenHeader>
+    </Authorized>
+</AuthorizeView>
 
-<RadzenDialog />
-<RadzenNotification />
-<RadzenTooltip />
-<RadzenContextMenu />
 
-<RadzenHeader>
-    <ChildContent>
-        <div class="row justify-content-start align-items-center">
-            <div class="col-4 d-flex align-items-center">
-                <RadzenSidebarToggle Click="@SidebarToggle0Click"></RadzenSidebarToggle>
-                <RadzenLabel Text="SGL - Sistema de Gestão de Logs" Style="text-overflow: ellipsis"></RadzenLabel>
-            </div>
-            <div class="col-4 d-flex align-items-center">
-                <RadzenSwitch Disabled="false" @bind-Value="@DarkTheme" Change="@UpdateTheme" />
-                <span>&nbsp; &nbsp;</span>
-                <label class="white-text"> Modo escuro </label>
-            </div>
-            <div class="col-4 text-right">
-                <RadzenButton ButtonStyle="ButtonStyle.Secondary"
-                              Text="Sair" Size="ButtonSize.Small"
-                              Style="margin-right:20px">
-                </RadzenButton>
-            </div>
-        </div>
-    </ChildContent>
-</RadzenHeader>
 <RadzenBody @ref="body0">
     <ChildContent>
         <RadzenContentContainer Name="main">
@@ -36,38 +34,45 @@
         </RadzenContentContainer>
     </ChildContent>
 </RadzenBody>
-<RadzenSidebar @ref="sidebar0">
-    <ChildContent>
-        <RadzenPanelMenu style="height: 100%">
+
+<StateLoader />
+
+<AuthorizeView>
+    <Authorized>
+        <RadzenSidebar @ref="sidebar0">
             <ChildContent>
-                <RadzenPanelMenuItem Text="Home" Path="/"></RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Cadastros">
+                <RadzenPanelMenu style="height: 100%">
                     <ChildContent>
-                        <RadzenPanelMenuItem Text="Monitoramentos" Path="/Cadastros/Monitoramentos"></RadzenPanelMenuItem>
-                        <RadzenPanelMenuItem Text="Sistemas" Path="/Cadastros/Sistemas"></RadzenPanelMenuItem>
-                    </ChildContent>
-                </RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Parametrizações">
-                    <ChildContent>
-                        <RadzenPanelMenuItem Text="Parametrizar Expurgo Log">
+                        <RadzenPanelMenuItem Text="Home" Path="/"></RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Cadastros">
+                            <ChildContent>
+                                <RadzenPanelMenuItem Text="Monitoramentos" Path="/Cadastros/Monitoramentos"></RadzenPanelMenuItem>
+                                <RadzenPanelMenuItem Text="Sistemas" Path="/Cadastros/Sistemas"></RadzenPanelMenuItem>
+                            </ChildContent>
                         </RadzenPanelMenuItem>
-                        <RadzenPanelMenuItem Text="Parametrizar Permissões de Acesso do Log">
+                        <RadzenPanelMenuItem Text="Parametrizações">
+                            <ChildContent>
+                                <RadzenPanelMenuItem Text="Parametrizar Expurgo Log">
+                                </RadzenPanelMenuItem>
+                                <RadzenPanelMenuItem Text="Parametrizar Permissões de Acesso do Log">
+                                </RadzenPanelMenuItem>
+                            </ChildContent>
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Consultas">
+                            <ChildContent>
+                                <RadzenPanelMenuItem Text="Log de Auditoria" Path="/Consultas/LogAuditoria/ConsultaLogAuditoria"></RadzenPanelMenuItem>
+                                <RadzenPanelMenuItem Text="Log de Exec. de Monitoramento" Path="/Consultas/LogExecucaoMonitoramento/ConsultaLogExecucaoMonitoramento"></RadzenPanelMenuItem>
+                                <RadzenPanelMenuItem Text="Log de Operação" Path="/Consultas/LogOperacao/ConsultaLogOperacao"></RadzenPanelMenuItem>
+                            </ChildContent>
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Controle Dev">
+                            <ChildContent>
+                                <RadzenPanelMenuItem Text="Counter" Path="counter"></RadzenPanelMenuItem>
+                            </ChildContent>
                         </RadzenPanelMenuItem>
                     </ChildContent>
-                </RadzenPanelMenuItem>
-                <RadzenPanelMenuItem Text="Consultas">
-                    <ChildContent>
-                        <RadzenPanelMenuItem Text="Log de Auditoria"  Path="/Consultas/LogAuditoria/ConsultaLogAuditoria"></RadzenPanelMenuItem>
-                        <RadzenPanelMenuItem Text="Log de Exec. de Monitoramento"  Path="/Consultas/LogExecucaoMonitoramento/ConsultaLogExecucaoMonitoramento"></RadzenPanelMenuItem>
-                        <RadzenPanelMenuItem Text="Log de Operação" Path="/Consultas/LogOperacao/ConsultaLogOperacao"></RadzenPanelMenuItem>
-                    </ChildContent>
-                </RadzenPanelMenuItem>
-                  <RadzenPanelMenuItem Text="Controle Dev">
-                     <ChildContent>
-                        <RadzenPanelMenuItem Text="Counter" Path="counter"></RadzenPanelMenuItem>
-                    </ChildContent>
-                </RadzenPanelMenuItem>
+                </RadzenPanelMenu>
             </ChildContent>
-        </RadzenPanelMenu>
-    </ChildContent>
-</RadzenSidebar>
+        </RadzenSidebar>
+    </Authorized>
+</AuthorizeView>

@@ -1,0 +1,56 @@
+﻿@*@inherits FluxorComponent
+@using dotnet.client.Store.Counter
+@using dotnet.client.Store.MainStore*@
+@*@inject IDispatcher Dispatcher*@
+@*@inject BrowserService BrowserService*@
+@inject IAuthorizationService AuthorizationService
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        var user = (await authenticationStateTask).User;
+         UserInfoState userInfo = new UserInfoState {
+            Nome = user.Identity.Name,
+            Email = user.Claims.SingleOrDefault(c => c.Type == Constantes.ClaimsTypes.Email)?.Value,
+            LoginDeRede = user.Claims.SingleOrDefault(c => c.Type == Constantes.ClaimsTypes.LoginDeRede)?.Value,
+            //Foto = await SetFoto(user),
+            UserClaims = user.Claims,
+            Roles = user.Claims
+            .Where(c => c.Type == Constantes.ClaimsTypes.Role)
+            .Select(c => c.Value),
+            PodeCriarUnidades = user.IsInRole(Constantes.Roles.UnidadesRead),
+            PodeVerUnidades = user.IsInRole(Constantes.Roles.UnidadesRead),
+            PodeEditarUnidades = user.IsInRole(Constantes.Roles.UnidadesUpdate),
+            PodeExcluirUnidades = user.IsInRole(Constantes.Roles.UnidadesDelete) 
+        };
+
+        if (firstRender) 
+        {
+            //Dispatcher.Dispatch(new MainStateLoadAction()); PRINCIPAL
+
+            //Dispatcher.Dispatch(new CounterLoadStateAction());
+        }
+        
+        //Dispatcher.Dispatch(new MainStateSetUserAction(userInfo));
+    }
+
+    // private async Task<string> SetFoto(System.Security.Claims.ClaimsPrincipal user) {
+    //    var foto = user.Claims.SingleOrDefault(c => c.Type == Constantes.ClaimsTypes.Foto)?.Value;
+    //    if (foto == default) 
+    //    {
+    //        //return await BrowserService.LetterAvatar(user.Identity.Name);
+    //    }
+    //    else 
+    //    {
+    //        return foto;
+    //    }          
+    //}
+
+
+}
+

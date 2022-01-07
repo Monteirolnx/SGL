@@ -48,6 +48,15 @@ public class Startup
         services.AddSingleton<IEmailSender, AuxEnviaEmail>();
 
         services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .SetIsOriginAllowed((host) => true)
+                .SetIsOriginAllowedToAllowWildcardSubdomains());
+        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SGLContexto contexto)
@@ -58,12 +67,12 @@ public class Startup
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SF.SGL.API v1"));
         }
-        app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader()
-                   .SetIsOriginAllowed(origin => true)
-                   .AllowCredentials());
+
+        app.UseCors("CorsPolicy");
 
         app.UseHttpsRedirection();
-         
+
+        app.UseHsts();
 
         app.UseRouting();
 

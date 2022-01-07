@@ -1,4 +1,6 @@
-﻿namespace SF.SGL.UI.Pages.Consultas.LogExecucaoMonitoramento.ConsultaLogExecucaoMonitoramento;
+﻿using Newtonsoft.Json;
+
+namespace SF.SGL.UI.Pages.Consultas.LogExecucaoMonitoramento.ConsultaLogExecucaoMonitoramento;
 
 public partial class ConsultaLogExecucaoMonitoramento
 {
@@ -28,6 +30,8 @@ public partial class ConsultaLogExecucaoMonitoramento
     protected int TotalRegistrosPesquisa { get; set; }
 
     private HubConnection HubConexao { get; set; }
+
+    public bool DisabledSwitch { get; set; }
 
     public bool HubConectado => HubConexao?.State == HubConnectionState.Connected;
 
@@ -71,44 +75,47 @@ public partial class ConsultaLogExecucaoMonitoramento
 
     private async Task AtivarModoEscuta()
     {
-        string serviceEndpoint = $"sf_sgl_api_hub";
-        UriBuilder uriBuilder = new(string.Concat(Configuration["EnderecoBaseSGLAPI"], serviceEndpoint));
-
-        HubConexao = new HubConnectionBuilder()
-           .WithUrl(uriBuilder.Uri)
-           .Build();
-
-        HubConexao.On<string>("ExecucaoMonitoramento", (message) =>
+        if (!HubConectado)
         {
-            if (ModoEscutaHabilitado)
+            string serviceEndpoint = $"sf_sgl_api_hub";
+            UriBuilder uriBuilder = new(string.Concat(Configuration["EnderecoBaseSGLAPI"], serviceEndpoint));
+
+            HubConexao = new HubConnectionBuilder()
+               .WithUrl(uriBuilder.Uri)
+               .Build();
+
+            HubConexao.On<string>("ExecucaoMonitoramento", (message) =>
             {
-                if (LogsExecucoesMonitoramentos is null)
+                if (ModoEscutaHabilitado)
                 {
-                    LogsExecucoesMonitoramentos = new();
+                    if (LogsExecucoesMonitoramentos is null)
+                    {
+                        LogsExecucoesMonitoramentos = new();
+                    }
+                    TotalRegistrosPesquisa = 0;
+                    LogExecMonitoramento logExecMonitoramento = new();
+                    logExecMonitoramento = JsonConvert.DeserializeObject<LogExecMonitoramento>(message);
+
+                    if (
+                    (parametroConsultaLogExecMonitoramento.SistemaId.HasValue && logExecMonitoramento.SistemaId == parametroConsultaLogExecMonitoramento.SistemaId && parametroConsultaLogExecMonitoramento.MonitoramentoId is null &&
+                    (parametroConsultaLogExecMonitoramento.Status is null || logExecMonitoramento.Status == parametroConsultaLogExecMonitoramento.Status)) ||
+                    (parametroConsultaLogExecMonitoramento.MonitoramentoId.HasValue && (logExecMonitoramento.MonitoramentoId == parametroConsultaLogExecMonitoramento.MonitoramentoId)) && (parametroConsultaLogExecMonitoramento.Status is null || logExecMonitoramento.Status == parametroConsultaLogExecMonitoramento.Status) ||
+                    (parametroConsultaLogExecMonitoramento.Status.HasValue && (logExecMonitoramento.Status == parametroConsultaLogExecMonitoramento.Status)) ||
+                    (parametroConsultaLogExecMonitoramento.SistemaId is null && parametroConsultaLogExecMonitoramento.MonitoramentoId is null && parametroConsultaLogExecMonitoramento.Status is null))
+                    {
+                        LogsExecucoesMonitoramentos.Add(logExecMonitoramento);
+                    }
+
+                    LogsExecucoesMonitoramentos = LogsExecucoesMonitoramentos.OrderByDescending(x => x.Data).ToList();
+                    TotalRegistrosPesquisa = LogsExecucoesMonitoramentos.Count;
+                    GridConsultaLogMonitoramento.Reset();
+
+                    Recarregar();
                 }
-                TotalRegistrosPesquisa = 0;
-                LogExecMonitoramento logExecMonitoramento = new();
-                logExecMonitoramento = JsonConvert.DeserializeObject<LogExecMonitoramento>(message);
+            });
 
-                if (
-                (parametroConsultaLogExecMonitoramento.SistemaId.HasValue && logExecMonitoramento.SistemaId == parametroConsultaLogExecMonitoramento.SistemaId && parametroConsultaLogExecMonitoramento.MonitoramentoId is null && 
-                (parametroConsultaLogExecMonitoramento.Status is null ||logExecMonitoramento.Status == parametroConsultaLogExecMonitoramento.Status)) ||
-                (parametroConsultaLogExecMonitoramento.MonitoramentoId.HasValue && (logExecMonitoramento.MonitoramentoId == parametroConsultaLogExecMonitoramento.MonitoramentoId)) && (parametroConsultaLogExecMonitoramento.Status is null || logExecMonitoramento.Status == parametroConsultaLogExecMonitoramento.Status) ||
-                (parametroConsultaLogExecMonitoramento.Status.HasValue && (logExecMonitoramento.Status == parametroConsultaLogExecMonitoramento.Status)) ||
-                (parametroConsultaLogExecMonitoramento.SistemaId is null && parametroConsultaLogExecMonitoramento.MonitoramentoId is null && parametroConsultaLogExecMonitoramento.Status is null))
-                {
-                    LogsExecucoesMonitoramentos.Add(logExecMonitoramento);
-                }
-
-                LogsExecucoesMonitoramentos = LogsExecucoesMonitoramentos.OrderByDescending(x => x.Data).ToList();
-                TotalRegistrosPesquisa = LogsExecucoesMonitoramentos.Count;
-                GridConsultaLogMonitoramento.Reset();
-
-                Recarregar();
-            }
-        });
-
-        await HubConexao.StartAsync();
+            await HubConexao.StartAsync();
+        }
     }
 
     protected void MontarDropDowns()
@@ -233,6 +240,7 @@ public partial class ConsultaLogExecucaoMonitoramento
 
     protected async Task ConectarDesconctarHub()
     {
+        DisabledSwitch = true;
         if (ModoEscutaHabilitado)
         {
             DesabilitarBtnConsultar = true;
@@ -246,6 +254,7 @@ public partial class ConsultaLogExecucaoMonitoramento
             await HubConexao.StopAsync();
             await HubConexao.DisposeAsync();
         }
+        DisabledSwitch = false;
     }
     #endregion
 

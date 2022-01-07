@@ -1,0 +1,41 @@
+﻿@page "/authentication/{action}"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [AllowAnonymous]
+
+<div class="wrapper">
+    <RemoteAuthenticatorView Action="@Action">
+
+        <LoggingIn>
+            <Loading />
+        </LoggingIn>
+
+        <CompletingLoggingIn>
+            <Loading />
+        </CompletingLoggingIn>
+
+        <LogInFailed>
+            Não foi possível entrar na sua conta.
+        </LogInFailed>
+
+        <LogOut>
+            <Loading />
+        </LogOut>
+
+        <CompletingLogOut>
+            <Loading />
+        </CompletingLogOut>
+
+        <LogOutFailed>
+            @*<RedirectToHome />*@
+        </LogOutFailed>
+
+        <LogOutSucceeded>
+            @*<LoggedOut />*@
+        </LogOutSucceeded>
+
+    </RemoteAuthenticatorView>
+</div>
+
+@code {
+    [Parameter] public string Action { get; set; }
+}

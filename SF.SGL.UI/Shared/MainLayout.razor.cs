@@ -1,26 +1,27 @@
-﻿namespace SF.SGL.UI.Shared;
-
-public partial class MainLayoutComponent : LayoutComponentBase
+﻿namespace SF.SGL.UI.Shared
 {
-    protected RadzenBody body0;
-    protected RadzenSidebar sidebar0;
-    public bool DarkTheme { get; set; }
-
-    [Inject]
-    public IJSRuntime JsRuntime { get; set; }
-
-    protected async Task SidebarToggle0Click(dynamic args)
+    public partial class MainLayoutComponent : LayoutComponentBase
     {
-        await InvokeAsync(() => { sidebar0.Toggle(); });
+        protected RadzenBody body0;
+        protected RadzenSidebar sidebar0;
+        public bool DarkTheme { get; set; }
 
-        await InvokeAsync(() => { body0.Toggle(); });
-    }
+        [Inject]
+        public IJSRuntime JsRuntime { get; set; }
 
-    protected async Task UpdateTheme()
-    {
-        string themeName = DarkTheme ? "dark" : "software";
+        protected async Task SidebarToggle0Click()
+        {
+            await InvokeAsync(() => { sidebar0.Toggle(); });
 
-        IJSObjectReference module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
-        await module.InvokeVoidAsync("setTheme", themeName);
+            await InvokeAsync(() => { body0.Toggle(); });
+        }
+
+        protected async Task UpdateTheme()
+        {
+            string themeName = DarkTheme ? "dark" : "software";
+
+            IJSObjectReference module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
+            await module.InvokeVoidAsync("setTheme", themeName);
+        }
     }
 }
